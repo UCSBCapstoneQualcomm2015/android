@@ -9,43 +9,27 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.sniffit.sniffit.R;
-
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
 
-public class LoginActivity extends Activity {
 
-    ServerRequest sr;
-    EditText email,password,res_email,code,newpass;
-    Button login, register,forgotPass, cont,cont_code,cancel,cancel1;
+public class RegisterActivity extends Activity {
+
+    EditText email, password;
+    Button login, register;
     String emailString, passwordString;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
-        sr = new ServerRequest();
+        setContentView(R.layout.activity_register);
 
         email = (EditText)findViewById(R.id.email);
         password = (EditText)findViewById(R.id.password);
-        login = (Button)findViewById(R.id.login);
         register = (Button)findViewById(R.id.register);
-        forgotPass = (Button)findViewById(R.id.forgot);
 
         register.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent regActivity = new Intent(LoginActivity.this, RegisterActivity.class);
-                startActivity(regActivity);
-                finish();
-            }
-        });
-
-        login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 emailString = email.getText().toString();
@@ -55,14 +39,8 @@ public class LoginActivity extends Activity {
 
                 ServerRequest sr = new ServerRequest();
                 JSONObject json = sr.getJSONFromUrl("http://", params);
-                if(json != null) {
-                        /* If login returns success, start MenuActivity */
-                            Intent menuActivity = new Intent(LoginActivity.this, MenuActivity.class);
 
-                            startActivity(menuActivity);
-                            finish();
-                        }
-                }
+            }
         });
     }
 
@@ -70,7 +48,7 @@ public class LoginActivity extends Activity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.login, menu);
+        getMenuInflater().inflate(R.menu.register, menu);
         return true;
     }
 

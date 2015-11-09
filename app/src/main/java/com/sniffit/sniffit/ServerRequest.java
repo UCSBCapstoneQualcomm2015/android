@@ -34,9 +34,9 @@ public class ServerRequest {
     public ServerRequest() {
     }
 
-    public JSONObject getJSONFromUrl(String url, HashMap<String, String> hm){
+    public JSONObject getJSONFromUrl(String url, HashMap<String, String> params){
         OkHttpClient client = new OkHttpClient();
-        Request request = requestBuilder(hm)
+        Request request = requestBuilder(params)
                 .url(url)
                 .build();
         Response response = null;
@@ -59,14 +59,14 @@ public class ServerRequest {
         return jObject;
     }
 
-    protected Request.Builder requestBuilder(HashMap<String, String> hm) {
+    protected Request.Builder requestBuilder(HashMap<String, String> params) {
 
-//        if (hm == null) {
-//            hm = new HashMap<String, String>();
+//        if (params == null) {
+//            params = new HashMap<String, String>();
 //        }
-//        hm.put("Authorization", authHeader());
+//        params.put("Authorization", authHeader());
         Request.Builder requestBuilder = new Request.Builder();
-        for (Map.Entry<String, String> entry : hm.entrySet()) {
+        for (Map.Entry<String, String> entry : params.entrySet()) {
             requestBuilder.addHeader(entry.getKey(), entry.getValue());
         }
         return requestBuilder;
