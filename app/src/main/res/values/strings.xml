@@ -8,5 +8,6 @@
     <string name="title_activity_find">FindActivity</string>
     <string name="title_activity_register">RegisterActivity</string>
     <string name="title_activity_menu">MenuActivity</string>
+    <string name="title_activity_map">MapActivity</string>
 
 </resources>
