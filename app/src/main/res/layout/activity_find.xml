@@ -1,32 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    tools:context="com.sniffit.sniffit.FindActivity">
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    android:id="@+id/find">
 
+<include layout="@layout/footer" />
+
+    <LinearLayout
+        android:id="@+id/layout1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingRight="10dp"
+        android:paddingLeft="10dp"
+        android:paddingTop="15dp">
 
         <TextView
-            android:text="@string/hello_world"
+            android:id="@+id/item"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/textView" />
+            android:layout_weight="1"
+            android:textSize="20sp"
+            android:text="Item:"/>
 
-        <Button
+
+        <Spinner
+            android:id="@+id/item_spinner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="New Button"
-            android:id="@+id/button"
-            android:layout_toEndOf="@+id/textView"
-            android:layout_marginBottom="81dp"
-            android:layout_alignParentBottom="true"
-            android:layout_toRightOf="@+id/textView" />
+            android:layout_weight="10"
+            android:textSize="20sp"/>
 
-        <EditText
-            android:id="@+id/toMessage" android:inputType="phone" android:layout_width="match_parent" android:layout_height="wrap_content"
-            android:hint="RFID Number" android:layout_marginTop="30dp"/>
 
+    </LinearLayout>
+    <!--need to add picture of current room-->
+    <LinearLayout
+        android:id="@+id/layout2"
+        android:layout_below="@+id/layout1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingRight="10dp"
+        android:paddingLeft="10dp"
+        android:paddingTop="15dp">
+
+        <TextView
+            android:id="@+id/room"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_below="@id/item"
+            android:textSize="20sp"
+            android:text="Room:"/>
+
+
+        <Spinner
+            android:id="@+id/room_spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="10"
+            android:layout_below="@id/item_spinner"
+            android:textSize="20sp"/>
+
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/content"
+        android:orientation="vertical"
+        android:layout_above="@+id/footer">
+
+
+    </LinearLayout>
 </RelativeLayout>

@@ -10,4 +10,7 @@
     <string name="title_activity_menu">MenuActivity</string>
     <string name="title_activity_map">MapActivity</string>
 
+    <string name="Room">Room</string>
+    <string name="Item">Item</string>
+
 </resources>

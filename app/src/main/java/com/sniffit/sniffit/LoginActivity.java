@@ -60,33 +60,33 @@ public class LoginActivity extends Activity {
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                emailString = email.getText().toString();
-                passwordString = password.getText().toString();
-
-                HashMap<String, String> params = new HashMap<String, String>();
-
-                ServerRequest sr = new ServerRequest();
-                //String bodyString = "_csrf=i428sMA86TyLgZieYv3mrNr501tWTgItTZZls%3D&email=abc123%40gmail.com&password=abc123";
-                //RequestBody requestBody = RequestBody.create(MEDIA_TYPE_MARKDOWN, bodyString);
-
-                sr.sendRequest(new Callback<ResponseBody>() {
-                    @Override
-                    public void onResponse(retrofit.Response<ResponseBody> response, Retrofit retrofit) {
-                        try {
-                            String b = response.body().string();
-                            Log.d("hey2", b);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-
-                        Log.d("hey", Integer.toString(response.code()));
-                    }
-
-                    @Override
-                    public void onFailure(Throwable t) {
-                        Log.d("he21y", t.toString());
-                    }
-                });
+//                emailString = email.getText().toString();
+//                passwordString = password.getText().toString();
+//
+//                HashMap<String, String> params = new HashMap<String, String>();
+//
+//                ServerRequest sr = new ServerRequest();
+//                //String bodyString = "_csrf=i428sMA86TyLgZieYv3mrNr501tWTgItTZZls%3D&email=abc123%40gmail.com&password=abc123";
+//                //RequestBody requestBody = RequestBody.create(MEDIA_TYPE_MARKDOWN, bodyString);
+//
+//                sr.sendRequest(new Callback<ResponseBody>() {
+//                    @Override
+//                    public void onResponse(retrofit.Response<ResponseBody> response, Retrofit retrofit) {
+//                        try {
+//                            String b = response.body().string();
+//                            Log.d("hey2", b);
+//                        } catch (IOException e) {
+//                            e.printStackTrace();
+//                        }
+//
+//                        Log.d("hey", Integer.toString(response.code()));
+//                    }
+//
+//                    @Override
+//                    public void onFailure(Throwable t) {
+//                        Log.d("he21y", t.toString());
+//                    }
+//                });
 
 
                 //JSONObject json = sr.sendRequest("post", "http://ec2-52-27-212-208.us-west-2.compute.amazonaws.com/login", requestBody, params);
@@ -97,7 +97,12 @@ public class LoginActivity extends Activity {
 //                            startActivity(menuActivity);
 //                            finish();
 //                        }
-                }
+
+                Intent intent = new Intent(getApplicationContext(), FindActivity.class);
+                startActivity(intent);
+
+
+            }
         });
     }
 
