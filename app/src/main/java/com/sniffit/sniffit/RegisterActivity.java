@@ -38,7 +38,7 @@ public class RegisterActivity extends Activity {
                 HashMap<String, String> params = new HashMap<String, String>();
 
                 ServerRequest sr = new ServerRequest();
-                JSONObject json = sr.getJSONFromUrl("http://", params);
+                //JSONObject json = sr.getJSONFromUrl("http://", params);
 
             }
         });

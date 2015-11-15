@@ -16,10 +16,19 @@ import org.json.JSONObject;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.Response;
+import com.squareup.okhttp.ResponseBody;
+
+import retrofit.Call;
+import retrofit.Retrofit;
+import retrofit.http.Body;
+import retrofit.http.Field;
+import retrofit.http.FormUrlEncoded;
+import retrofit.http.POST;
 
 
 /**
@@ -31,32 +40,49 @@ public class ServerRequest {
     static JSONObject jObj = null;
     static String json = "";
 
+    Request request;
+    Response response;
+    String jsonData = "";
+
     public ServerRequest() {
     }
 
-    public JSONObject getJSONFromUrl(String url, HashMap<String, String> params){
-        OkHttpClient client = new OkHttpClient();
-        Request request = requestBuilder(params)
-                .url(url)
+    public interface LoginInterface{
+        @FormUrlEncoded
+        @POST("/login")
+        Call<ResponseBody> loginUser(@Field("_csrf") String csrf, @Field("email") String email, @Field("password") String password);
+    }
+
+    public void sendRequest(retrofit.Callback<ResponseBody> callback){
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://ec2-52-27-212-208.us-west-2.compute.amazonaws.com/login")
                 .build();
-        Response response = null;
-        String jsonData = "";
-        try {
-            response = client.newCall(request).execute();
-            jsonData = response.body().string();
-        } catch (IOException e) {
-            e.printStackTrace();
 
-        }
+        LoginInterface login = retrofit.create(LoginInterface.class);
+        try{
+            Call<ResponseBody> call = login.loginUser("", "abc123@gmail.com", "abc123");
+            call.enqueue(callback);
 
-        JSONObject jObject = null;
-        try {
-            jObject = new JSONObject(jsonData);
-        } catch (JSONException e) {
+
+        }catch (Exception e){
             e.printStackTrace();
         }
 
-        return jObject;
+
+
+//        OkHttpClient client = new OkHttpClient();
+//
+//        if (method.equalsIgnoreCase("get")) {
+//            request = requestBuilder(headerMap).url(url).build();
+//        } else if (method.equalsIgnoreCase("delete")) {
+//            request = requestBuilder(headerMap).url(url).delete().build();
+//        } else if (method.equalsIgnoreCase("post")) {
+//            request = requestBuilder(headerMap).url(url).post(body).build();
+//        } else if (method.equalsIgnoreCase("put")) {
+//            request = requestBuilder(headerMap).url(url).put(body).build();
+//        }
+//
+//        client.newCall(request).enqueue(callback);
     }
 
     protected Request.Builder requestBuilder(HashMap<String, String> params) {

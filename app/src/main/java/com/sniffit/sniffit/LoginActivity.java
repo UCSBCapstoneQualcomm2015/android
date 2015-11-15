@@ -3,6 +3,7 @@ package com.sniffit.sniffit;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -10,11 +11,19 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.sniffit.sniffit.R;
+import com.squareup.okhttp.MediaType;
+import com.squareup.okhttp.RequestBody;
+import com.squareup.okhttp.Response;
+import com.squareup.okhttp.ResponseBody;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.HashMap;
+
+import retrofit.Callback;
+import retrofit.Retrofit;
 
 public class LoginActivity extends Activity {
 
@@ -22,6 +31,9 @@ public class LoginActivity extends Activity {
     EditText email,password,res_email,code,newpass;
     Button login, register,forgotPass, cont,cont_code,cancel,cancel1;
     String emailString, passwordString;
+
+    public static final MediaType MEDIA_TYPE_MARKDOWN
+            = MediaType.parse("application/x-www-form-urlencoded; charset=utf-8");
 
 
     @Override
@@ -54,14 +66,37 @@ public class LoginActivity extends Activity {
                 HashMap<String, String> params = new HashMap<String, String>();
 
                 ServerRequest sr = new ServerRequest();
-                JSONObject json = sr.getJSONFromUrl("http://", params);
-                if(json != null) {
-                        /* If login returns success, start MenuActivity */
-                            Intent menuActivity = new Intent(LoginActivity.this, MenuActivity.class);
+                //String bodyString = "_csrf=i428sMA86TyLgZieYv3mrNr501tWTgItTZZls%3D&email=abc123%40gmail.com&password=abc123";
+                //RequestBody requestBody = RequestBody.create(MEDIA_TYPE_MARKDOWN, bodyString);
 
-                            startActivity(menuActivity);
-                            finish();
+                sr.sendRequest(new Callback<ResponseBody>() {
+                    @Override
+                    public void onResponse(retrofit.Response<ResponseBody> response, Retrofit retrofit) {
+                        try {
+                            String b = response.body().string();
+                            Log.d("hey2", b);
+                        } catch (IOException e) {
+                            e.printStackTrace();
                         }
+
+                        Log.d("hey", Integer.toString(response.code()));
+                    }
+
+                    @Override
+                    public void onFailure(Throwable t) {
+                        Log.d("he21y", t.toString());
+                    }
+                });
+
+
+                //JSONObject json = sr.sendRequest("post", "http://ec2-52-27-212-208.us-west-2.compute.amazonaws.com/login", requestBody, params);
+//                if(json != null) {
+//                        /* If login returns success, start MenuActivity */
+//                            Intent menuActivity = new Intent(LoginActivity.this, MenuActivity.class);
+//
+//                            startActivity(menuActivity);
+//                            finish();
+//                        }
                 }
         });
     }
