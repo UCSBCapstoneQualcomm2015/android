@@ -1,9 +1,14 @@
 package com.sniffit.sniffit;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
 
 
 public class FindActivity extends Activity {
@@ -12,6 +17,10 @@ public class FindActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_find);
+        TextView header = (TextView)findViewById(R.id.header_title);
+        header.setText("Find Tag");
+        Button findButton = (Button) findViewById(R.id.find_button);
+        findButton.setBackgroundColor(Color.parseColor("#293e6a"));
     }
 
 
@@ -32,5 +41,10 @@ public class FindActivity extends Activity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+    public void goToRooms(View view) {
+        Intent intent = new Intent(this, RoomListActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
     }
 }

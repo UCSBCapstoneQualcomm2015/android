@@ -37,6 +37,11 @@
             android:name=".MapActivity"
             android:label="@string/title_activity_map" >
         </activity>
+        <activity
+            android:theme="@style/Theme.AppCompat.Light"
+            android:name=".RoomListActivity"
+            android:label=".RoomListActivity" >
+         </activity>
     </application>
 
     <!-- To auto-complete the email text field in the login form with the user's emails -->

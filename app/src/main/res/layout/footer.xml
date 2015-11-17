@@ -37,6 +37,7 @@
         android:background="#3B5998"
         android:textColor="#FFFFFF"
         android:text="Rooms"
+        android:onClick="goToRooms"
         />
 
     <Button
