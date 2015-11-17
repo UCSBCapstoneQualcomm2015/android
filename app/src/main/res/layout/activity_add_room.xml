@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.sniffit.sniffit.AddRoomActivity">
+    <include layout="@layout/footer" />
+    <include layout="@layout/header" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/header"
+        android:layout_above="@+id/footer">
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="50px"
+            android:id="@+id/roomName"
+            android:inputType="text"
+            android:hint="Room Name"/>
+
+        <EditText
+            android:id="@+id/width"
+            android:layout_width="match_parent"
+            android:layout_gravity="center"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:hint="Width"
+            android:layout_below="@+id/roomName"/>
+
+        <EditText
+            android:id="@+id/height"
+            android:layout_width="match_parent"
+            android:layout_gravity="center"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:hint="Height"
+            android:layout_below="@+id/width"/>
+
+
+        <Button
+            android:layout_marginTop="100px"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:id="@+id/confirm"
+            android:textColor="#ffffff"
+            android:textAlignment="center"
+            android:text="Confirm"
+            android:layout_below="@+id/height"/>
+
+
+
+
+
+    </RelativeLayout>
+
+</RelativeLayout>

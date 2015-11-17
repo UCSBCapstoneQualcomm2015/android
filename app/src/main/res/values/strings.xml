@@ -12,5 +12,6 @@
 
     <string name="Room">Room</string>
     <string name="Item">Item</string>
+    <string name="title_activity_add_room">AddRoomActivity</string>
 
 </resources>

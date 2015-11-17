@@ -20,6 +20,7 @@ public class RoomListActivity extends AppCompatActivity {
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     ArrayList<String> roomList;     //JUST FOR NOW; SHOULD EVENTUALLY BE AN ARRAYLIST OF "ROOM" OBJECTS
+    Button roomButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,7 +31,7 @@ public class RoomListActivity extends AppCompatActivity {
         TextView header = (TextView)findViewById(R.id.header_title);
         header.setText("Room List");
 
-        Button roomButton = (Button) findViewById(R.id.rooms_button);
+        roomButton = (Button) findViewById(R.id.rooms_button);
         roomButton.setBackgroundColor(Color.parseColor("#293e6a"));
         roomList = new ArrayList<String>();
         roomList.add("Bedroom");    //hardcode examples
