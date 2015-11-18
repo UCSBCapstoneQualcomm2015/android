@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -11,9 +12,19 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.sniffit.sniffit.R;
+import com.sniffit.sniffit.REST.ServerRequest;
+import com.sniffit.sniffit.REST.User;
+import com.squareup.okhttp.Headers;
+import com.squareup.okhttp.ResponseBody;
+
+import retrofit.Callback;
+import retrofit.Response;
+import retrofit.Retrofit;
 
 
 public class FindActivity extends Activity {
+
+    User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,8 +32,31 @@ public class FindActivity extends Activity {
         setContentView(R.layout.activity_find);
         TextView header = (TextView)findViewById(R.id.header_title);
         header.setText("Find Tag");
-        Button findButton = (Button) findViewById(R.id.find_button);
+        Button findButton = (Button) findViewById(R.id.sniff_button);
         findButton.setBackgroundColor(Color.parseColor("#293e6a"));
+
+        Intent intent = getIntent();
+        user = (User) intent.getSerializableExtra("user");
+
+        findButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d("hey", "hey");
+                ServerRequest sr = new ServerRequest();
+
+                sr.sendRequest("getTags", user, new Callback<ResponseBody>() {
+                    @Override
+                    public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
+                        Headers h = response.headers();
+                    }
+
+                    @Override
+                    public void onFailure(Throwable t) {
+
+                    }
+                });
+            }
+        });
     }
 
 

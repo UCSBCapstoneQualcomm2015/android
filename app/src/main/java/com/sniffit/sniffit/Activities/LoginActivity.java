@@ -12,11 +12,15 @@ import android.widget.EditText;
 
 import com.sniffit.sniffit.R;
 import com.sniffit.sniffit.REST.ServerRequest;
+import com.sniffit.sniffit.REST.User;
+import com.squareup.okhttp.Headers;
 import com.squareup.okhttp.MediaType;
 import com.squareup.okhttp.ResponseBody;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import retrofit.Callback;
 import retrofit.Retrofit;
@@ -24,9 +28,10 @@ import retrofit.Retrofit;
 public class LoginActivity extends Activity {
 
     ServerRequest sr;
-    EditText email,password,res_email,code,newpass;
-    Button login, register,forgotPass, cont,cont_code,cancel,cancel1;
+    EditText email, password;
+    Button login, register,forgotPass;
     String emailString, passwordString;
+    User user;
 
     public static final MediaType MEDIA_TYPE_MARKDOWN
             = MediaType.parse("application/x-www-form-urlencoded; charset=utf-8");
@@ -63,17 +68,18 @@ public class LoginActivity extends Activity {
 
                 ServerRequest sr = new ServerRequest();
 
-                sr.sendRequest("login", new Callback<ResponseBody>() {
+                sr.sendRequest("login", null, new Callback<ResponseBody>() {
                     @Override
                     public void onResponse(retrofit.Response<ResponseBody> response, Retrofit retrofit) {
-                        try {
-                            String b = response.body().string();
-                            Log.d("Response Body", b);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-
+                        Headers h = response.headers();
+                        String cookie = h.get("Set-Cookie");
+                        //Creates a new User class, passes in cookie
+                        user = new User(cookie);
+                        Log.d("Cookie", cookie);
                         Log.d("Status code", Integer.toString(response.code()));
+                        Intent intent = new Intent(getApplicationContext(), FindActivity.class);
+                        intent.putExtra("user", user);
+                        startActivity(intent);
                     }
 
                     @Override
@@ -82,8 +88,6 @@ public class LoginActivity extends Activity {
                     }
                 });
 
-                Intent intent = new Intent(getApplicationContext(), FindActivity.class);
-                startActivity(intent);
 
 
             }
