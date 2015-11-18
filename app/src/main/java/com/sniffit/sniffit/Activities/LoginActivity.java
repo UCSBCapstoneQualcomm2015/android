@@ -1,4 +1,4 @@
-package com.sniffit.sniffit;
+package com.sniffit.sniffit.Activities;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -9,16 +9,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 
 import com.sniffit.sniffit.R;
+import com.sniffit.sniffit.REST.ServerRequest;
 import com.squareup.okhttp.MediaType;
-import com.squareup.okhttp.RequestBody;
-import com.squareup.okhttp.Response;
 import com.squareup.okhttp.ResponseBody;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -61,43 +56,31 @@ public class LoginActivity extends Activity {
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                emailString = email.getText().toString();
-//                passwordString = password.getText().toString();
-//
-//                HashMap<String, String> params = new HashMap<String, String>();
-//
-//                ServerRequest sr = new ServerRequest();
-//                //String bodyString = "_csrf=i428sMA86TyLgZieYv3mrNr501tWTgItTZZls%3D&email=abc123%40gmail.com&password=abc123";
-//                //RequestBody requestBody = RequestBody.create(MEDIA_TYPE_MARKDOWN, bodyString);
-//
-//                sr.sendRequest(new Callback<ResponseBody>() {
-//                    @Override
-//                    public void onResponse(retrofit.Response<ResponseBody> response, Retrofit retrofit) {
-//                        try {
-//                            String b = response.body().string();
-//                            Log.d("hey2", b);
-//                        } catch (IOException e) {
-//                            e.printStackTrace();
-//                        }
-//
-//                        Log.d("hey", Integer.toString(response.code()));
-//                    }
-//
-//                    @Override
-//                    public void onFailure(Throwable t) {
-//                        Log.d("he21y", t.toString());
-//                    }
-//                });
+                emailString = email.getText().toString();
+                passwordString = password.getText().toString();
 
+                HashMap<String, String> params = new HashMap<String, String>();
 
-                //JSONObject json = sr.sendRequest("post", "http://ec2-52-27-212-208.us-west-2.compute.amazonaws.com/login", requestBody, params);
-//                if(json != null) {
-//                        /* If login returns success, start MenuActivity */
-//                            Intent menuActivity = new Intent(LoginActivity.this, MenuActivity.class);
-//
-//                            startActivity(menuActivity);
-//                            finish();
-//                        }
+                ServerRequest sr = new ServerRequest();
+
+                sr.sendRequest("login", new Callback<ResponseBody>() {
+                    @Override
+                    public void onResponse(retrofit.Response<ResponseBody> response, Retrofit retrofit) {
+                        try {
+                            String b = response.body().string();
+                            Log.d("Response Body", b);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
+                        Log.d("Status code", Integer.toString(response.code()));
+                    }
+
+                    @Override
+                    public void onFailure(Throwable t) {
+                        Log.d("Error", t.toString());
+                    }
+                });
 
                 Intent intent = new Intent(getApplicationContext(), FindActivity.class);
                 startActivity(intent);

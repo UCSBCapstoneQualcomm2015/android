@@ -1,4 +1,4 @@
-package com.sniffit.sniffit;
+package com.sniffit.sniffit.Activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,6 +7,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import com.sniffit.sniffit.R;
 
 public class AddRoomActivity extends Activity {
 

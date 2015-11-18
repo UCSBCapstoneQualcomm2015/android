@@ -1,4 +1,4 @@
-package com.sniffit.sniffit;
+package com.sniffit.sniffit.Activities;
 
 import android.graphics.Color;
 import android.os.Bundle;
@@ -9,7 +9,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import java.text.SimpleDateFormat;
+import com.sniffit.sniffit.R;
+
 import java.util.ArrayList;
 
 /**
