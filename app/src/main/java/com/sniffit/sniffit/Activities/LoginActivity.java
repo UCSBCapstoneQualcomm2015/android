@@ -66,27 +66,30 @@ public class LoginActivity extends Activity {
 
                 HashMap<String, String> params = new HashMap<String, String>();
 
-                ServerRequest sr = new ServerRequest();
-
-                sr.sendRequest("login", null, new Callback<ResponseBody>() {
-                    @Override
-                    public void onResponse(retrofit.Response<ResponseBody> response, Retrofit retrofit) {
-                        Headers h = response.headers();
-                        String cookie = h.get("Set-Cookie");
-                        //Creates a new User class, passes in cookie
-                        user = new User(cookie);
-                        Log.d("Cookie", cookie);
-                        Log.d("Status code", Integer.toString(response.code()));
-                        Intent intent = new Intent(getApplicationContext(), FindActivity.class);
-                        intent.putExtra("user", user);
-                        startActivity(intent);
-                    }
-
-                    @Override
-                    public void onFailure(Throwable t) {
-                        Log.d("Error", t.toString());
-                    }
-                });
+//                ServerRequest sr = new ServerRequest();
+//
+//                sr.sendRequest("login", null, new Callback<ResponseBody>() {
+//                    @Override
+//                    public void onResponse(retrofit.Response<ResponseBody> response, Retrofit retrofit) {
+//                        Headers h = response.headers();
+//                        String cookie = h.get("Set-Cookie");
+//                        //Creates a new User class, passes in cookie
+//                        user = new User(cookie);
+//                        Log.d("Cookie", cookie);
+//                        Log.d("Status code", Integer.toString(response.code()));
+//                        Intent intent = new Intent(getApplicationContext(), FindActivity.class);
+//                        intent.putExtra("user", user);
+//                        startActivity(intent);
+//                    }
+//
+//                    @Override
+//                    public void onFailure(Throwable t) {
+//                        Log.d("Error", t.toString());
+//                    }
+//                });
+                Intent intent = new Intent(getApplicationContext(), FindActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
 
 
 

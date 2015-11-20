@@ -79,8 +79,15 @@ public class FindActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
     public void goToRooms(View view) {
-        Intent intent = new Intent(this, RoomListActivity.class);
+        Intent intent = new Intent(this, ListDisplay.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.putExtra("displayFlag", 1);
+        startActivity(intent);
+    }
+    public void goToItems(View view) {
+        Intent intent = new Intent(this, ListDisplay.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.putExtra("displayFlag", 2);
         startActivity(intent);
     }
 }

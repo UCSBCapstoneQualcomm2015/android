@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    android:id="@+id/find">
+
+    <include layout="@layout/footer" />
+    <include layout="@layout/header" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/daily_logger"
+        tools:context=".DailyLogger"
+        android:layout_above="@+id/footer"
+        android:layout_below="@+id/header">
+        <!--room view would go here-->
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/edit_room"
+            android:text="Edit Room"/>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/snapdragon_button"
+            android:layout_below="@id/edit_room"
+            android:text="Snapdragons"/>
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/ref_button"
+            android:layout_below="@id/snapdragon_button"
+            android:text="Reference Tags"/>
+
+
+    </RelativeLayout>
+</RelativeLayout>

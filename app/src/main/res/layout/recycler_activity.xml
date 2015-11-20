@@ -1,30 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <include layout="@layout/footer" />
-    <include layout="@layout/header" />
 
-    <TextView
-        android:id="@+id/nodata"
+    <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:text="Nothing logged"
-        android:textSize="20dp"
-        android:textStyle="italic"
-        android:gravity="center"
-        />
+        android:id="@+id/rec_act"
+        android:orientation="vertical">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycler_view"
-        android:scrollbars="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@+id/footer"
-        android:layout_below="@+id/header"
-        />
+        <include layout="@layout/footer" />
+        <include layout="@layout/header" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/footer"
+            android:layout_below="@+id/header"
+            android:orientation="vertical">
 
 
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recycler_view"
+                android:scrollbars="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                />
 
-</RelativeLayout>
+            <TextView
+                android:id="@+id/nodata"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:text="Nothing logged"
+                android:textSize="20dp"
+                android:textStyle="italic"
+                android:gravity="center"
+                />
+
+            <com.melnykov.fab.FloatingActionButton
+                android:id="@+id/fab"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right|bottom"
+                android:tint="@android:color/white"
+                android:src="@android:drawable/ic_input_add"
+                fab:fab_colorNormal="#3B5998"
+                fab:fab_colorPressed="#87CEFA"
+                android:layout_marginRight="23dp"
+                android:layout_marginEnd="23dp"
+                android:layout_marginBottom="23dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true" />
+        </RelativeLayout>
+    </RelativeLayout>
+
+
+</FrameLayout>

@@ -43,13 +43,17 @@
             android:label="@string/title_activity_map" >
         </activity>
         <activity
-            android:name=".Activities.RoomListActivity"
-            android:label=".RoomListActivity"
+            android:name=".Activities.ListDisplay"
+            android:label=".ListDisplay"
             android:theme="@style/Theme.AppCompat.Light" >
         </activity>
         <activity
             android:name=".Activities.AddRoomActivity"
             android:label="@string/title_activity_add_room" >
+        </activity>
+        <activity
+            android:name=".Activities.RoomActivity"
+            android:label="RoomActivity" >
         </activity>
     </application>
 

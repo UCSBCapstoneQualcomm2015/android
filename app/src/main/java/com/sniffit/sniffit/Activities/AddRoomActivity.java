@@ -9,6 +9,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.sniffit.sniffit.R;
+import com.sniffit.sniffit.RFIDItem;
 
 public class AddRoomActivity extends Activity {
 
@@ -39,7 +40,7 @@ public class AddRoomActivity extends Activity {
     }
     
     public void goToRooms(View view) {
-        Intent intent = new Intent(this, RoomListActivity.class);
+        Intent intent = new Intent(this, ListDisplay.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
     }
