@@ -17,6 +17,8 @@ import com.sniffit.sniffit.REST.User;
 import com.squareup.okhttp.Headers;
 import com.squareup.okhttp.ResponseBody;
 
+import java.io.IOException;
+
 import retrofit.Callback;
 import retrofit.Response;
 import retrofit.Retrofit;
@@ -41,13 +43,21 @@ public class FindActivity extends Activity {
         findButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d("hey", "hey");
                 ServerRequest sr = new ServerRequest();
 
-                sr.sendRequest("getTags", user, new Callback<ResponseBody>() {
+                sr.putRFIDTag(user, new Callback<ResponseBody>() {
                     @Override
                     public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
-                        Headers h = response.headers();
+                        try {
+                            int code = response.code();
+                            Headers h = response.headers();
+                            ResponseBody body = response.body();
+                            String bodyString = body.string();
+                            int a = 2;
+                            Log.d("hey", bodyString);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     }
 
                     @Override

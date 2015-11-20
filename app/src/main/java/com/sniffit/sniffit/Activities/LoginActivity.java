@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.google.gson.Gson;
 import com.sniffit.sniffit.R;
 import com.sniffit.sniffit.REST.ServerRequest;
 import com.sniffit.sniffit.REST.User;
@@ -43,6 +44,8 @@ public class LoginActivity extends Activity {
         setContentView(R.layout.activity_login);
         sr = new ServerRequest();
 
+        //Implement csrf
+        final String csrfString = "";
         email = (EditText)findViewById(R.id.email);
         password = (EditText)findViewById(R.id.password);
         login = (Button)findViewById(R.id.login);
@@ -64,22 +67,29 @@ public class LoginActivity extends Activity {
                 emailString = email.getText().toString();
                 passwordString = password.getText().toString();
 
+                //Hardcoded for testing
+                emailString = "b@gmail.com";
+                passwordString = "1234";
+
                 HashMap<String, String> params = new HashMap<String, String>();
 
                 ServerRequest sr = new ServerRequest();
 
-                sr.sendRequest("login", null, new Callback<ResponseBody>() {
+                sr.authenticate(csrfString, emailString, passwordString, new Callback<ResponseBody>() {
                     @Override
                     public void onResponse(retrofit.Response<ResponseBody> response, Retrofit retrofit) {
-                        Headers h = response.headers();
-                        String cookie = h.get("Set-Cookie");
-                        //Creates a new User class, passes in cookie
-                        user = new User(cookie);
-                        Log.d("Cookie", cookie);
-                        Log.d("Status code", Integer.toString(response.code()));
-                        Intent intent = new Intent(getApplicationContext(), FindActivity.class);
-                        intent.putExtra("user", user);
-                        startActivity(intent);
+                        try {
+                            String jsonBody = response.body().string();
+                            Gson gson = new Gson();
+                            User user = gson.fromJson(jsonBody, User.class);
+
+                            Intent intent = new Intent(getApplicationContext(), FindActivity.class);
+                            intent.putExtra("user", user);
+                            startActivity(intent);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
                     }
 
                     @Override
