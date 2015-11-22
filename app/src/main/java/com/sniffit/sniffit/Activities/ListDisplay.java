@@ -1,5 +1,6 @@
 package com.sniffit.sniffit.Activities;
 
+import android.app.DialogFragment;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -13,6 +14,7 @@ import android.widget.TextView;
 
 import com.melnykov.fab.FloatingActionButton;
 import com.sniffit.sniffit.Activities.RecyclerAdapter;
+import com.sniffit.sniffit.AddItemDialogFragment;
 import com.sniffit.sniffit.R;
 import com.sniffit.sniffit.RFIDItem;
 import com.sniffit.sniffit.Room;
@@ -25,13 +27,14 @@ import java.util.List;
 /**
  * Created by sohanshah on 11/16/15.
  */
-public class ListDisplay extends AppCompatActivity {
+public class ListDisplay extends AppCompatActivity implements AddItemDialogFragment.AddItemListener {
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     ArrayList<SniffitObject> sniffitList;     //JUST FOR NOW; SHOULD EVENTUALLY BE AN ARRAYLIST OF "ROOM" OBJECTS
     Button currentPage;
     FloatingActionButton fab;
+    private int flag;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,8 +46,9 @@ public class ListDisplay extends AppCompatActivity {
         TextView header = (TextView)findViewById(R.id.header_title);
         sniffitList = new ArrayList<SniffitObject>();
         int displayFlag = getIntent().getIntExtra("displayFlag", -1);
+        this.flag = displayFlag;
 
-        if (displayFlag == 1) {
+        if (flag == 1) {
             header.setText("Room List");
             currentPage = (Button) findViewById(R.id.rooms_button);
             currentPage.setBackgroundColor(Color.parseColor("#294e6a"));
@@ -59,7 +63,7 @@ public class ListDisplay extends AppCompatActivity {
             sniffitList.add(room3);
         }
 
-        else if (displayFlag == 2) {
+        else if (flag == 2) {
             header.setText("Item List");
             currentPage = (Button) findViewById(R.id.items_button);
             currentPage.setBackgroundColor(Color.parseColor("#294e6a"));
@@ -70,9 +74,6 @@ public class ListDisplay extends AppCompatActivity {
             sniffitList.add(item1);
             sniffitList.add(item2);
         }
-
-
-
 
 //        for (rooms in database) {
         //roomList: populate with list of user's rooms
@@ -99,9 +100,35 @@ public class ListDisplay extends AppCompatActivity {
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         // specify an adapter (see also next example)
-        mAdapter = new RecyclerAdapter(sniffitList, displayFlag);
+        mAdapter = new RecyclerAdapter(sniffitList, displayFlag, getFragmentManager());
         mRecyclerView.setAdapter(mAdapter);
         Log.d("adapter set", "adapter");
+    }
+    /// ADDING AN OBJECT //////
+    public void addObject(View view) {
+        switch (flag) {
+            case 2:
+                DialogFragment dialog =  AddItemDialogFragment.newInstance(1, "", "");
+                dialog.show(getFragmentManager(), "addItem");
+                break;
+            default:
+                break;
+        }
+    }
+
+    @Override
+    public void itemConfirm(DialogFragment dialog, String itemName, String itemId) {
+                Log.d(itemName, itemId);
+                //would add it to the database here
+    }
+
+
+    /////STUFF FOR FOOTER/////
+
+    public void goToFind(View view) {
+        Intent intent = new Intent(this, FindActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
     }
 
     public void goToRooms(View view) {

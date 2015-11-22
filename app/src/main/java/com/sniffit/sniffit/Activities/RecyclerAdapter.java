@@ -1,5 +1,9 @@
 package com.sniffit.sniffit.Activities;
 
+import android.app.DialogFragment;
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
@@ -8,22 +12,28 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
+import android.support.v4.app.FragmentActivity;
+import com.sniffit.sniffit.AddItemDialogFragment;
 import com.sniffit.sniffit.R;
 import com.sniffit.sniffit.Snapdragon;
 import com.sniffit.sniffit.SniffitObject;
+import com.sniffit.sniffit.AddItemDialogFragment;
+
+
 
 import java.util.ArrayList;
 
 /**
  * Created by sohanshah on 11/16/15.
  */
-public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHolder>  {
+public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHolder> {
 
     ArrayList<SniffitObject> sniffitList;
     int displayFlag;
+    FragmentManager manager;
     public static class ViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
+        FragmentManager manager;
         public View mView;
         public ViewHolder(View v) {
             super(v);
@@ -44,9 +54,10 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public RecyclerAdapter(ArrayList<SniffitObject> myDataset, int flag) {   //FOR NOW: SHOULD END UP ARRAYLIST OF OBJECTS (EITHER ROOMS OR ITEMS)
+    public RecyclerAdapter(ArrayList<SniffitObject> myDataset, int flag, FragmentManager manager) {   //FOR NOW: SHOULD END UP ARRAYLIST OF OBJECTS (EITHER ROOMS OR ITEMS)
         sniffitList = myDataset;
         displayFlag = flag;
+        this.manager = manager;
     }
 
 
@@ -72,7 +83,11 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
                         intent.putExtras(bundle);
                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        v.getContext().startActivity(intent);       //NEXT STEP = CREATE ROOMACTIVITY
+                        v.getContext().startActivity(intent);
+                        break;
+                    case 2:         //updating one of the items (should edit it in the db)
+                        DialogFragment editItem = AddItemDialogFragment.newInstance(2, "ITEM1", "ITEM2");       //SHOULD PASS IN NAME AND ID OF SNIFFITLIST.GET(POSITION)
+                        editItem.show(manager, "editItem");
                         break;
                     case 4:
                         intent = new Intent(v.getContext(), ListDisplay.class);

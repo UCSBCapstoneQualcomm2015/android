@@ -14,4 +14,7 @@
     <string name="Item">Item</string>
     <string name="title_activity_add_room">AddRoomActivity</string>
 
+    <string name="confirm">Confirm</string>
+    <string name="cancel">Cancel</string>
+
 </resources>
