@@ -1,4 +1,6 @@
-package com.sniffit.sniffit;
+package com.sniffit.sniffit.Objects;
+
+import com.sniffit.sniffit.Objects.SniffitObject;
 
 /**
  * Created by sohanshah on 11/19/15.

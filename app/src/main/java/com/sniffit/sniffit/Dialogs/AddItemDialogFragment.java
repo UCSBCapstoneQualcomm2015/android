@@ -1,20 +1,16 @@
-package com.sniffit.sniffit;
+package com.sniffit.sniffit.Dialogs;
 
 import android.app.Activity;
 import android.content.DialogInterface;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
-import android.content.Intent;
 import android.app.DialogFragment;
 import android.app.Dialog;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.app.AlertDialog;
+
+import com.sniffit.sniffit.R;
 
 
 /**

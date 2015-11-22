@@ -1,9 +1,11 @@
-package com.sniffit.sniffit;
+package com.sniffit.sniffit.Objects;
+
+import com.sniffit.sniffit.Objects.SniffitObject;
 
 /**
  * Created by sohanshah on 11/18/15.
  */
-public class RFIDItem extends SniffitObject{
+public class RFIDItem extends SniffitObject {
 
     String id;
     Float x;

@@ -13,16 +13,13 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.melnykov.fab.FloatingActionButton;
-import com.sniffit.sniffit.Activities.RecyclerAdapter;
-import com.sniffit.sniffit.AddItemDialogFragment;
+import com.sniffit.sniffit.Dialogs.AddItemDialogFragment;
 import com.sniffit.sniffit.R;
-import com.sniffit.sniffit.RFIDItem;
-import com.sniffit.sniffit.Room;
-import com.sniffit.sniffit.SniffitObject;
+import com.sniffit.sniffit.Objects.RFIDItem;
+import com.sniffit.sniffit.Objects.Room;
+import com.sniffit.sniffit.Objects.SniffitObject;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by sohanshah on 11/16/15.

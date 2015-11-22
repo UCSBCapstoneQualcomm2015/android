@@ -1,24 +1,18 @@
 package com.sniffit.sniffit.Activities;
 
 import android.app.DialogFragment;
-import android.app.Fragment;
 import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.support.v4.app.FragmentActivity;
-import com.sniffit.sniffit.AddItemDialogFragment;
-import com.sniffit.sniffit.R;
-import com.sniffit.sniffit.Snapdragon;
-import com.sniffit.sniffit.SniffitObject;
-import com.sniffit.sniffit.AddItemDialogFragment;
 
+import com.sniffit.sniffit.Dialogs.AddItemDialogFragment;
+import com.sniffit.sniffit.R;
+import com.sniffit.sniffit.Objects.SniffitObject;
 
 
 import java.util.ArrayList;

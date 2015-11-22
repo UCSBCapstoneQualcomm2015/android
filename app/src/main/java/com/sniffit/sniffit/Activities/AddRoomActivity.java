@@ -9,7 +9,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.sniffit.sniffit.R;
-import com.sniffit.sniffit.RFIDItem;
 
 public class AddRoomActivity extends Activity {
 

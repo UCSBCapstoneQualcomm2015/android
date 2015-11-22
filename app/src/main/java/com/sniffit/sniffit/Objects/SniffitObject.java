@@ -1,4 +1,4 @@
-package com.sniffit.sniffit;
+package com.sniffit.sniffit.Objects;
 
 import java.io.Serializable;
 

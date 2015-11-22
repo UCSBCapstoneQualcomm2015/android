@@ -2,23 +2,13 @@ package com.sniffit.sniffit.Activities;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 
 import com.sniffit.sniffit.R;
-import com.sniffit.sniffit.REST.ServerRequest;
-import com.sniffit.sniffit.REST.User;
-import com.sniffit.sniffit.Room;
-import com.squareup.okhttp.Headers;
-import com.squareup.okhttp.ResponseBody;
-
-import retrofit.Callback;
-import retrofit.Response;
-import retrofit.Retrofit;
+import com.sniffit.sniffit.Objects.Room;
 
 /**
  * Created by sohanshah on 11/19/15.
