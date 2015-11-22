@@ -118,8 +118,12 @@ public class ListDisplay extends AppCompatActivity implements AddItemDialogFragm
 
     @Override
     public void itemConfirm(DialogFragment dialog, String itemName, String itemId) {
-                Log.d(itemName, itemId);
-                //would add it to the database here
+        Log.d(itemName, itemId);
+                //would add it to the database here and reload the intent to update list
+        Intent intent = new Intent(this, ListDisplay.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.putExtra("displayFlag", 2);
+        startActivity(intent);
     }
 
 
