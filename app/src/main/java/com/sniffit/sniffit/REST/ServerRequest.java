@@ -17,7 +17,10 @@ import retrofit.http.Field;
 import retrofit.http.FormUrlEncoded;
 import retrofit.http.GET;
 import retrofit.http.Header;
+import retrofit.http.Headers;
 import retrofit.http.POST;
+import retrofit.http.PUT;
+import retrofit.http.Path;
 
 
 /**
@@ -40,34 +43,96 @@ public class ServerRequest {
     }
 
     public interface apiInterface{
-        @GET("rfidtags")
-        Call<ResponseBody> getTags(@Header("cookie") String cookie);
+
+        @GET("api/user/{user_id}/rfidtags")
+        Call<ResponseBody> getRFIDTags(@Header("x-access-token") String token, @Path("user_id") String userId);
+
+        @GET("api/user/{user_id}/rfidtags/{rfid_tag_id}")
+        Call<ResponseBody> getRFIDTag(@Header("x-access-token") String token, @Path("user_id") String userId, @Path("rfid_tag_id") String tagId);
+        
+        @FormUrlEncoded
+        @POST("api/login")
+        Call<ResponseBody> loginUser(@Field("_csrf") String csrf, @Field("email") String email, @Field("password") String password);
 
         @FormUrlEncoded
-        @POST("login")
-        Call<ResponseBody> loginUser(@Field("_csrf") String csrf, @Field("email") String email, @Field("password") String password);
+        @POST("api/user/{user_id}/rfidtags")
+        Call<ResponseBody> postTag(@Header("x-access-token") String token, @Path("user_id") String userId, @Field("_csrf") String csrf, @Field("tagId") String tagId, @Field("name") String name);
+
+        @FormUrlEncoded
+        @PUT("api/user/{user_id}/rfidtags/{rfid_tag_id}")
+        Call<ResponseBody> putTag(@Header("x-access-token") String token, @Path("user_id") String userId, @Path("rfid_tag_id") String oldTagId, @Field("tagId") String newTagId, @Field("name") String name);
+
     }
 
-    public void sendRequest(String requestType, User user, retrofit.Callback<ResponseBody> callback){
+    public void authenticate(String csrf, String email, String password, retrofit.Callback<ResponseBody> callback){
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(base_url)
                 .build();
+        apiInterface loginService = retrofit.create(apiInterface.class);
+        Call<ResponseBody> call = loginService.loginUser(csrf, email, password);
+        call.enqueue(callback);
+    }
 
+    public void sendRequest(String request, User user, retrofit.Callback<ResponseBody> callback){
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(base_url)
+                .build();
         apiInterface apiService = retrofit.create(apiInterface.class);
-        try{
-            if(requestType == "login") {
-                Call<ResponseBody> call = apiService.loginUser("", "a@gmail.com", "1234");
-                call.enqueue(callback);
-            }
-            if(requestType == "getTags") {
-                Call<ResponseBody> call = apiService.getTags(user.cookie);
-                call.enqueue(callback);
-            }
-        }catch (Exception e){
-            e.printStackTrace();
+
+        switch (request.toLowerCase()){
+            case "getrfidtags":
+                Call<ResponseBody> getRFIDCall = apiService.getRFIDTags(user.getToken(), user.getUserId());
+                getRFIDCall.enqueue(callback);
+                break;
+
         }
+    }
+
+    public void getRFIDTag(String id, User user, retrofit.Callback<ResponseBody> callback){
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(base_url)
+                .build();
+        apiInterface apiService = retrofit.create(apiInterface.class);
+
+        Call<ResponseBody> call = apiService.getRFIDTag(user.getToken(), user.getUserId(), id);
+        call.enqueue(callback);
+    }
+
+    public void putRFIDTag(User user, retrofit.Callback<ResponseBody> callback){
+        //Hard coded
+        String tagId = "564eb237b6b88d075c73f68d";
+        String newId = "lalalal";
+        String name = "and";
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(base_url)
+                .build();
+        apiInterface loginService = retrofit.create(apiInterface.class);
+
+        Call<ResponseBody> rfidCall = loginService.putTag(user.getToken(), user.getUserId(), tagId, newId, name);
+        rfidCall.enqueue(callback);
 
     }
 
+    public void postRFIDTag(User user, retrofit.Callback<ResponseBody> callback){
+        //Hard coded
+        String csrf = "";
+        String tagId = "1123414";
+        String name = "and";
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(base_url)
+                .build();
+        apiInterface loginService = retrofit.create(apiInterface.class);
+
+        Call<ResponseBody> rfidCall = loginService.postTag(user.getToken(), user.getUserId(), csrf, tagId, name);
+        rfidCall.enqueue(callback);
+
+    }
 
 }
+
+
+
+
+
