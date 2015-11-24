@@ -14,17 +14,20 @@ import android.widget.TextView;
 
 import com.melnykov.fab.FloatingActionButton;
 import com.sniffit.sniffit.Dialogs.AddItemDialogFragment;
+import com.sniffit.sniffit.Dialogs.AddRoomDialogFragment;
 import com.sniffit.sniffit.R;
 import com.sniffit.sniffit.Objects.RFIDItem;
 import com.sniffit.sniffit.Objects.Room;
 import com.sniffit.sniffit.Objects.SniffitObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by sohanshah on 11/16/15.
  */
-public class ListDisplay extends AppCompatActivity implements AddItemDialogFragment.AddItemListener {
+public class ListDisplay extends AppCompatActivity implements AddItemDialogFragment.AddItemListener,
+                                                                AddRoomDialogFragment.AddRoomListener{
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
@@ -51,6 +54,8 @@ public class ListDisplay extends AppCompatActivity implements AddItemDialogFragm
             currentPage.setBackgroundColor(Color.parseColor("#294e6a"));
             Room room1 = new Room();
             room1.setName("Bedroom");
+            room1.setLength("7");
+            room1.setWidth("5");
             Room room2 = new Room();
             room2.setName("Bathroom");//hardcode examples
             Room room3 = new Room();
@@ -103,9 +108,15 @@ public class ListDisplay extends AppCompatActivity implements AddItemDialogFragm
     }
     /// ADDING AN OBJECT //////
     public void addObject(View view) {
-        switch (flag) {
+        DialogFragment dialog;
+        switch (flag) {     //1: room     2:item
+
+            case 1:
+                dialog = AddRoomDialogFragment.newInstance(1, "", "", "");
+                dialog.show(getFragmentManager(), "addRoom");
+                break;
             case 2:
-                DialogFragment dialog =  AddItemDialogFragment.newInstance(1, "", "");
+                dialog =  AddItemDialogFragment.newInstance(1, "", "");
                 dialog.show(getFragmentManager(), "addItem");
                 break;
             default:
@@ -123,6 +134,15 @@ public class ListDisplay extends AppCompatActivity implements AddItemDialogFragm
         startActivity(intent);
     }
 
+    @Override
+    public void roomConfirm(DialogFragment dialog, String roomName, String length, String width) {
+        Log.d(roomName, length);
+        //would add it to the database here and reload the intent to update room
+        Intent intent = new Intent(this, ListDisplay.class);
+        intent.putExtra("displayFlag", 1);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+    }
 
     /////STUFF FOR FOOTER/////
 

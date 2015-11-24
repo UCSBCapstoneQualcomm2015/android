@@ -48,10 +48,6 @@
             android:theme="@style/Theme.AppCompat.Light" >
         </activity>
         <activity
-            android:name=".Activities.AddRoomActivity"
-            android:label="@string/title_activity_add_room" >
-        </activity>
-        <activity
             android:name=".Activities.RoomActivity"
             android:label="RoomActivity" >
         </activity>

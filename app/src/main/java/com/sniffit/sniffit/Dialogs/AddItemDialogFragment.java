@@ -83,26 +83,6 @@ import com.sniffit.sniffit.R;
             }
         })
                 .setNegativeButton(R.string.cancel, null);
-        //      score_one = (EditText) v.findViewById(R.id.score_one);
-//        score_two = (EditText) v.findViewById(R.id.score_two);
-//        team_one = (AutoCompleteTextView) v.findViewById(R.id.team_one_name);
-//        team_two = (AutoCompleteTextView) v.findViewById(R.id.team_two_name);
-//        String[] teams = getResources().getStringArray(R.array.team_list);
-//        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, teams);
-//        team_one.setAdapter(adapter);
-//        team_two.setAdapter(adapter);
-//        builder.setTitle(R.string.title)
-//                .setPositiveButton(R.string.done, new DialogInterface.OnClickListener() {
-//                    public void onClick(DialogInterface dialog, int id) {
-//                        mListener.onDialogPositiveClick(GameEntry.this, score_one.getText().toString(),
-//                                score_two.getText().toString(),
-//                                team_one.getText().toString(),
-//                                team_two.getText().toString());
-//                    }
-//                });
-//
-//        return builder.create();
-//    }
 
 
         // Create the AlertDialog object and return it

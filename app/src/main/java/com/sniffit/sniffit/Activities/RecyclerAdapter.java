@@ -69,7 +69,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
             @Override
             public void onClick(View v) {
                 Intent intent;
-                switch (displayFlag) {
+                switch (displayFlag) {      //1: rooms page  2: edit item dialog  3: edit snapdragon dialog  4. edit reftag dialog
                     case 1:
                         intent = new Intent(v.getContext(), RoomActivity.class);
                         Bundle bundle = new Bundle();
