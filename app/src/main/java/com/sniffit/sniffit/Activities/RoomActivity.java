@@ -38,6 +38,14 @@ public class RoomActivity extends Activity implements AddRoomDialogFragment.AddR
         editItem.show(getFragmentManager(), "editItem");
     }
 
+    public void getSnapList(View view) {
+        Intent intent = new Intent(this, ListDisplay.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        //POSSIBILITY MAKE ALL INTENTS TO LISTDISPLAY BUNDLES AND GRAB THINGS OUT ACCORDINGLY
+        intent.putExtra("displayFlag", 3);
+        startActivity(intent);
+    }
+
     @Override
     public void roomConfirm(DialogFragment dialog, String roomName, String length, String width) {
         Log.d(roomName, length);
@@ -54,14 +62,18 @@ public class RoomActivity extends Activity implements AddRoomDialogFragment.AddR
 
     public void goToRooms(View view) {
         Intent intent = new Intent(this, ListDisplay.class);
+        Bundle bundle = new Bundle();
+        bundle.putInt("displayFlag", 1);
+        intent.putExtras(bundle);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        intent.putExtra("displayFlag", 1);
         startActivity(intent);
     }
     public void goToItems(View view) {
         Intent intent = new Intent(this, ListDisplay.class);
+        Bundle bundle = new Bundle();
+        bundle.putInt("displayFlag", 2);
+        intent.putExtras(bundle);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        intent.putExtra("displayFlag", 2);
         startActivity(intent);
     }
 }

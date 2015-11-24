@@ -15,6 +15,8 @@ import android.widget.TextView;
 import com.melnykov.fab.FloatingActionButton;
 import com.sniffit.sniffit.Dialogs.AddItemDialogFragment;
 import com.sniffit.sniffit.Dialogs.AddRoomDialogFragment;
+import com.sniffit.sniffit.Dialogs.AddSnapdragonDialogFragment;
+import com.sniffit.sniffit.Objects.Snapdragon;
 import com.sniffit.sniffit.R;
 import com.sniffit.sniffit.Objects.RFIDItem;
 import com.sniffit.sniffit.Objects.Room;
@@ -27,7 +29,8 @@ import java.util.List;
  * Created by sohanshah on 11/16/15.
  */
 public class ListDisplay extends AppCompatActivity implements AddItemDialogFragment.AddItemListener,
-                                                                AddRoomDialogFragment.AddRoomListener{
+                                                                AddRoomDialogFragment.AddRoomListener,
+                                                                AddSnapdragonDialogFragment.AddSnapDragonListener {
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
@@ -35,6 +38,7 @@ public class ListDisplay extends AppCompatActivity implements AddItemDialogFragm
     Button currentPage;
     FloatingActionButton fab;
     private int flag;
+    Room room;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +49,7 @@ public class ListDisplay extends AppCompatActivity implements AddItemDialogFragm
         getSupportActionBar().hide();
         TextView header = (TextView)findViewById(R.id.header_title);
         sniffitList = new ArrayList<SniffitObject>();
-        int displayFlag = getIntent().getIntExtra("displayFlag", -1);
+        int displayFlag = getIntent().getExtras().getInt("displayFlag", -1);
         this.flag = displayFlag;
 
         if (flag == 1) {
@@ -77,6 +81,21 @@ public class ListDisplay extends AppCompatActivity implements AddItemDialogFragm
             sniffitList.add(item2);
         }
 
+        else if (flag == 3) {               //WE NEED TO PASS IN ROOM AS EXTRA AND QUERY FOR SNAPDRAGONS WITH THAT ROOM
+            header.setText("Snapdragon List");
+            currentPage = (Button) findViewById(R.id.rooms_button);
+            currentPage.setBackgroundColor(Color.parseColor("#294e6a"));
+            Snapdragon snap1 = new Snapdragon();
+            snap1.setName("Snapple");
+            snap1.setIp("12394959203939");
+            Snapdragon snap2 = new Snapdragon();
+            snap2.setName("SnapDragon Tales");
+            snap2.setIp("129392049");
+            sniffitList.add(snap1);
+            sniffitList.add(snap2);
+
+        }
+
 //        for (rooms in database) {
         //roomList: populate with list of user's rooms
 //        }
@@ -86,7 +105,6 @@ public class ListDisplay extends AppCompatActivity implements AddItemDialogFragm
             nodata.setVisibility(View.INVISIBLE);
         }
         else {
-            Log.d("a","why does this show up");
             TextView nodata = (TextView) findViewById(R.id.nodata);
             nodata.setVisibility(View.VISIBLE);
         }
@@ -119,6 +137,9 @@ public class ListDisplay extends AppCompatActivity implements AddItemDialogFragm
                 dialog =  AddItemDialogFragment.newInstance(1, "", "");
                 dialog.show(getFragmentManager(), "addItem");
                 break;
+            case 3:
+                dialog = AddSnapdragonDialogFragment.newInstance(1,"","");
+                dialog.show(getFragmentManager(), "addSnapdragon");
             default:
                 break;
         }
@@ -129,8 +150,10 @@ public class ListDisplay extends AppCompatActivity implements AddItemDialogFragm
         Log.d(itemName, itemId);
                 //would add it to the database here and reload the intent to update list
         Intent intent = new Intent(this, ListDisplay.class);
+        Bundle bundle = new Bundle();
+        bundle.putInt("displayFlag", 2);
+        intent.putExtras(bundle);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        intent.putExtra("displayFlag", 2);
         startActivity(intent);
     }
 
@@ -139,9 +162,23 @@ public class ListDisplay extends AppCompatActivity implements AddItemDialogFragm
         Log.d(roomName, length);
         //would add it to the database here and reload the intent to update room
         Intent intent = new Intent(this, ListDisplay.class);
-        intent.putExtra("displayFlag", 1);
+        Bundle bundle = new Bundle();
+        bundle.putInt("displayFlag", 1);
+        intent.putExtras(bundle);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
+    }
+
+    @Override
+    public void snapdragonConfirm(DialogFragment dialog, String snapName, String ip) {
+        Log.d(snapName, ip);
+        Intent intent = new Intent(this, ListDisplay.class);
+        Bundle bundle = new Bundle();
+        bundle.putInt("displayFlag", 3);
+        intent.putExtras(bundle);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+        //would add it to the database here and reload the intent to update list
     }
 
     /////STUFF FOR FOOTER/////
@@ -155,13 +192,17 @@ public class ListDisplay extends AppCompatActivity implements AddItemDialogFragm
     public void goToRooms(View view) {
         Intent intent = new Intent(this, ListDisplay.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        intent.putExtra("displayFlag", 1);
+        Bundle bundle = new Bundle();
+        bundle.putInt("displayFlag", 1);
+        intent.putExtras(bundle);
         startActivity(intent);
     }
     public void goToItems(View view) {
         Intent intent = new Intent(this, ListDisplay.class);
+        Bundle bundle = new Bundle();
+        bundle.putInt("displayFlag", 2);
+        intent.putExtras(bundle);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        intent.putExtra("displayFlag", 2);
         startActivity(intent);
     }
 

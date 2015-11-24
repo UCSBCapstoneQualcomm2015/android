@@ -90,14 +90,18 @@ public class FindActivity extends Activity {
     }
     public void goToRooms(View view) {
         Intent intent = new Intent(this, ListDisplay.class);
+        Bundle bundle = new Bundle();
+        bundle.putInt("displayFlag", 1);
+        intent.putExtras(bundle);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        intent.putExtra("displayFlag", 1);
         startActivity(intent);
     }
     public void goToItems(View view) {
         Intent intent = new Intent(this, ListDisplay.class);
+        Bundle bundle = new Bundle();
+        bundle.putInt("displayFlag", 2);
+        intent.putExtras(bundle);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        intent.putExtra("displayFlag", 2);
         startActivity(intent);
     }
 }

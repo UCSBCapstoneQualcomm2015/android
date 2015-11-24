@@ -7,15 +7,27 @@ import com.sniffit.sniffit.Objects.SniffitObject;
  */
 public class Snapdragon extends SniffitObject {
 
-    String id;
-
-    public String getId() {
-        return id;
+    @Override
+    public String getName() {
+        return name;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    @Override
+    public void setName(String name) {
+        this.name = name;
     }
+
+    public String getIp() {
+        return ip;
+    }
+
+    public void setIp(String ip) {
+        this.ip = ip;
+    }
+
+    String name;
+    String ip;
+
 
 
 }

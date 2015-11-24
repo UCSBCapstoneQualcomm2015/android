@@ -29,6 +29,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/snapdragon_button"
             android:layout_below="@id/edit_room"
+            android:onClick="getSnapList"
             android:text="Snapdragons"/>
         <Button
             android:layout_width="match_parent"

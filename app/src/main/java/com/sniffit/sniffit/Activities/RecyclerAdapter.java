@@ -11,6 +11,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.sniffit.sniffit.Dialogs.AddItemDialogFragment;
+import com.sniffit.sniffit.Dialogs.AddSnapdragonDialogFragment;
+import com.sniffit.sniffit.Objects.Snapdragon;
 import com.sniffit.sniffit.R;
 import com.sniffit.sniffit.Objects.SniffitObject;
 
@@ -82,6 +84,11 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                     case 2:         //updating one of the items (should edit it in the db)
                         DialogFragment editItem = AddItemDialogFragment.newInstance(2, "ITEM1", "ITEM2");       //SHOULD PASS IN NAME AND ID OF SNIFFITLIST.GET(POSITION)
                         editItem.show(manager, "editItem");
+                        break;
+                    case 3:
+                        Snapdragon curr = (Snapdragon) sniffitList.get(position);
+                        DialogFragment editSnap = AddSnapdragonDialogFragment.newInstance(2, curr.getName(), curr.getIp());
+                        editSnap.show(manager, "editSnap");
                         break;
                     case 4:
                         intent = new Intent(v.getContext(), ListDisplay.class);
