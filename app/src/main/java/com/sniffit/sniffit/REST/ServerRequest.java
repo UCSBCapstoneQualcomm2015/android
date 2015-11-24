@@ -49,7 +49,7 @@ public class ServerRequest {
         @POST("api/login")
         Call<ResponseBody> loginUser(@Field("_csrf") String csrf, @Field("email") String email, @Field("password") String password);
 
-        //RFID
+        //RFID API calls
         @GET("api/user/{user_id}/rfidtags")
         Call<ResponseBody> getRFIDTags(@Header("x-access-token") String token, @Path("user_id") String userId);
 
@@ -67,14 +67,24 @@ public class ServerRequest {
         @DELETE("api/user/{user_id}/rfidtags/{rfid_tag_id}")
         Call<ResponseBody> deleteTag(@Header("x-access-token") String token, @Path("user_id") String userId, @Path("rfid_tag_id") String tagId);
 
-        //Rooms
-
+        //Rooms API calls
         @GET("api/user/{user_id}/rooms")
         Call<ResponseBody> getRooms(@Header("x-access-token") String token, @Path("user_id") String userId);
 
-        @GET("api/user/{user_id}/rooms/{rfid_tag_id}")
-        Call<ResponseBody> getRoom(@Header("x-access-token") String token, @Path("user_id") String userId, @Path("rfid_tag_id") String tagId);
+        @GET("api/user/{user_id}/rooms/{room_name}")
+        Call<ResponseBody> getRoom(@Header("x-access-token") String token, @Path("user_id") String userId, @Path("room_name") String roomName);
 
+        @FormUrlEncoded
+        @POST("api/user/{user_id}/rooms")
+        Call<ResponseBody> postRoom(@Header("x-access-token") String token, @Path("user_id") String userId, @Field("name") String name, @Field("length") String length,  @Field("width") String width);
+
+        @FormUrlEncoded
+        @PUT("api/user/{user_id}/rooms/{room_name}")
+        Call<ResponseBody> putRoom(@Header("x-access-token") String token, @Path("user_id") String userId, @Path("room_name") String oldRoom, @Field("name") String name, @Field("length") String length,  @Field("width") String width);
+
+        @FormUrlEncoded
+        @DELETE("api/user/{user_id}/rooms/{room_name}")
+        Call<ResponseBody> deleteRoom(@Header("x-access-token") String token, @Path("user_id") String userId, @Path("room_name") String roomName);
 
     }
 
@@ -87,6 +97,9 @@ public class ServerRequest {
         call.enqueue(callback);
     }
 
+    /*
+        API helper function for general GET requests, with a "request" parameter that chooses which api call to make
+     */
     public void getIds(String request, User user, retrofit.Callback<ResponseBody> callback){
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(base_url)
@@ -107,6 +120,9 @@ public class ServerRequest {
         }
     }
 
+    /*
+        API helper function for a specific id's GET request, with a "request" parameter that chooses which api call to make
+     */
     public void getId(String request, String id, User user, retrofit.Callback<ResponseBody> callback){
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(base_url)
@@ -128,20 +144,26 @@ public class ServerRequest {
 
     }
 
-    public void putRFIDTag(User user, retrofit.Callback<ResponseBody> callback){
-        //Hard coded
-        String tagId = "564eb237b6b88d075c73f68d";
-        String newId = "lalalal";
-        String name = "and";
-
+    /*
+        API helper function for DELETE requests, with a "request" parameter that chooses which api call to make
+     */
+    public void deleteId(String request, String id, User user, retrofit.Callback<ResponseBody> callback){
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(base_url)
                 .build();
-        apiInterface loginService = retrofit.create(apiInterface.class);
+        apiInterface apiService = retrofit.create(apiInterface.class);
 
-        Call<ResponseBody> rfidCall = loginService.putTag(user.getToken(), user.getUserId(), tagId, newId, name);
-        rfidCall.enqueue(callback);
+        switch (request.toLowerCase()) {
+            case "rfid":
+                Call<ResponseBody> call = apiService.deleteTag(user.getToken(), user.getUserId(), id);
+                call.enqueue(callback);
+                break;
 
+            case "rooms":
+                Call<ResponseBody> roomCall = apiService.deleteRoom(user.getToken(), user.getUserId(), id);
+                roomCall.enqueue(callback);
+                break;
+        }
     }
 
     public void postRFIDTag(User user, retrofit.Callback<ResponseBody> callback){
@@ -160,16 +182,54 @@ public class ServerRequest {
 
     }
 
-    public void deleteRFIDTag(String id, User user, retrofit.Callback<ResponseBody> callback){
+    public void putRFIDTag(User user, retrofit.Callback<ResponseBody> callback){
+        //Hard coded
+        String tagId = "564eb237b6b88d075c73f68d";
+        String newId = "lalalal";
+        String name = "and";
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(base_url)
                 .build();
-        apiInterface apiService = retrofit.create(apiInterface.class);
+        apiInterface loginService = retrofit.create(apiInterface.class);
 
-        Call<ResponseBody> call = apiService.deleteTag(user.getToken(), user.getUserId(), id);
-        call.enqueue(callback);
+        Call<ResponseBody> rfidCall = loginService.putTag(user.getToken(), user.getUserId(), tagId, newId, name);
+        rfidCall.enqueue(callback);
+
     }
+
+    public void postRoom(User user, retrofit.Callback<ResponseBody> callback){
+        //Hard coded
+        String width = "123";
+        String length = "1124";
+        String name = "and";
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(base_url)
+                .build();
+        apiInterface loginService = retrofit.create(apiInterface.class);
+
+        Call<ResponseBody> rfidCall = loginService.postRoom(user.getToken(), user.getUserId(), name, length, width);
+        rfidCall.enqueue(callback);
+    }
+
+    public void putRoom(User user, retrofit.Callback<ResponseBody> callback){
+        //Hard coded
+        String width = "123";
+        String length = "1124";
+        String name = "and";
+        String oldName = "alkdsf";
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(base_url)
+                .build();
+        apiInterface loginService = retrofit.create(apiInterface.class);
+
+        Call<ResponseBody> rfidCall = loginService.putRoom(user.getToken(), user.getUserId(), oldName, name, length, width);
+        rfidCall.enqueue(callback);
+
+    }
+
 
 
 }
