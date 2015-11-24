@@ -1,26 +1,27 @@
 package com.sniffit.sniffit.REST;
 
-import java.io.InputStream;
-import java.util.HashMap;
-import java.util.Map;
+        import java.io.InputStream;
+        import java.util.HashMap;
+        import java.util.Map;
 
-import org.json.JSONObject;
+        import org.json.JSONObject;
 
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.Response;
-import com.squareup.okhttp.ResponseBody;
+        import com.squareup.okhttp.Request;
+        import com.squareup.okhttp.Response;
+        import com.squareup.okhttp.ResponseBody;
 
-import retrofit.Call;
-import retrofit.Retrofit;
-import retrofit.http.Body;
-import retrofit.http.Field;
-import retrofit.http.FormUrlEncoded;
-import retrofit.http.GET;
-import retrofit.http.Header;
-import retrofit.http.Headers;
-import retrofit.http.POST;
-import retrofit.http.PUT;
-import retrofit.http.Path;
+        import retrofit.Call;
+        import retrofit.Retrofit;
+        import retrofit.http.Body;
+        import retrofit.http.DELETE;
+        import retrofit.http.Field;
+        import retrofit.http.FormUrlEncoded;
+        import retrofit.http.GET;
+        import retrofit.http.Header;
+        import retrofit.http.Headers;
+        import retrofit.http.POST;
+        import retrofit.http.PUT;
+        import retrofit.http.Path;
 
 
 /**
@@ -29,7 +30,7 @@ import retrofit.http.Path;
 public class ServerRequest {
 
     private static final String base_url = "http://192.168.57.1:3000/";
-            //"http://ec2-52-27-212-208.us-west-2.compute.amazonaws.com/";
+    //"http://ec2-52-27-212-208.us-west-2.compute.amazonaws.com/";
 
     static InputStream is = null;
     static JSONObject jObj = null;
@@ -43,16 +44,17 @@ public class ServerRequest {
     }
 
     public interface apiInterface{
+        //Authentication
+        @FormUrlEncoded
+        @POST("api/login")
+        Call<ResponseBody> loginUser(@Field("_csrf") String csrf, @Field("email") String email, @Field("password") String password);
 
+        //RFID
         @GET("api/user/{user_id}/rfidtags")
         Call<ResponseBody> getRFIDTags(@Header("x-access-token") String token, @Path("user_id") String userId);
 
         @GET("api/user/{user_id}/rfidtags/{rfid_tag_id}")
         Call<ResponseBody> getRFIDTag(@Header("x-access-token") String token, @Path("user_id") String userId, @Path("rfid_tag_id") String tagId);
-        
-        @FormUrlEncoded
-        @POST("api/login")
-        Call<ResponseBody> loginUser(@Field("_csrf") String csrf, @Field("email") String email, @Field("password") String password);
 
         @FormUrlEncoded
         @POST("api/user/{user_id}/rfidtags")
@@ -61,6 +63,18 @@ public class ServerRequest {
         @FormUrlEncoded
         @PUT("api/user/{user_id}/rfidtags/{rfid_tag_id}")
         Call<ResponseBody> putTag(@Header("x-access-token") String token, @Path("user_id") String userId, @Path("rfid_tag_id") String oldTagId, @Field("tagId") String newTagId, @Field("name") String name);
+
+        @DELETE("api/user/{user_id}/rfidtags/{rfid_tag_id}")
+        Call<ResponseBody> deleteTag(@Header("x-access-token") String token, @Path("user_id") String userId, @Path("rfid_tag_id") String tagId);
+
+        //Rooms
+
+        @GET("api/user/{user_id}/rooms")
+        Call<ResponseBody> getRooms(@Header("x-access-token") String token, @Path("user_id") String userId);
+
+        @GET("api/user/{user_id}/rooms/{rfid_tag_id}")
+        Call<ResponseBody> getRoom(@Header("x-access-token") String token, @Path("user_id") String userId, @Path("rfid_tag_id") String tagId);
+
 
     }
 
@@ -73,29 +87,45 @@ public class ServerRequest {
         call.enqueue(callback);
     }
 
-    public void sendRequest(String request, User user, retrofit.Callback<ResponseBody> callback){
+    public void getIds(String request, User user, retrofit.Callback<ResponseBody> callback){
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(base_url)
                 .build();
         apiInterface apiService = retrofit.create(apiInterface.class);
 
         switch (request.toLowerCase()){
-            case "getrfidtags":
+            case "rfid":
                 Call<ResponseBody> getRFIDCall = apiService.getRFIDTags(user.getToken(), user.getUserId());
                 getRFIDCall.enqueue(callback);
+                break;
+
+            case "rooms":
+                Call<ResponseBody> getRoomCall = apiService.getRooms(user.getToken(), user.getUserId());
+                getRoomCall.enqueue(callback);
                 break;
 
         }
     }
 
-    public void getRFIDTag(String id, User user, retrofit.Callback<ResponseBody> callback){
+    public void getId(String request, String id, User user, retrofit.Callback<ResponseBody> callback){
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(base_url)
                 .build();
         apiInterface apiService = retrofit.create(apiInterface.class);
 
-        Call<ResponseBody> call = apiService.getRFIDTag(user.getToken(), user.getUserId(), id);
-        call.enqueue(callback);
+        switch (request.toLowerCase()){
+            case "rfid":
+                Call<ResponseBody> call = apiService.getRFIDTag(user.getToken(), user.getUserId(), id);
+                call.enqueue(callback);
+                break;
+
+            case "rooms":
+                Call<ResponseBody> getRoomCall = apiService.getRoom(user.getToken(), user.getUserId(), id);
+                getRoomCall.enqueue(callback);
+                break;
+
+        }
+
     }
 
     public void putRFIDTag(User user, retrofit.Callback<ResponseBody> callback){
@@ -129,6 +159,18 @@ public class ServerRequest {
         rfidCall.enqueue(callback);
 
     }
+
+    public void deleteRFIDTag(String id, User user, retrofit.Callback<ResponseBody> callback){
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(base_url)
+                .build();
+        apiInterface apiService = retrofit.create(apiInterface.class);
+
+        Call<ResponseBody> call = apiService.deleteTag(user.getToken(), user.getUserId(), id);
+        call.enqueue(callback);
+    }
+
 
 }
 
