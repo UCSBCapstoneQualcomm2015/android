@@ -10,29 +10,27 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 
-import com.sniffit.sniffit.Objects.Room;
 import com.sniffit.sniffit.R;
 
 /**
- * Created by sohanshah on 11/23/15.
+ * Created by sohanshah on 11/26/15.
  */
-public class AddSnapdragonDialogFragment extends DialogFragment {
-
-    public interface AddSnapDragonListener {
-        public void snapdragonConfirm(DialogFragment dialog, String tagName, String tagId);
+public class AddRefTagDialogFragment extends DialogFragment{
+    public interface AddRefTagListener {
+        public void refTagConfirm(DialogFragment dialog, String tagName, String tagId, String x, String y);
     }
 
-    AddSnapDragonListener mListener;
-    private EditText snapdragonName, ip, x, y;
+    AddRefTagListener mListener;
+    private EditText refTagName, id, x, y;
 
-    public static AddSnapdragonDialogFragment newInstance(int num, String snapdragonName, String ip,String x, String y) {
-        AddSnapdragonDialogFragment f = new AddSnapdragonDialogFragment();
+    public static AddRefTagDialogFragment newInstance(int num, String tagName, String tagId,String x, String y) {
+        AddRefTagDialogFragment f = new AddRefTagDialogFragment();
 
         // Supply num input as an argument.
         Bundle args = new Bundle();
         args.putInt("num", num);
-        args.putString("snapdragonName", snapdragonName);
-        args.putString("ip",ip);
+        args.putString("tagName", tagName);
+        args.putString("id",tagId);
         args.putString("x", x);
         args.putString("y", y);
         f.setArguments(args);
@@ -45,11 +43,11 @@ public class AddSnapdragonDialogFragment extends DialogFragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         try {
-            mListener = (AddSnapDragonListener) activity;
+            mListener = (AddRefTagListener) activity;
 
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
-                    + "must implement AddSnapdragonListener");
+                    + "must implement AddRefTagListener");
         }
     }
 
@@ -59,27 +57,26 @@ public class AddSnapdragonDialogFragment extends DialogFragment {
         // Use the Builder class for convenient dialog construction
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         int flag = getArguments().getInt("num");
-        String snapName = getArguments().getString("snapdragonName");
-        String snapIp = getArguments().getString("ip");
-        String snapX = getArguments().getString("x");
-        String snapY = getArguments().getString("y");
+        String tagName = getArguments().getString("tagName");
+        String tagId = getArguments().getString("id");
+        String tagX = getArguments().getString("x");
+        String tagY = getArguments().getString("y");
 
         LayoutInflater inflater = getActivity().getLayoutInflater();
-        View v = inflater.inflate(R.layout.add_snapdragon_dialog, null);
+        View v = inflater.inflate(R.layout.add_reference_tag_dialog, null);
         builder.setView(v);
-        snapdragonName = (EditText) v.findViewById(R.id.snap_name);
-        ip = (EditText) v.findViewById(R.id.snap_ip);
-        snapdragonName.setText(snapName);
-        ip.setText(snapIp);
+        refTagName = (EditText) v.findViewById(R.id.tag_name);
+        id = (EditText) v.findViewById(R.id.snap_ip);
+        refTagName.setText(tagName);
+        id.setText(tagId);
+        x.setText(tagX);
+        y.setText(tagY);
         switch (flag) {
             case 1:
-                builder.setTitle("Add New Snapdragon");
+                builder.setTitle("Add New Reference Item");
                 break;
             case 2:
-                builder.setTitle("Edit Snapdragon");
-
-//                x.setText(snapX);
-   //             y.setText(snapY);
+                builder.setTitle("Edit Reference Item");
                 break;
             default:
                 break;
@@ -87,8 +84,8 @@ public class AddSnapdragonDialogFragment extends DialogFragment {
         builder.setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                mListener.snapdragonConfirm(AddSnapdragonDialogFragment.this, snapdragonName.getText().toString(),
-                        ip.getText().toString());
+                mListener.refTagConfirm(AddRefTagDialogFragment.this, refTagName.getText().toString(),
+                        id.getText().toString(), x.getText().toString(), y.getText().toString());
             }
         })
                 .setNegativeButton(R.string.cancel, null);

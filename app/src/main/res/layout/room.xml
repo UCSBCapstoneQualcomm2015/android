@@ -36,7 +36,8 @@
             android:layout_height="wrap_content"
             android:id="@+id/ref_button"
             android:layout_below="@id/snapdragon_button"
-            android:text="Reference Tags"/>
+            android:text="Reference Tags"
+            android:onClick="getReferenceTagList"/>
 
 
     </RelativeLayout>

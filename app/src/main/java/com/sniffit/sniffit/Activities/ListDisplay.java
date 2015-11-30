@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.melnykov.fab.FloatingActionButton;
 import com.sniffit.sniffit.Dialogs.AddItemDialogFragment;
+import com.sniffit.sniffit.Dialogs.AddRefTagDialogFragment;
 import com.sniffit.sniffit.Dialogs.AddRoomDialogFragment;
 import com.sniffit.sniffit.Dialogs.AddSnapdragonDialogFragment;
 import com.sniffit.sniffit.Objects.Snapdragon;
@@ -30,7 +31,12 @@ import java.util.List;
  */
 public class ListDisplay extends AppCompatActivity implements AddItemDialogFragment.AddItemListener,
                                                                 AddRoomDialogFragment.AddRoomListener,
-                                                                AddSnapdragonDialogFragment.AddSnapDragonListener {
+                                                                AddSnapdragonDialogFragment.AddSnapDragonListener,
+                                                                AddRefTagDialogFragment.AddRefTagListener {
+    static final int ROOM = 1;
+    static final int ITEM = 2;
+    static final int SNAPDRAGON = 3;
+    static final int REFERENCE = 4;
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
@@ -52,7 +58,7 @@ public class ListDisplay extends AppCompatActivity implements AddItemDialogFragm
         int displayFlag = getIntent().getExtras().getInt("displayFlag", -1);
         this.flag = displayFlag;
 
-        if (flag == 1) {
+        if (flag == ROOM) {
             header.setText("Room List");
             currentPage = (Button) findViewById(R.id.rooms_button);
             currentPage.setBackgroundColor(Color.parseColor("#294e6a"));
@@ -69,7 +75,7 @@ public class ListDisplay extends AppCompatActivity implements AddItemDialogFragm
             sniffitList.add(room3);
         }
 
-        else if (flag == 2) {
+        else if (flag == ITEM) {
             header.setText("Item List");
             currentPage = (Button) findViewById(R.id.items_button);
             currentPage.setBackgroundColor(Color.parseColor("#294e6a"));
@@ -81,8 +87,10 @@ public class ListDisplay extends AppCompatActivity implements AddItemDialogFragm
             sniffitList.add(item2);
         }
 
-        else if (flag == 3) {               //WE NEED TO PASS IN ROOM AS EXTRA AND QUERY FOR SNAPDRAGONS WITH THAT ROOM
+        else if (flag == SNAPDRAGON) {         //if we are adding a snapdragon (same with ref tag), we need to figure out way to add it to that specific room in db
             header.setText("Snapdragon List");
+            room = (Room) getIntent().getExtras().getSerializable("room");
+            Log.d("room", room.getName());
             currentPage = (Button) findViewById(R.id.rooms_button);
             currentPage.setBackgroundColor(Color.parseColor("#294e6a"));
             Snapdragon snap1 = new Snapdragon();
@@ -129,17 +137,21 @@ public class ListDisplay extends AppCompatActivity implements AddItemDialogFragm
         DialogFragment dialog;
         switch (flag) {     //1: room     2:item
 
-            case 1:
+            case ROOM:
                 dialog = AddRoomDialogFragment.newInstance(1, "", "", "");
                 dialog.show(getFragmentManager(), "addRoom");
                 break;
-            case 2:
+            case ITEM:
                 dialog =  AddItemDialogFragment.newInstance(1, "", "");
                 dialog.show(getFragmentManager(), "addItem");
                 break;
-            case 3:
-                dialog = AddSnapdragonDialogFragment.newInstance(1,"","");
+            case SNAPDRAGON:
+                dialog = AddSnapdragonDialogFragment.newInstance(1,"","","","");
                 dialog.show(getFragmentManager(), "addSnapdragon");
+                break;
+            case REFERENCE:
+                dialog = AddRefTagDialogFragment.newInstance(1,"","","","");
+                dialog.show(getFragmentManager(),"addRefTag");
             default:
                 break;
         }
@@ -175,11 +187,26 @@ public class ListDisplay extends AppCompatActivity implements AddItemDialogFragm
         Intent intent = new Intent(this, ListDisplay.class);
         Bundle bundle = new Bundle();
         bundle.putInt("displayFlag", 3);
+        bundle.putSerializable("room", room);
         intent.putExtras(bundle);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
         //would add it to the database here and reload the intent to update list
     }
+
+    @Override
+    public void refTagConfirm(DialogFragment dialog, String tagName, String tagId, String x, String y)   {
+        Log.d (tagName, tagId);
+        Intent intent = new Intent(this, ListDisplay.class);
+        Bundle bundle = new Bundle();
+        bundle.putInt("displayFlag", 4);
+        bundle.putSerializable("room", room);
+        intent.putExtras(bundle);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+        //would add it to the database here and reload the intent to update list
+    }
+
 
     /////STUFF FOR FOOTER/////
 

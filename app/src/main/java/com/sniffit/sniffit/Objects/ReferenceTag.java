@@ -1,25 +1,13 @@
 package com.sniffit.sniffit.Objects;
 
-import com.sniffit.sniffit.Objects.SniffitObject;
-
 /**
- * Created by sohanshah on 11/19/15.
+ * Created by sohanshah on 11/26/15.
  */
-public class Snapdragon extends SniffitObject {
+public class ReferenceTag extends  SniffitObject{
 
-
-    public String getIp() {
-        return ip;
-    }
-
-    public void setIp(String ip) {
-        this.ip = ip;
-    }
-
-    String ip;
     Room room;
+    String id;
     String x;
-    String y;
 
     public String getX() {
         return x;
@@ -37,6 +25,8 @@ public class Snapdragon extends SniffitObject {
         this.y = y;
     }
 
+    String y;
+
     public Room getRoom() {
         return room;
     }
@@ -45,8 +35,13 @@ public class Snapdragon extends SniffitObject {
         this.room = room;
     }
 
+    public String getId() {
+        return id;
+    }
 
-
+    public void setId(String id) {
+        this.id = id;
+    }
 
 
 }

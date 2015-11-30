@@ -63,14 +63,14 @@ import com.sniffit.sniffit.R;
         builder.setView(v);
         tagName = (EditText) v.findViewById(R.id.item_name);
         tagId = (EditText) v.findViewById(R.id.item_id);
+        tagName.setText(itemName);
+        tagId.setText(itemId);
         switch (flag) {
             case 1:
                 builder.setTitle("Add New Item");
                 break;
             case 2:
                 builder.setTitle("Edit Item");
-                tagName.setText(itemName);
-                tagId.setText(itemId);
                 break;
             default:
                 break;

@@ -11,7 +11,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.sniffit.sniffit.Dialogs.AddItemDialogFragment;
+import com.sniffit.sniffit.Dialogs.AddRefTagDialogFragment;
 import com.sniffit.sniffit.Dialogs.AddSnapdragonDialogFragment;
+import com.sniffit.sniffit.Objects.ReferenceTag;
 import com.sniffit.sniffit.Objects.Snapdragon;
 import com.sniffit.sniffit.R;
 import com.sniffit.sniffit.Objects.SniffitObject;
@@ -87,13 +89,13 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                         break;
                     case 3:
                         Snapdragon curr = (Snapdragon) sniffitList.get(position);
-                        DialogFragment editSnap = AddSnapdragonDialogFragment.newInstance(2, curr.getName(), curr.getIp());
+                        DialogFragment editSnap = AddSnapdragonDialogFragment.newInstance(2, curr.getName(), curr.getIp(),curr.getX(),curr.getY());
                         editSnap.show(manager, "editSnap");
                         break;
                     case 4:
-                        intent = new Intent(v.getContext(), ListDisplay.class);
-                        intent.putExtra("displayFlag", 4);
-                        v.getContext().startActivity(intent);
+                        ReferenceTag currRef = (ReferenceTag) sniffitList.get(position);
+                        DialogFragment editRefTag = AddRefTagDialogFragment.newInstance(2,currRef.getName(), currRef.getId(), currRef.getX(), currRef.getY());
+                        editRefTag.show(manager, "editRefTag");
                         break;
                     default:
                         break;

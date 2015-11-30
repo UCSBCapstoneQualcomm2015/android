@@ -38,11 +38,25 @@ public class RoomActivity extends Activity implements AddRoomDialogFragment.AddR
         editItem.show(getFragmentManager(), "editItem");
     }
 
-    public void getSnapList(View view) {
+    public void getSnapList(View view) {        //need to pass in room object to snapdragons list (same with ref tags) - necessary for when we add snapdragon
         Intent intent = new Intent(this, ListDisplay.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         //POSSIBILITY MAKE ALL INTENTS TO LISTDISPLAY BUNDLES AND GRAB THINGS OUT ACCORDINGLY
-        intent.putExtra("displayFlag", 3);
+        Bundle bundle = new Bundle();
+        bundle.putInt("displayFlag", 3);
+        bundle.putSerializable("room", room);
+        intent.putExtras(bundle);
+        startActivity(intent);
+    }
+
+    public void getReferenceTagList(View view) {
+        Intent intent = new Intent(this, ListDisplay.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        //POSSIBILITY MAKE ALL INTENTS TO LISTDISPLAY BUNDLES AND GRAB THINGS OUT ACCORDINGLY
+        Bundle bundle = new Bundle();
+        bundle.putInt("displayFlag", 4);
+        bundle.putSerializable("room", room);
+        intent.putExtras(bundle);
         startActivity(intent);
     }
 

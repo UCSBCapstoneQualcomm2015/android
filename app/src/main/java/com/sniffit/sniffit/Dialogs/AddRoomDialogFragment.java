@@ -66,15 +66,15 @@ public class AddRoomDialogFragment extends DialogFragment{
         edit_roomName = (EditText) v.findViewById(R.id.room_name);
         edit_length = (EditText) v.findViewById(R.id.length);
         edit_width = (EditText) v.findViewById(R.id.width);
+        edit_roomName.setText(roomName);
+        edit_length.setText(length);
+        edit_width.setText(width);
         switch (flag) {
             case 1:
                 builder.setTitle("Add New Room");
                 break;
             case 2:
                 builder.setTitle("Edit Room");
-                edit_roomName.setText(roomName);
-                edit_length.setText(length);
-                edit_width.setText(width);
                 break;
             default:
                 break;

@@ -3,25 +3,25 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
     <EditText
-        android:id="@+id/snap_name"
+        android:id="@+id/tag_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:layout_marginLeft="4dp"
         android:layout_marginRight="4dp"
         android:layout_marginBottom="4dp"
-        android:hint="Snapdragon Name" />
+        android:hint="Tag Name" />
     <EditText
-        android:id="@+id/snap_ip"
+        android:id="@+id/ref_tag_id"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="16dp"
         android:layout_marginLeft="4dp"
         android:layout_marginRight="4dp"
-        android:layout_marginBottom="16dp"
-        android:hint="IP Address"/>
+        android:layout_marginBottom="4dp"
+        android:hint="Tag Id" />
     <LinearLayout
-        android:id="@+id/snap_coords"
+        android:id="@+id/ref_tag_coords"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingRight="10dp"
@@ -30,7 +30,7 @@
         android:paddingBottom="15dp">
 
         <EditText
-            android:id="@+id/snapX"
+            android:id="@+id/refTagX"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -39,7 +39,7 @@
 
 
         <EditText
-            android:id="@+id/snapY"
+            android:id="@+id/refTagY"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
