@@ -73,34 +73,34 @@ public class LoginActivity extends Activity {
 
                 HashMap<String, String> params = new HashMap<String, String>();
 
-//                ServerRequest sr = new ServerRequest();
-//
-//                sr.authenticate(csrfString, emailString, passwordString, new Callback<ResponseBody>() {
-//                    @Override
-//                    public void onResponse(retrofit.Response<ResponseBody> response, Retrofit retrofit) {
-//                        try {
-//                            String jsonBody = response.body().string();
-//                            Gson gson = new Gson();
-//                            User user = gson.fromJson(jsonBody, User.class);
-//
-//                            Intent intent = new Intent(getApplicationContext(), FindActivity.class);
-//                            intent.putExtra("user", user);
-//                            startActivity(intent);
-//                        } catch (IOException e) {
-//                            e.printStackTrace();
-//                        }
-//
-//                    }
-//
-//                    @Override
-//                    public void onFailure(Throwable t) {
-//                        Log.d("Error", t.toString());
-//                    }
-//                });
+                ServerRequest sr = new ServerRequest();
 
-                Intent intent = new Intent(getApplicationContext(), FindActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
+                sr.authenticate(csrfString, emailString, passwordString, new Callback<ResponseBody>() {
+                    @Override
+                    public void onResponse(retrofit.Response<ResponseBody> response, Retrofit retrofit) {
+                        try {
+                            String jsonBody = response.body().string();
+                            Gson gson = new Gson();
+                            User user = gson.fromJson(jsonBody, User.class);
+
+                            Intent intent = new Intent(getApplicationContext(), FindActivity.class);
+                            intent.putExtra("user", user);
+                            startActivity(intent);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+
+                    @Override
+                    public void onFailure(Throwable t) {
+                        Log.d("Error", t.toString());
+                    }
+                });
+
+//                Intent intent = new Intent(getApplicationContext(), FindActivity.class);
+//                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                startActivity(intent);
 
 
 
