@@ -9,9 +9,11 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.melnykov.fab.FloatingActionButton;
 import com.sniffit.sniffit.Dialogs.AddItemDialogFragment;
 import com.sniffit.sniffit.Dialogs.AddRefTagDialogFragment;
@@ -23,9 +25,15 @@ import com.sniffit.sniffit.R;
 import com.sniffit.sniffit.Objects.RFIDItem;
 import com.sniffit.sniffit.Objects.Room;
 import com.sniffit.sniffit.Objects.SniffitObject;
+import com.sniffit.sniffit.REST.ServerRequest;
+import com.squareup.okhttp.ResponseBody;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit.Callback;
+import retrofit.Response;
+import retrofit.Retrofit;
 
 /**
  * Created by sohanshah on 11/16/15.
@@ -46,6 +54,7 @@ public class ListDisplay extends AppCompatActivity implements AddItemDialogFragm
     FloatingActionButton fab;
     private int flag;
     Room room;
+    final ServerRequest sr = new ServerRequest();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,29 +72,60 @@ public class ListDisplay extends AppCompatActivity implements AddItemDialogFragm
             header.setText("Room List");
             currentPage = (Button) findViewById(R.id.rooms_button);
             currentPage.setBackgroundColor(Color.parseColor("#294e6a"));
-            Room room1 = new Room();
-            room1.setName("Bedroom");
-            room1.setLength("7");
-            room1.setWidth("5");
-            Room room2 = new Room();
-            room2.setName("Bathroom");//hardcode examples
-            Room room3 = new Room();
-            room3.setName("Bathroom2");
-            sniffitList.add(room1);
-            sniffitList.add(room2);
-            sniffitList.add(room3);
+
+//            sr.getIds("rooms", user, new Callback<ResponseBody>() {
+//                @Override
+//                public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
+//                    try {
+//                        String json = response.body().string();
+//                        System.out.println(json);
+//                        Gson gson = new Gson();
+//                        Room[] roomArray = gson.fromJson(json, Room[].class);
+//                        for(Room roo: roomArray){
+//                            sniffitList.add(room);
+//                        }
+//                    } catch (Exception e) {
+//                        e.printStackTrace();
+//                    }
+//
+//                }
+//
+//                @Override
+//                public void onFailure(Throwable t) {
+//
+//                }
+//            });
+
         }
 
         else if (flag == ITEM) {
             header.setText("Item List");
             currentPage = (Button) findViewById(R.id.items_button);
             currentPage.setBackgroundColor(Color.parseColor("#294e6a"));
-            RFIDItem item1 = new RFIDItem();
-            item1.setName("keys");
-            RFIDItem item2 = new RFIDItem();
-            item2.setName("wallet");
-            sniffitList.add(item1);
-            sniffitList.add(item2);
+
+//            sr.getIds("rfid", user, new Callback<ResponseBody>() {
+//                @Override
+//                public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
+//                    try {
+//                        String json = response.body().string();
+//                        System.out.println(json);
+//                        Gson gson = new Gson();
+//                        RFIDItem[] rfidArray = gson.fromJson(json, RFIDItem[].class);
+//                        for(RFIDItem item: rfidArray){
+//                            sniffitList.add(item);
+//                        }
+//                    } catch (Exception e) {
+//                        e.printStackTrace();
+//                    }
+//
+//                }
+//
+//                @Override
+//                public void onFailure(Throwable t) {
+//
+//                }
+//            });
+
         }
 
         else if (flag == SNAPDRAGON) {         //if we are adding a snapdragon (same with ref tag), we need to figure out way to add it to that specific room in db
@@ -94,14 +134,29 @@ public class ListDisplay extends AppCompatActivity implements AddItemDialogFragm
             Log.d("room", room.getName());
             currentPage = (Button) findViewById(R.id.rooms_button);
             currentPage.setBackgroundColor(Color.parseColor("#294e6a"));
-            Snapdragon snap1 = new Snapdragon();
-            snap1.setName("Snapple");
-            snap1.setIp("12394959203939");
-            Snapdragon snap2 = new Snapdragon();
-            snap2.setName("SnapDragon Tales");
-            snap2.setIp("129392049");
-            sniffitList.add(snap1);
-            sniffitList.add(snap2);
+
+//            sr.getIds("snapdragon", user, new Callback<ResponseBody>() {
+//                @Override
+//                public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
+//                    try {
+//                        String json = response.body().string();
+//                        System.out.println(json);
+//                        Gson gson = new Gson();
+//                        Snapdragon[] snapdragonArray = gson.fromJson(json, Snapdragon[].class);
+//                        for(Snapdragon snapdragon: snapdragonArray){
+//                            sniffitList.add(snapdragon);
+//                        }
+//                    } catch (Exception e) {
+//                        e.printStackTrace();
+//                    }
+//
+//                }
+//
+//                @Override
+//                public void onFailure(Throwable t) {
+//
+//                }
+//            });
 
         }
 
@@ -109,19 +164,31 @@ public class ListDisplay extends AppCompatActivity implements AddItemDialogFragm
             room = (Room) getIntent().getExtras().getSerializable("room");
             header.setText("Reference Tags (Bedroom)");
             header.setTextSize(25);
-            ReferenceTag tag1 = new ReferenceTag();
-            ReferenceTag tag2 = new ReferenceTag();
-            tag1.setRoom(room);
-            tag1.setId("29493929392");
-            tag1.setX("7");
-            tag1.setY("2");
-            tag1.setName("Bed 1");
-            tag2.setName("Bed 2");
-
-            sniffitList.add(tag1);
-            sniffitList.add(tag2);
             currentPage = (Button) findViewById(R.id.rooms_button);
             currentPage.setBackgroundColor(Color.parseColor("#294e6a"));
+
+//            sr.getIds("reference", user, new Callback<ResponseBody>() {
+//                @Override
+//                public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
+//                    try {
+//                        String json = response.body().string();
+//                        System.out.println(json);
+//                        Gson gson = new Gson();
+//                        ReferenceTag[] referenceTagArray = gson.fromJson(json, ReferenceTag[].class);
+//                        for(ReferenceTag tag: referenceTagArray){
+//                            sniffitList.add(tag);
+//                        }
+//                    } catch (Exception e) {
+//                        e.printStackTrace();
+//                    }
+//
+//                }
+//
+//                @Override
+//                public void onFailure(Throwable t) {
+//
+//                }
+//            });
         }
 
 //        for (rooms in database) {

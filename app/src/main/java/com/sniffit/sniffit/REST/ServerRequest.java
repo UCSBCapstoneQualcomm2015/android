@@ -88,6 +88,26 @@ public class ServerRequest {
         @DELETE("api/user/{user_id}/rooms/{room_name}")
         Call<ResponseBody> deleteRoom(@Header("x-access-token") String token, @Path("user_id") String userId, @Path("room_name") String roomName);
 
+        //Snapdragon API calls
+        @GET("api/user/{user_id}/snapdragons")
+        Call<ResponseBody> getSnapdragons(@Header("x-access-token") String token, @Path("user_id") String userId);
+
+        @GET("api/user/{user_id}/snapdragons/{snapdragon_ip}")
+        Call<ResponseBody> getSnapdragon(@Header("x-access-token") String token, @Path("user_id") String userId, @Path("snapdragon_ip") String snapdragonIp);
+
+        @FormUrlEncoded
+        @POST("api/user/{user_id}/snapdragons")
+        Call<ResponseBody> postSnapdragon(@Header("x-access-token") String token, @Path("user_id") String userId, @Field("name") String name, @Field("roomId") String roomId,  @Field("ipAddress") String ipAddress);
+
+        @FormUrlEncoded
+        @PUT("api/user/{user_id}/snapdragons/{snapdragon_ip}")
+        Call<ResponseBody> putSnapdragon(@Header("x-access-token") String token, @Path("user_id") String userId, @Path("snapdragon_ip") String snapdragonIp, @Field("name") String name, @Field("roomId") String roomId,  @Field("ipAddress") String ipAddress);
+
+        @FormUrlEncoded
+        @DELETE("api/user/{user_id}/snapdragons/{snapdragon_ip}")
+        Call<ResponseBody> deleteSnapdragon(@Header("x-access-token") String token, @Path("user_id") String userId, @Path("snapdragon_ip") String snapdragonIp);
+
+
     }
 
     public void authenticate(String csrf, String email, String password, retrofit.Callback<ResponseBody> callback){
@@ -119,6 +139,11 @@ public class ServerRequest {
                 getRoomCall.enqueue(callback);
                 break;
 
+            case "snapdragon":
+                Call<ResponseBody> getSnapdragonCall = apiService.getSnapdragons(user.getToken(), user.getUserId());
+                getSnapdragonCall.enqueue(callback);
+                break;
+
         }
     }
 
@@ -140,6 +165,11 @@ public class ServerRequest {
             case "rooms":
                 Call<ResponseBody> getRoomCall = apiService.getRoom(user.getToken(), user.getUserId(), id);
                 getRoomCall.enqueue(callback);
+                break;
+
+            case "snapdragon":
+                Call<ResponseBody> getSnapdragonCall = apiService.getSnapdragon(user.getToken(), user.getUserId(), id);
+                getSnapdragonCall.enqueue(callback);
                 break;
 
         }
@@ -164,6 +194,11 @@ public class ServerRequest {
             case "rooms":
                 Call<ResponseBody> roomCall = apiService.deleteRoom(user.getToken(), user.getUserId(), id);
                 roomCall.enqueue(callback);
+                break;
+
+            case "snapdragon":
+                Call<ResponseBody> snapdragonCall = apiService.deleteSnapdragon(user.getToken(), user.getUserId(), id);
+                snapdragonCall.enqueue(callback);
                 break;
         }
     }
@@ -232,6 +267,38 @@ public class ServerRequest {
 
     }
 
+    public void postSnapdragon(User user, retrofit.Callback<ResponseBody> callback){
+        //Hard coded
+        String name = "and";
+        String roomId = "4321";
+        String ipAddress = "123123";
+
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(base_url)
+                .build();
+        apiInterface loginService = retrofit.create(apiInterface.class);
+
+        Call<ResponseBody> snapdragonCall = loginService.postRoom(user.getToken(), user.getUserId(), name, roomId, ipAddress);
+        snapdragonCall.enqueue(callback);
+    }
+
+    public void putSnapdragon(User user, retrofit.Callback<ResponseBody> callback){
+        //Hard coded
+        String oldName = "23423";
+        String name = "and";
+        String roomId = "4321";
+        String ipAddress = "123123";
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(base_url)
+                .build();
+        apiInterface loginService = retrofit.create(apiInterface.class);
+
+        Call<ResponseBody> snapdragonCall = loginService.putRoom(user.getToken(), user.getUserId(), oldName, name, roomId, ipAddress);
+        snapdragonCall.enqueue(callback);
+
+    }
 
 
 }
