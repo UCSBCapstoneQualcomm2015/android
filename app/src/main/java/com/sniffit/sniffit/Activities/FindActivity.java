@@ -35,6 +35,7 @@ public class FindActivity extends Activity {
 
     User user;
     Spinner roomSpinner, itemSpinner;
+    Bundle bundle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,8 +49,11 @@ public class FindActivity extends Activity {
         itemSpinner = (Spinner)findViewById(R.id.item_spinner);
 
         Intent intent = getIntent();
-        user = (User) intent.getSerializableExtra("user");
+        user = (User) getIntent().getExtras().getSerializable("user");
         final ServerRequest sr = new ServerRequest();
+
+        bundle = new Bundle();
+        bundle.putSerializable("user", user);
 
         //Set Room Spinner values
         sr.getIds("rooms", user, new Callback<ResponseBody>() {
@@ -149,7 +153,6 @@ public class FindActivity extends Activity {
     }
     public void goToRooms(View view) {
         Intent intent = new Intent(this, ListDisplay.class);
-        Bundle bundle = new Bundle();
         bundle.putInt("displayFlag", 1);
         intent.putExtras(bundle);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -157,10 +160,11 @@ public class FindActivity extends Activity {
     }
     public void goToItems(View view) {
         Intent intent = new Intent(this, ListDisplay.class);
-        Bundle bundle = new Bundle();
         bundle.putInt("displayFlag", 2);
         intent.putExtras(bundle);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
     }
+
+    public void goToFind(View view) {}
 }

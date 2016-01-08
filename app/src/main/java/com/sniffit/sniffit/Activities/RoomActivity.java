@@ -14,6 +14,7 @@ import com.sniffit.sniffit.Dialogs.AddItemDialogFragment;
 import com.sniffit.sniffit.Dialogs.AddRoomDialogFragment;
 import com.sniffit.sniffit.R;
 import com.sniffit.sniffit.Objects.Room;
+import com.sniffit.sniffit.REST.User;
 
 /**
  * Created by sohanshah on 11/19/15.
@@ -21,6 +22,9 @@ import com.sniffit.sniffit.Objects.Room;
 public class RoomActivity extends Activity implements AddRoomDialogFragment.AddRoomListener{
     Room room;
     Button currentPage;
+    User user;
+    Bundle bundle;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,9 +32,12 @@ public class RoomActivity extends Activity implements AddRoomDialogFragment.AddR
         TextView header = (TextView)findViewById(R.id.header_title);
         Intent intent = getIntent();
         room = (Room) intent.getExtras().getSerializable("room");
+        user = (User) intent.getExtras().getSerializable("user");
         currentPage = (Button) findViewById(R.id.rooms_button);
         currentPage.setBackgroundColor(Color.parseColor("#294e6a"));
         header.setText(room.getName());
+        bundle = new Bundle();
+        bundle.putSerializable("user", user);
     }
 
     // when edit room button is clicked
@@ -44,7 +51,6 @@ public class RoomActivity extends Activity implements AddRoomDialogFragment.AddR
         Intent intent = new Intent(this, ListDisplay.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         //POSSIBILITY MAKE ALL INTENTS TO LISTDISPLAY BUNDLES AND GRAB THINGS OUT ACCORDINGLY
-        Bundle bundle = new Bundle();
         bundle.putInt("displayFlag", 3);
         bundle.putSerializable("room", room);
         intent.putExtras(bundle);
@@ -55,7 +61,6 @@ public class RoomActivity extends Activity implements AddRoomDialogFragment.AddR
         Intent intent = new Intent(this, ListDisplay.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         //POSSIBILITY MAKE ALL INTENTS TO LISTDISPLAY BUNDLES AND GRAB THINGS OUT ACCORDINGLY
-        Bundle bundle = new Bundle();
         bundle.putInt("displayFlag", 4);
         bundle.putSerializable("room", room);
         intent.putExtras(bundle);
@@ -67,7 +72,6 @@ public class RoomActivity extends Activity implements AddRoomDialogFragment.AddR
         Log.d(roomName, length);
         //would add it to the database here and reload the intent to update room
         Intent intent = new Intent(this, RoomActivity.class);
-        Bundle bundle = new Bundle();
         bundle.putSerializable("object", room);
         intent.putExtras(bundle);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -78,12 +82,12 @@ public class RoomActivity extends Activity implements AddRoomDialogFragment.AddR
 
     public void goToFind(View view){
         Intent intent = new Intent(this, FindActivity.class);
+        intent.putExtras(bundle);
         startActivity(intent);
     }
 
     public void goToRooms(View view) {
         Intent intent = new Intent(this, ListDisplay.class);
-        Bundle bundle = new Bundle();
         bundle.putInt("displayFlag", 1);
         intent.putExtras(bundle);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -91,7 +95,6 @@ public class RoomActivity extends Activity implements AddRoomDialogFragment.AddR
     }
     public void goToItems(View view) {
         Intent intent = new Intent(this, ListDisplay.class);
-        Bundle bundle = new Bundle();
         bundle.putInt("displayFlag", 2);
         intent.putExtras(bundle);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

@@ -84,7 +84,9 @@ public class LoginActivity extends Activity {
                             User user = gson.fromJson(jsonBody, User.class);
 
                             Intent intent = new Intent(getApplicationContext(), FindActivity.class);
-                            intent.putExtra("user", user);
+                            Bundle bundle = new Bundle();
+                            bundle.putSerializable("user", user);
+                            intent.putExtras(bundle);
                             startActivity(intent);
                         } catch (IOException e) {
                             e.printStackTrace();
