@@ -17,6 +17,7 @@ import com.sniffit.sniffit.Dialogs.AddItemDialogFragment;
 import com.sniffit.sniffit.Dialogs.AddRefTagDialogFragment;
 import com.sniffit.sniffit.Dialogs.AddRoomDialogFragment;
 import com.sniffit.sniffit.Dialogs.AddSnapdragonDialogFragment;
+import com.sniffit.sniffit.Objects.ReferenceTag;
 import com.sniffit.sniffit.Objects.Snapdragon;
 import com.sniffit.sniffit.R;
 import com.sniffit.sniffit.Objects.RFIDItem;
@@ -102,6 +103,25 @@ public class ListDisplay extends AppCompatActivity implements AddItemDialogFragm
             sniffitList.add(snap1);
             sniffitList.add(snap2);
 
+        }
+
+        else if (flag == REFERENCE) {
+            room = (Room) getIntent().getExtras().getSerializable("room");
+            header.setText("Reference Tags (Bedroom)");
+            header.setTextSize(25);
+            ReferenceTag tag1 = new ReferenceTag();
+            ReferenceTag tag2 = new ReferenceTag();
+            tag1.setRoom(room);
+            tag1.setId("29493929392");
+            tag1.setX("7");
+            tag1.setY("2");
+            tag1.setName("Bed 1");
+            tag2.setName("Bed 2");
+
+            sniffitList.add(tag1);
+            sniffitList.add(tag2);
+            currentPage = (Button) findViewById(R.id.rooms_button);
+            currentPage.setBackgroundColor(Color.parseColor("#294e6a"));
         }
 
 //        for (rooms in database) {
@@ -212,15 +232,21 @@ public class ListDisplay extends AppCompatActivity implements AddItemDialogFragm
 
     public void goToFind(View view) {
         Intent intent = new Intent(this, FindActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
     }
 
     public void goToRooms(View view) {
-        Intent intent = new Intent(this, ListDisplay.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         Bundle bundle = new Bundle();
-        bundle.putInt("displayFlag", 1);
+        Intent intent;
+        if (flag == SNAPDRAGON || flag == REFERENCE) {
+            intent = new Intent(this, RoomActivity.class);
+            bundle.putSerializable("room", room);
+        }
+        else {
+            intent = new Intent(this, ListDisplay.class);
+            bundle.putInt("displayFlag", 1);
+        }
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.putExtras(bundle);
         startActivity(intent);
     }

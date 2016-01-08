@@ -105,7 +105,7 @@ public class FindActivity extends Activity {
             @Override
             public void onClick(View view) {
                 RFIDItem rfid = (RFIDItem) itemSpinner.getSelectedItem();
-                sr.getId("rfid", rfid.getTagId(), user, new Callback<ResponseBody>() {
+                sr.getId("rfid", rfid.getId(), user, new Callback<ResponseBody>() {
                     @Override
                     public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
                         try {

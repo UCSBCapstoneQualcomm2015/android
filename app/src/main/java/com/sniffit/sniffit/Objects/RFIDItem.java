@@ -1,6 +1,5 @@
 package com.sniffit.sniffit.Objects;
 
-import com.google.gson.annotations.SerializedName;
 import com.sniffit.sniffit.Objects.SniffitObject;
 
 /**
@@ -8,19 +7,32 @@ import com.sniffit.sniffit.Objects.SniffitObject;
  */
 public class RFIDItem extends SniffitObject {
 
-    String tagId;
+    String id;
+    Float x;
+    Float y;
 
-    public String getTagId() {
-        return tagId;
+    public String getId() {
+        return id;
     }
 
-    public void setTagId(String tagId) {
-        this.tagId = tagId;
+    public void setId(String id) {
+        this.id = id;
     }
 
-    @Override
-    public String toString() {
-        return this.name;
+    public Float getX() {
+        return x;
+    }
+
+    public void setX(Float x) {
+        this.x = x;
+    }
+
+    public Float getY() {
+        return y;
+    }
+
+    public void setY(Float y) {
+        this.y = y;
     }
 
 

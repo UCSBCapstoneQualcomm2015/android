@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.sniffit.sniffit.Dialogs.AddItemDialogFragment;
 import com.sniffit.sniffit.Dialogs.AddRefTagDialogFragment;
 import com.sniffit.sniffit.Dialogs.AddSnapdragonDialogFragment;
+import com.sniffit.sniffit.Objects.RFIDItem;
 import com.sniffit.sniffit.Objects.ReferenceTag;
 import com.sniffit.sniffit.Objects.Snapdragon;
 import com.sniffit.sniffit.R;
@@ -84,7 +85,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                         v.getContext().startActivity(intent);
                         break;
                     case 2:         //updating one of the items (should edit it in the db)
-                        DialogFragment editItem = AddItemDialogFragment.newInstance(2, "ITEM1", "ITEM2");       //SHOULD PASS IN NAME AND ID OF SNIFFITLIST.GET(POSITION)
+                        RFIDItem currItem = (RFIDItem) sniffitList.get(position);
+                        DialogFragment editItem = AddItemDialogFragment.newInstance(2, currItem.getName(), currItem.getId());       //SHOULD PASS IN NAME AND ID OF SNIFFITLIST.GET(POSITION)
                         editItem.show(manager, "editItem");
                         break;
                     case 3:

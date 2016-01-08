@@ -3,6 +3,7 @@ package com.sniffit.sniffit.Activities;
 import android.app.Activity;
 import android.app.DialogFragment;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -19,15 +20,16 @@ import com.sniffit.sniffit.Objects.Room;
  */
 public class RoomActivity extends Activity implements AddRoomDialogFragment.AddRoomListener{
     Room room;
-    Button editRoom;
+    Button currentPage;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d("hi","hi");
         setContentView(R.layout.room);
         TextView header = (TextView)findViewById(R.id.header_title);
         Intent intent = getIntent();
-        room = (Room) intent.getExtras().getSerializable("object");
+        room = (Room) intent.getExtras().getSerializable("room");
+        currentPage = (Button) findViewById(R.id.rooms_button);
+        currentPage.setBackgroundColor(Color.parseColor("#294e6a"));
         header.setText(room.getName());
     }
 
@@ -66,13 +68,18 @@ public class RoomActivity extends Activity implements AddRoomDialogFragment.AddR
         //would add it to the database here and reload the intent to update room
         Intent intent = new Intent(this, RoomActivity.class);
         Bundle bundle = new Bundle();
-        bundle.putSerializable("object",room);
+        bundle.putSerializable("object", room);
         intent.putExtras(bundle);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
     }
 
 
+
+    public void goToFind(View view){
+        Intent intent = new Intent(this, FindActivity.class);
+        startActivity(intent);
+    }
 
     public void goToRooms(View view) {
         Intent intent = new Intent(this, ListDisplay.class);
