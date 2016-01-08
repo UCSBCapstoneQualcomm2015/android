@@ -107,6 +107,24 @@ public class ServerRequest {
         @DELETE("api/user/{user_id}/snapdragons/{snapdragon_ip}")
         Call<ResponseBody> deleteSnapdragon(@Header("x-access-token") String token, @Path("user_id") String userId, @Path("snapdragon_ip") String snapdragonIp);
 
+        //Reference Tag API calls
+        @GET("api/user/{user_id}/reftags/")
+        Call<ResponseBody> getReferenceTags(@Header("x-access-token") String token, @Path("user_id") String userId);
+
+        @GET("api/user/{user_id}/reftags/{ref_tagId}")
+        Call<ResponseBody> getReferenceTag(@Header("x-access-token") String token, @Path("user_id") String userId, @Path("ref_tagId") String tagId);
+
+        @FormUrlEncoded
+        @POST("api/user/{user_id}/reftags/")
+        Call<ResponseBody> postReferenceTag(@Header("x-access-token") String token, @Path("user_id") String userId, @Field("tagId") String tagId, @Field("roomId") String roomId, @Field("x_position") String xPosition, @Field("y_position") String yPosition);
+
+        @FormUrlEncoded
+        @PUT("api/user/{user_id}/reftags/{ref_tagId}")
+        Call<ResponseBody> putReferenceTag(@Header("x-access-token") String token, @Path("user_id") String userId, @Path("ref_tagId") String oldTagId, @Field("tagId") String newTagId, @Field("roomId") String roomId, @Field("x_position") String xPosition, @Field("y_position") String yPosition);
+
+        @DELETE("api/user/{user_id}/reftags/{ref_tagId}")
+        Call<ResponseBody> deleteReferenceTag(@Header("x-access-token") String token, @Path("user_id") String userId, @Path("ref_tagId") String tagId);
+
 
     }
 
@@ -144,6 +162,10 @@ public class ServerRequest {
                 getSnapdragonCall.enqueue(callback);
                 break;
 
+            case "reference":
+                Call<ResponseBody> getReferenceCall = apiService.getSnapdragons(user.getToken(), user.getUserId());
+                getReferenceCall.enqueue(callback);
+                break;
         }
     }
 
@@ -172,6 +194,10 @@ public class ServerRequest {
                 getSnapdragonCall.enqueue(callback);
                 break;
 
+            case "reference":
+                Call<ResponseBody> getReferenceCall = apiService.getSnapdragon(user.getToken(), user.getUserId(), id);
+                getReferenceCall.enqueue(callback);
+                break;
         }
 
     }
@@ -199,6 +225,11 @@ public class ServerRequest {
             case "snapdragon":
                 Call<ResponseBody> snapdragonCall = apiService.deleteSnapdragon(user.getToken(), user.getUserId(), id);
                 snapdragonCall.enqueue(callback);
+                break;
+
+            case "reference":
+                Call<ResponseBody> referenceCall = apiService.deleteSnapdragon(user.getToken(), user.getUserId(), id);
+                referenceCall.enqueue(callback);
                 break;
         }
     }
@@ -264,7 +295,6 @@ public class ServerRequest {
 
         Call<ResponseBody> rfidCall = loginService.putRoom(user.getToken(), user.getUserId(), oldName, name, length, width);
         rfidCall.enqueue(callback);
-
     }
 
     public void postSnapdragon(User user, retrofit.Callback<ResponseBody> callback){
@@ -297,7 +327,39 @@ public class ServerRequest {
 
         Call<ResponseBody> snapdragonCall = loginService.putRoom(user.getToken(), user.getUserId(), oldName, name, roomId, ipAddress);
         snapdragonCall.enqueue(callback);
+    }
 
+    public void postReferenceTag(User user, retrofit.Callback<ResponseBody> callback){
+        //Hard coded
+        String tagId = "23424";
+        String roomId = "4321";
+        String xPosition = "1";
+        String yPosition = "1";
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(base_url)
+                .build();
+        apiInterface loginService = retrofit.create(apiInterface.class);
+
+        Call<ResponseBody> snapdragonCall = loginService.postReferenceTag(user.getToken(), user.getUserId(), tagId, roomId, xPosition, yPosition);
+        snapdragonCall.enqueue(callback);
+    }
+
+    public void putReferenceTag(User user, retrofit.Callback<ResponseBody> callback){
+        //Hard coded
+        String oldTagId = "23423";
+        String tagId = "and";
+        String roomId = "12313";
+        String xPosition = "4321";
+        String yPosition = "123123";
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(base_url)
+                .build();
+        apiInterface loginService = retrofit.create(apiInterface.class);
+
+        Call<ResponseBody> snapdragonCall = loginService.putReferenceTag(user.getToken(), user.getUserId(), oldTagId, tagId, roomId, xPosition, yPosition);
+        snapdragonCall.enqueue(callback);
     }
 
 
