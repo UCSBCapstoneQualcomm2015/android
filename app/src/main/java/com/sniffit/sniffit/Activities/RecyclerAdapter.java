@@ -86,7 +86,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                         break;
                     case 2:         //updating one of the items (should edit it in the db)
                         RFIDItem currItem = (RFIDItem) sniffitList.get(position);
-                        DialogFragment editItem = AddItemDialogFragment.newInstance(2, currItem.getName(), currItem.getId());       //SHOULD PASS IN NAME AND ID OF SNIFFITLIST.GET(POSITION)
+                        DialogFragment editItem = AddItemDialogFragment.newInstance(2, currItem.getName(), currItem.getTagId());       //SHOULD PASS IN NAME AND ID OF SNIFFITLIST.GET(POSITION)
                         editItem.show(manager, "editItem");
                         break;
                     case 3:

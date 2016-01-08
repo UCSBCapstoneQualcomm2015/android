@@ -69,7 +69,7 @@ public class LoginActivity extends Activity {
 
                 //Hardcoded for testing
                 emailString = "b@gmail.com";
-                passwordString = "1234";
+                passwordString = "abc123";
 
                 HashMap<String, String> params = new HashMap<String, String>();
 
