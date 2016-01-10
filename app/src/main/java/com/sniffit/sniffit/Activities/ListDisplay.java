@@ -27,6 +27,7 @@ import com.sniffit.sniffit.Objects.Room;
 import com.sniffit.sniffit.Objects.SniffitObject;
 import com.sniffit.sniffit.REST.ServerRequest;
 import com.squareup.okhttp.ResponseBody;
+import com.sniffit.sniffit.REST.User;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,6 +56,8 @@ public class ListDisplay extends AppCompatActivity implements AddItemDialogFragm
     private int flag;
     Room room;
     final ServerRequest sr = new ServerRequest();
+    User user;
+    Bundle bundle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +69,9 @@ public class ListDisplay extends AppCompatActivity implements AddItemDialogFragm
         TextView header = (TextView)findViewById(R.id.header_title);
         sniffitList = new ArrayList<SniffitObject>();
         int displayFlag = getIntent().getExtras().getInt("displayFlag", -1);
+        user = (User) getIntent().getExtras().getSerializable("user");
+        bundle = new Bundle();
+        bundle.putSerializable("user", user);
         this.flag = displayFlag;
 
         if (flag == ROOM) {
@@ -215,7 +221,7 @@ public class ListDisplay extends AppCompatActivity implements AddItemDialogFragm
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         // specify an adapter (see also next example)
-        mAdapter = new RecyclerAdapter(sniffitList, displayFlag, getFragmentManager());
+        mAdapter = new RecyclerAdapter(sniffitList, displayFlag,user, getFragmentManager());
         mRecyclerView.setAdapter(mAdapter);
         Log.d("adapter set", "adapter");
     }
@@ -249,7 +255,6 @@ public class ListDisplay extends AppCompatActivity implements AddItemDialogFragm
         Log.d(itemName, itemId);
                 //would add it to the database here and reload the intent to update list
         Intent intent = new Intent(this, ListDisplay.class);
-        Bundle bundle = new Bundle();
         bundle.putInt("displayFlag", 2);
         intent.putExtras(bundle);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -261,7 +266,6 @@ public class ListDisplay extends AppCompatActivity implements AddItemDialogFragm
         Log.d(roomName, length);
         //would add it to the database here and reload the intent to update room
         Intent intent = new Intent(this, ListDisplay.class);
-        Bundle bundle = new Bundle();
         bundle.putInt("displayFlag", 1);
         intent.putExtras(bundle);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -272,7 +276,6 @@ public class ListDisplay extends AppCompatActivity implements AddItemDialogFragm
     public void snapdragonConfirm(DialogFragment dialog, String snapName, String ip) {
         Log.d(snapName, ip);
         Intent intent = new Intent(this, ListDisplay.class);
-        Bundle bundle = new Bundle();
         bundle.putInt("displayFlag", 3);
         bundle.putSerializable("room", room);
         intent.putExtras(bundle);
@@ -285,7 +288,6 @@ public class ListDisplay extends AppCompatActivity implements AddItemDialogFragm
     public void refTagConfirm(DialogFragment dialog, String tagName, String tagId, String x, String y)   {
         Log.d (tagName, tagId);
         Intent intent = new Intent(this, ListDisplay.class);
-        Bundle bundle = new Bundle();
         bundle.putInt("displayFlag", 4);
         bundle.putSerializable("room", room);
         intent.putExtras(bundle);
@@ -299,11 +301,11 @@ public class ListDisplay extends AppCompatActivity implements AddItemDialogFragm
 
     public void goToFind(View view) {
         Intent intent = new Intent(this, FindActivity.class);
+        intent.putExtras(bundle);
         startActivity(intent);
     }
 
     public void goToRooms(View view) {
-        Bundle bundle = new Bundle();
         Intent intent;
         if (flag == SNAPDRAGON || flag == REFERENCE) {
             intent = new Intent(this, RoomActivity.class);
@@ -319,7 +321,6 @@ public class ListDisplay extends AppCompatActivity implements AddItemDialogFragm
     }
     public void goToItems(View view) {
         Intent intent = new Intent(this, ListDisplay.class);
-        Bundle bundle = new Bundle();
         bundle.putInt("displayFlag", 2);
         intent.putExtras(bundle);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

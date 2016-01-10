@@ -18,6 +18,7 @@ import com.sniffit.sniffit.Objects.ReferenceTag;
 import com.sniffit.sniffit.Objects.Snapdragon;
 import com.sniffit.sniffit.R;
 import com.sniffit.sniffit.Objects.SniffitObject;
+import com.sniffit.sniffit.REST.User;
 
 
 import java.util.ArrayList;
@@ -30,6 +31,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     ArrayList<SniffitObject> sniffitList;
     int displayFlag;
     FragmentManager manager;
+    User user;
+    Bundle bundle;
     public static class ViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
         FragmentManager manager;
@@ -53,9 +56,10 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public RecyclerAdapter(ArrayList<SniffitObject> myDataset, int flag, FragmentManager manager) {   //FOR NOW: SHOULD END UP ARRAYLIST OF OBJECTS (EITHER ROOMS OR ITEMS)
+    public RecyclerAdapter(ArrayList<SniffitObject> myDataset, int flag, User user, FragmentManager manager) {   //FOR NOW: SHOULD END UP ARRAYLIST OF OBJECTS (EITHER ROOMS OR ITEMS)
         sniffitList = myDataset;
         displayFlag = flag;
+        this.user = user;
         this.manager = manager;
     }
 
@@ -77,8 +81,9 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                 switch (displayFlag) {      //1: rooms page  2: edit item dialog  3: edit snapdragon dialog  4. edit reftag dialog
                     case 1:
                         intent = new Intent(v.getContext(), RoomActivity.class);
-                        Bundle bundle = new Bundle();
-                        bundle.putSerializable("object",sniffitList.get(position));
+                        bundle = new Bundle();
+                        bundle.putSerializable("room",sniffitList.get(position));
+                        bundle.putSerializable("user", user);
 
                         intent.putExtras(bundle);
                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
