@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.melnykov.fab.FloatingActionButton;
 import com.sniffit.sniffit.Dialogs.AddItemDialogFragment;
 import com.sniffit.sniffit.Dialogs.AddRefTagDialogFragment;
@@ -24,6 +25,13 @@ import com.sniffit.sniffit.Objects.RFIDItem;
 import com.sniffit.sniffit.Objects.Room;
 import com.sniffit.sniffit.Objects.SniffitObject;
 import com.sniffit.sniffit.REST.User;
+import com.sniffit.sniffit.REST.ServerRequest;
+import com.squareup.okhttp.ResponseBody;
+
+import retrofit.Call;
+import retrofit.Callback;
+import retrofit.Response;
+import retrofit.Retrofit;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,6 +56,7 @@ public class ListDisplay extends AppCompatActivity implements AddItemDialogFragm
     private int flag;
     Room room;
     User user;
+    final ServerRequest sr = new ServerRequest();
     Bundle bundle;
 
     @Override
@@ -69,17 +78,41 @@ public class ListDisplay extends AppCompatActivity implements AddItemDialogFragm
             header.setText("Room List");
             currentPage = (Button) findViewById(R.id.rooms_button);
             currentPage.setBackgroundColor(Color.parseColor("#294e6a"));
-            Room room1 = new Room();
-            room1.setName("Bedroom");
-            room1.setLength("7");
-            room1.setWidth("5");
-            Room room2 = new Room();
-            room2.setName("Bathroom");//hardcode examples
-            Room room3 = new Room();
-            room3.setName("Bathroom2");
-            sniffitList.add(room1);
-            sniffitList.add(room2);
-            sniffitList.add(room3);
+//            Room room1 = new Room();
+//            room1.setName("Bedroom");
+//            room1.setLength("7");
+//            room1.setWidth("5");
+//            Room room2 = new Room();
+//            room2.setName("Bathroom");//hardcode examples
+//            Room room3 = new Room();
+//            room3.setName("Bathroom2");
+//            sniffitList.add(room1);
+//            sniffitList.add(room2);
+//            sniffitList.add(room3);
+
+
+            sr.getIds("rooms", user, new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
+                    try {
+                        String json = response.body().string();
+                        System.out.println(json);
+                        Gson gson = new Gson();
+                        Room[] roomArray = gson.fromJson(json, Room[].class);
+                        for(Room room: roomArray){
+                            sniffitList.add(room);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                }
+
+                @Override
+                public void onFailure(Throwable t) {
+
+                }
+            });
         }
 
         else if (flag == ITEM) {
@@ -197,8 +230,17 @@ public class ListDisplay extends AppCompatActivity implements AddItemDialogFragm
     @Override
     public void roomConfirm(DialogFragment dialog, String roomName, String length, String width) {
         Log.d(roomName, length);
-        //would add it to the database here and reload the intent to update room
-        Intent intent = new Intent(this, ListDisplay.class);
+
+        sr.postRoom(user, roomName, width, length, new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
+
+            }
+            @Override
+            public void onFailure(Throwable t) { }
+        });
+
+    Intent intent = new Intent(this, ListDisplay.class);
         bundle.putInt("displayFlag", 1);
         intent.putExtras(bundle);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -220,6 +262,17 @@ public class ListDisplay extends AppCompatActivity implements AddItemDialogFragm
     @Override
     public void refTagConfirm(DialogFragment dialog, String tagName, String tagId, String x, String y)   {
         Log.d (tagName, tagId);
+
+        sr.postRFIDTag(user, tagId, tagName, new Callback<ResponseBody>() {         //NEED TO THROW IN X AND Y
+            @Override
+            public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
+
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+            }
+        });
         Intent intent = new Intent(this, ListDisplay.class);
         bundle.putInt("displayFlag", 4);
         bundle.putSerializable("room", room);

@@ -168,11 +168,11 @@ public class ServerRequest {
         }
     }
 
-    public void postRFIDTag(User user, retrofit.Callback<ResponseBody> callback){
+    public void postRFIDTag(User user, String myTagId, String myName, retrofit.Callback<ResponseBody> callback){
         //Hard coded
         String csrf = "";
-        String tagId = "1123414";
-        String name = "and";
+        String tagId = myTagId;
+        String name = myName;
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(base_url)
@@ -200,11 +200,11 @@ public class ServerRequest {
 
     }
 
-    public void postRoom(User user, retrofit.Callback<ResponseBody> callback){
+    public void postRoom(User user, String roomName, String roomWidth, String roomLength, retrofit.Callback<ResponseBody> callback){
         //Hard coded
-        String width = "123";
-        String length = "1124";
-        String name = "and";
+        String width = roomWidth;
+        String length = roomLength;
+        String name = roomName;
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(base_url)
