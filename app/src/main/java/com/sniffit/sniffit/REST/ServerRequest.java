@@ -89,8 +89,8 @@ public class ServerRequest {
         Call<ResponseBody> deleteRoom(@Header("x-access-token") String token, @Path("user_id") String userId, @Path("room_name") String roomName);
 
         //Snapdragon API calls
-        @GET("api/user/{user_id}/snapdragons")
-        Call<ResponseBody> getSnapdragons(@Header("x-access-token") String token, @Path("user_id") String userId);
+        @GET("api/user/{user_id}/snapdragons/{room_id}")
+        Call<ResponseBody> getSnapdragons(@Header("x-access-token") String token, @Path("user_id") String userId, @Path("room_id") String roomId);
 
         @GET("api/user/{user_id}/snapdragons/{snapdragon_ip}")
         Call<ResponseBody> getSnapdragon(@Header("x-access-token") String token, @Path("user_id") String userId, @Path("snapdragon_ip") String snapdragonIp);
@@ -108,8 +108,8 @@ public class ServerRequest {
         Call<ResponseBody> deleteSnapdragon(@Header("x-access-token") String token, @Path("user_id") String userId, @Path("snapdragon_ip") String snapdragonIp);
 
         //Reference Tag API calls
-        @GET("api/user/{user_id}/reftags/")
-        Call<ResponseBody> getReferenceTags(@Header("x-access-token") String token, @Path("user_id") String userId);
+        @GET("api/user/{user_id}/reftags/{room_id}")
+        Call<ResponseBody> getReferenceTags(@Header("x-access-token") String token, @Path("user_id") String userId, @Path("room_id") String roomId);
 
         @GET("api/user/{user_id}/reftags/{ref_tagId}")
         Call<ResponseBody> getReferenceTag(@Header("x-access-token") String token, @Path("user_id") String userId, @Path("ref_tagId") String tagId);
@@ -157,13 +157,27 @@ public class ServerRequest {
                 getRoomCall.enqueue(callback);
                 break;
 
+        }
+    }
+
+    /*
+    API helper function for GET requests associated with a Room, which includes Snapdragons and Reference Tags
+ */
+    public void getRoomIds(String request, User user, String roomId, retrofit.Callback<ResponseBody> callback){
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(base_url)
+                .build();
+        apiInterface apiService = retrofit.create(apiInterface.class);
+
+        switch (request.toLowerCase()){
+
             case "snapdragon":
-                Call<ResponseBody> getSnapdragonCall = apiService.getSnapdragons(user.getToken(), user.getUserId());
+                Call<ResponseBody> getSnapdragonCall = apiService.getSnapdragons(user.getToken(), user.getUserId(), roomId);
                 getSnapdragonCall.enqueue(callback);
                 break;
 
             case "reference":
-                Call<ResponseBody> getReferenceCall = apiService.getSnapdragons(user.getToken(), user.getUserId());
+                Call<ResponseBody> getReferenceCall = apiService.getSnapdragons(user.getToken(), user.getUserId(), roomId);
                 getReferenceCall.enqueue(callback);
                 break;
         }
@@ -234,11 +248,11 @@ public class ServerRequest {
         }
     }
 
-    public void postRFIDTag(User user, retrofit.Callback<ResponseBody> callback){
+    public void postRFIDTag(User user, String myTagId, String myName, retrofit.Callback<ResponseBody> callback){
         //Hard coded
         String csrf = "";
-        String tagId = "1123414";
-        String name = "and";
+        String tagId = myTagId;
+        String name = myName;
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(base_url)
@@ -266,11 +280,11 @@ public class ServerRequest {
 
     }
 
-    public void postRoom(User user, retrofit.Callback<ResponseBody> callback){
+    public void postRoom(User user, String roomName, String roomWidth, String roomLength, retrofit.Callback<ResponseBody> callback){
         //Hard coded
-        String width = "123";
-        String length = "1124";
-        String name = "and";
+        String width = roomWidth;
+        String length = roomLength;
+        String name = roomName;
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(base_url)

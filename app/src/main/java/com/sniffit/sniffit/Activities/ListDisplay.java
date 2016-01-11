@@ -28,6 +28,13 @@ import com.sniffit.sniffit.Objects.SniffitObject;
 import com.sniffit.sniffit.REST.ServerRequest;
 import com.squareup.okhttp.ResponseBody;
 import com.sniffit.sniffit.REST.User;
+import com.sniffit.sniffit.REST.ServerRequest;
+import com.squareup.okhttp.ResponseBody;
+
+import retrofit.Call;
+import retrofit.Callback;
+import retrofit.Response;
+import retrofit.Retrofit;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,8 +62,8 @@ public class ListDisplay extends AppCompatActivity implements AddItemDialogFragm
     FloatingActionButton fab;
     private int flag;
     Room room;
-    final ServerRequest sr = new ServerRequest();
     User user;
+    final ServerRequest sr = new ServerRequest();
     Bundle bundle;
 
     @Override
@@ -79,29 +86,28 @@ public class ListDisplay extends AppCompatActivity implements AddItemDialogFragm
             currentPage = (Button) findViewById(R.id.rooms_button);
             currentPage.setBackgroundColor(Color.parseColor("#294e6a"));
 
-//            sr.getIds("rooms", user, new Callback<ResponseBody>() {
-//                @Override
-//                public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
-//                    try {
-//                        String json = response.body().string();
-//                        System.out.println(json);
-//                        Gson gson = new Gson();
-//                        Room[] roomArray = gson.fromJson(json, Room[].class);
-//                        for(Room roo: roomArray){
-//                            sniffitList.add(room);
-//                        }
-//                    } catch (Exception e) {
-//                        e.printStackTrace();
-//                    }
-//
-//                }
-//
-//                @Override
-//                public void onFailure(Throwable t) {
-//
-//                }
-//            });
+            sr.getIds("rooms", user, new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
+                    try {
+                        String json = response.body().string();
+                        System.out.println(json);
+                        Gson gson = new Gson();
+                        Room[] roomArray = gson.fromJson(json, Room[].class);
+                        for(Room room: roomArray){
+                            sniffitList.add(room);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
 
+                }
+
+                @Override
+                public void onFailure(Throwable t) {
+
+                }
+            });
         }
 
         else if (flag == ITEM) {
@@ -109,60 +115,60 @@ public class ListDisplay extends AppCompatActivity implements AddItemDialogFragm
             currentPage = (Button) findViewById(R.id.items_button);
             currentPage.setBackgroundColor(Color.parseColor("#294e6a"));
 
-//            sr.getIds("rfid", user, new Callback<ResponseBody>() {
-//                @Override
-//                public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
-//                    try {
-//                        String json = response.body().string();
-//                        System.out.println(json);
-//                        Gson gson = new Gson();
-//                        RFIDItem[] rfidArray = gson.fromJson(json, RFIDItem[].class);
-//                        for(RFIDItem item: rfidArray){
-//                            sniffitList.add(item);
-//                        }
-//                    } catch (Exception e) {
-//                        e.printStackTrace();
-//                    }
-//
-//                }
-//
-//                @Override
-//                public void onFailure(Throwable t) {
-//
-//                }
-//            });
+            sr.getIds("rfid", user, new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
+                    try {
+                        String json = response.body().string();
+                        System.out.println(json);
+                        Gson gson = new Gson();
+                        RFIDItem[] rfidArray = gson.fromJson(json, RFIDItem[].class);
+                        for(RFIDItem item: rfidArray){
+                            sniffitList.add(item);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                }
+
+                @Override
+                public void onFailure(Throwable t) {
+
+                }
+            });
 
         }
 
         else if (flag == SNAPDRAGON) {         //if we are adding a snapdragon (same with ref tag), we need to figure out way to add it to that specific room in db
             header.setText("Snapdragon List");
             room = (Room) getIntent().getExtras().getSerializable("room");
-            Log.d("room", room.getName());
+            Log.d("room", room.get_id());
             currentPage = (Button) findViewById(R.id.rooms_button);
             currentPage.setBackgroundColor(Color.parseColor("#294e6a"));
 
-//            sr.getIds("snapdragon", user, new Callback<ResponseBody>() {
-//                @Override
-//                public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
-//                    try {
-//                        String json = response.body().string();
-//                        System.out.println(json);
-//                        Gson gson = new Gson();
-//                        Snapdragon[] snapdragonArray = gson.fromJson(json, Snapdragon[].class);
-//                        for(Snapdragon snapdragon: snapdragonArray){
-//                            sniffitList.add(snapdragon);
-//                        }
-//                    } catch (Exception e) {
-//                        e.printStackTrace();
-//                    }
-//
-//                }
-//
-//                @Override
-//                public void onFailure(Throwable t) {
-//
-//                }
-//            });
+            sr.getRoomIds("snapdragon", user, room.get_id(), new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
+                    try {
+                        String json = response.body().string();
+                        System.out.println(json);
+                        Gson gson = new Gson();
+                        Snapdragon[] snapdragonArray = gson.fromJson(json, Snapdragon[].class);
+                        for(Snapdragon snapdragon: snapdragonArray){
+                            sniffitList.add(snapdragon);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                }
+
+                @Override
+                public void onFailure(Throwable t) {
+
+                }
+            });
 
         }
 
@@ -173,28 +179,28 @@ public class ListDisplay extends AppCompatActivity implements AddItemDialogFragm
             currentPage = (Button) findViewById(R.id.rooms_button);
             currentPage.setBackgroundColor(Color.parseColor("#294e6a"));
 
-//            sr.getIds("reference", user, new Callback<ResponseBody>() {
-//                @Override
-//                public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
-//                    try {
-//                        String json = response.body().string();
-//                        System.out.println(json);
-//                        Gson gson = new Gson();
-//                        ReferenceTag[] referenceTagArray = gson.fromJson(json, ReferenceTag[].class);
-//                        for(ReferenceTag tag: referenceTagArray){
-//                            sniffitList.add(tag);
-//                        }
-//                    } catch (Exception e) {
-//                        e.printStackTrace();
-//                    }
-//
-//                }
-//
-//                @Override
-//                public void onFailure(Throwable t) {
-//
-//                }
-//            });
+            sr.getRoomIds("reference", user, room.get_id(), new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
+                    try {
+                        String json = response.body().string();
+                        System.out.println(json);
+                        Gson gson = new Gson();
+                        ReferenceTag[] referenceTagArray = gson.fromJson(json, ReferenceTag[].class);
+                        for(ReferenceTag tag: referenceTagArray){
+                            sniffitList.add(tag);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                }
+
+                @Override
+                public void onFailure(Throwable t) {
+
+                }
+            });
         }
 
 //        for (rooms in database) {
@@ -264,8 +270,17 @@ public class ListDisplay extends AppCompatActivity implements AddItemDialogFragm
     @Override
     public void roomConfirm(DialogFragment dialog, String roomName, String length, String width) {
         Log.d(roomName, length);
-        //would add it to the database here and reload the intent to update room
-        Intent intent = new Intent(this, ListDisplay.class);
+
+        sr.postRoom(user, roomName, width, length, new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
+
+            }
+            @Override
+            public void onFailure(Throwable t) { }
+        });
+
+    Intent intent = new Intent(this, ListDisplay.class);
         bundle.putInt("displayFlag", 1);
         intent.putExtras(bundle);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -287,6 +302,17 @@ public class ListDisplay extends AppCompatActivity implements AddItemDialogFragm
     @Override
     public void refTagConfirm(DialogFragment dialog, String tagName, String tagId, String x, String y)   {
         Log.d (tagName, tagId);
+
+        sr.postRFIDTag(user, tagId, tagName, new Callback<ResponseBody>() {         //NEED TO THROW IN X AND Y
+            @Override
+            public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
+
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+            }
+        });
         Intent intent = new Intent(this, ListDisplay.class);
         bundle.putInt("displayFlag", 4);
         bundle.putSerializable("room", room);
