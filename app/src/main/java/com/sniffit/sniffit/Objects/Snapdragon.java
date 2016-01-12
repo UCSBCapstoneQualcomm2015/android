@@ -1,40 +1,38 @@
 package com.sniffit.sniffit.Objects;
 
-import com.sniffit.sniffit.Objects.SniffitObject;
-
 /**
  * Created by sohanshah on 11/19/15.
  */
 public class Snapdragon extends SniffitObject {
 
 
-    public String getIp() {
-        return ip;
+    public String getIpAddress() {
+        return ipAddress;
     }
 
-    public void setIp(String ip) {
-        this.ip = ip;
+    public void setIpAddress(String ipAddress) {
+        this.ipAddress = ipAddress;
     }
 
-    String ip;
+    String ipAddress;
     Room room;
-    String x;
-    String y;
+    String xCoord;
+    String yCoord;
 
-    public String getX() {
-        return x;
+    public String getxCoord() {
+        return xCoord;
     }
 
-    public void setX(String x) {
-        this.x = x;
+    public void setxCoord(String xCoord) {
+        this.xCoord = xCoord;
     }
 
-    public String getY() {
-        return y;
+    public String getyCoord() {
+        return yCoord;
     }
 
-    public void setY(String y) {
-        this.y = y;
+    public void setyCoord(String yCoord) {
+        this.yCoord = yCoord;
     }
 
     public Room getRoom() {

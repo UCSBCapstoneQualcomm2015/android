@@ -19,7 +19,7 @@ import com.sniffit.sniffit.R;
 public class AddSnapdragonDialogFragment extends DialogFragment {
 
     public interface AddSnapDragonListener {
-        public void snapdragonConfirm(DialogFragment dialog, String tagName, String tagId);
+        public void snapdragonConfirm(DialogFragment dialog, String tagName, String tagId, String x, String y);
     }
 
     AddSnapDragonListener mListener;
@@ -62,13 +62,15 @@ public class AddSnapdragonDialogFragment extends DialogFragment {
         String snapName = getArguments().getString("snapdragonName");
         String snapIp = getArguments().getString("ip");
         String snapX = getArguments().getString("x");
-        String snapY = getArguments().getString("y");
+        final String snapY = getArguments().getString("y");
 
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View v = inflater.inflate(R.layout.add_snapdragon_dialog, null);
         builder.setView(v);
         snapdragonName = (EditText) v.findViewById(R.id.snap_name);
         ip = (EditText) v.findViewById(R.id.snap_ip);
+        x = (EditText) v.findViewById(R.id.snapX);
+        y = (EditText) v.findViewById(R.id.snapY);
         snapdragonName.setText(snapName);
         ip.setText(snapIp);
         switch (flag) {
@@ -88,7 +90,7 @@ public class AddSnapdragonDialogFragment extends DialogFragment {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 mListener.snapdragonConfirm(AddSnapdragonDialogFragment.this, snapdragonName.getText().toString(),
-                        ip.getText().toString());
+                        ip.getText().toString(), x.getText().toString(), y.getText().toString());
             }
         })
                 .setNegativeButton(R.string.cancel, null);

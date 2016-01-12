@@ -89,7 +89,7 @@ public class ServerRequest {
         Call<ResponseBody> deleteRoom(@Header("x-access-token") String token, @Path("user_id") String userId, @Path("room_name") String roomName);
 
         //Snapdragon API calls
-        @GET("api/user/{user_id}/snapdragons/{room_id}")
+        @GET("api/user/{user_id}/snapdragons/rooms/{room_id}")
         Call<ResponseBody> getSnapdragons(@Header("x-access-token") String token, @Path("user_id") String userId, @Path("room_id") String roomId);
 
         @GET("api/user/{user_id}/snapdragons/{snapdragon_ip}")
@@ -97,7 +97,7 @@ public class ServerRequest {
 
         @FormUrlEncoded
         @POST("api/user/{user_id}/snapdragons")
-        Call<ResponseBody> postSnapdragon(@Header("x-access-token") String token, @Path("user_id") String userId, @Field("name") String name, @Field("roomId") String roomId,  @Field("ipAddress") String ipAddress);
+        Call<ResponseBody> postSnapdragon(@Header("x-access-token") String token, @Path("user_id") String userId, @Field("name") String name, @Field("roomId") String roomId,  @Field("ipAddress") String ipAddress, @Field("xCoord") String xCoord, @Field("yCoord") String yCoord);
 
         @FormUrlEncoded
         @PUT("api/user/{user_id}/snapdragons/{snapdragon_ip}")
@@ -177,7 +177,7 @@ public class ServerRequest {
                 break;
 
             case "reference":
-                Call<ResponseBody> getReferenceCall = apiService.getSnapdragons(user.getToken(), user.getUserId(), roomId);
+                Call<ResponseBody> getReferenceCall = apiService.getReferenceTags(user.getToken(), user.getUserId(), roomId);
                 getReferenceCall.enqueue(callback);
                 break;
         }
@@ -281,7 +281,6 @@ public class ServerRequest {
     }
 
     public void postRoom(User user, String roomName, String roomWidth, String roomLength, retrofit.Callback<ResponseBody> callback){
-        //Hard coded
         String width = roomWidth;
         String length = roomLength;
         String name = roomName;
@@ -311,19 +310,14 @@ public class ServerRequest {
         rfidCall.enqueue(callback);
     }
 
-    public void postSnapdragon(User user, retrofit.Callback<ResponseBody> callback){
-        //Hard coded
-        String name = "and";
-        String roomId = "4321";
-        String ipAddress = "123123";
-
+    public void postSnapdragon(User user, String name, String roomId, String ipAddress, String xCoord, String yCoord, retrofit.Callback<ResponseBody> callback){
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(base_url)
                 .build();
         apiInterface loginService = retrofit.create(apiInterface.class);
 
-        Call<ResponseBody> snapdragonCall = loginService.postRoom(user.getToken(), user.getUserId(), name, roomId, ipAddress);
+        Call<ResponseBody> snapdragonCall = loginService.postSnapdragon(user.getToken(), user.getUserId(), name, roomId, ipAddress, xCoord, yCoord);
         snapdragonCall.enqueue(callback);
     }
 
@@ -339,7 +333,7 @@ public class ServerRequest {
                 .build();
         apiInterface loginService = retrofit.create(apiInterface.class);
 
-        Call<ResponseBody> snapdragonCall = loginService.putRoom(user.getToken(), user.getUserId(), oldName, name, roomId, ipAddress);
+        Call<ResponseBody> snapdragonCall = loginService.putSnapdragon(user.getToken(), user.getUserId(), oldName, name, roomId, ipAddress);
         snapdragonCall.enqueue(callback);
     }
 

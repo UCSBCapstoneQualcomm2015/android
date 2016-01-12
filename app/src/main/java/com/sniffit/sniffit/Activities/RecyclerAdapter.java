@@ -96,7 +96,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                         break;
                     case 3:
                         Snapdragon curr = (Snapdragon) sniffitList.get(position);
-                        DialogFragment editSnap = AddSnapdragonDialogFragment.newInstance(2, curr.getName(), curr.getIp(),curr.getX(),curr.getY());
+                        DialogFragment editSnap = AddSnapdragonDialogFragment.newInstance(2, curr.getName(), curr.getIpAddress(),curr.getxCoord(),curr.getyCoord());
                         editSnap.show(manager, "editSnap");
                         break;
                     case 4:

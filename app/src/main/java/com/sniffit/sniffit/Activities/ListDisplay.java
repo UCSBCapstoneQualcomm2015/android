@@ -152,7 +152,7 @@ public class ListDisplay extends AppCompatActivity implements AddItemDialogFragm
                 public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
                     try {
                         String json = response.body().string();
-                        System.out.println(json);
+                        System.out.println();
                         Gson gson = new Gson();
                         Snapdragon[] snapdragonArray = gson.fromJson(json, Snapdragon[].class);
                         for(Snapdragon snapdragon: snapdragonArray){
@@ -288,8 +288,23 @@ public class ListDisplay extends AppCompatActivity implements AddItemDialogFragm
     }
 
     @Override
-    public void snapdragonConfirm(DialogFragment dialog, String snapName, String ip) {
+    public void snapdragonConfirm(DialogFragment dialog, String snapName, String ip, String xCoord, String yCoord) {
+        room = (Room) getIntent().getExtras().getSerializable("room");
+        user = (User) getIntent().getExtras().getSerializable("user");
+        Log.d("hey", user.getUserId());
         Log.d(snapName, ip);
+
+        sr.postSnapdragon(user, snapName, room.get_id(), ip, xCoord, yCoord, new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
+
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+
+            }
+        });
         Intent intent = new Intent(this, ListDisplay.class);
         bundle.putInt("displayFlag", 3);
         bundle.putSerializable("room", room);
