@@ -268,7 +268,7 @@ public class ListDisplay extends AppCompatActivity implements AddItemDialogFragm
     }
 
     @Override
-    public void roomConfirm(DialogFragment dialog, String roomName, String length, String width, int roomFlag) {
+    public void roomConfirm(DialogFragment dialog, String roomName, String length, String width, int roomFlag, String oldName) {
         Log.d(roomName, length);
         if (roomFlag == 1) {
             sr.postRoom(user, roomName, width, length, new Callback<ResponseBody>() {
@@ -282,8 +282,21 @@ public class ListDisplay extends AppCompatActivity implements AddItemDialogFragm
                 }
             });
         }
+        else {
+            sr.putRoom(user, roomName,width, length, oldName, new Callback<ResponseBody> () {
+                @Override
+                public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
 
-    Intent intent = new Intent(this, ListDisplay.class);
+                }
+
+                @Override
+                public void onFailure(Throwable t) {
+                }
+            });
+            }
+
+
+        Intent intent = new Intent(this, ListDisplay.class);
         bundle.putInt("displayFlag", 1);
         intent.putExtras(bundle);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
