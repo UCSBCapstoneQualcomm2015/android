@@ -17,7 +17,7 @@ import com.sniffit.sniffit.R;
  */
 public class AddRefTagDialogFragment extends DialogFragment{
     public interface AddRefTagListener {
-        public void refTagConfirm(DialogFragment dialog, String tagName, String tagId, String x, String y);
+        public void refTagConfirm(DialogFragment dialog, String tagName, String tagId, String x, String y, int refFlag);
     }
 
     AddRefTagListener mListener;
@@ -56,7 +56,7 @@ public class AddRefTagDialogFragment extends DialogFragment{
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         // Use the Builder class for convenient dialog construction
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        int flag = getArguments().getInt("num");
+        final int flag = getArguments().getInt("num");
         String tagName = getArguments().getString("tagName");
         String tagId = getArguments().getString("id");
         String tagX = getArguments().getString("x");
@@ -66,7 +66,9 @@ public class AddRefTagDialogFragment extends DialogFragment{
         View v = inflater.inflate(R.layout.add_reference_tag_dialog, null);
         builder.setView(v);
         refTagName = (EditText) v.findViewById(R.id.tag_name);
-        id = (EditText) v.findViewById(R.id.snap_ip);
+        id = (EditText) v.findViewById(R.id.ref_tag_id);
+        x = (EditText) v.findViewById(R.id.refTagX);
+        y = (EditText) v.findViewById(R.id.refTagY);
         refTagName.setText(tagName);
         id.setText(tagId);
         x.setText(tagX);
@@ -85,7 +87,7 @@ public class AddRefTagDialogFragment extends DialogFragment{
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 mListener.refTagConfirm(AddRefTagDialogFragment.this, refTagName.getText().toString(),
-                        id.getText().toString(), x.getText().toString(), y.getText().toString());
+                        id.getText().toString(), x.getText().toString(), y.getText().toString(), flag);
             }
         })
                 .setNegativeButton(R.string.cancel, null);

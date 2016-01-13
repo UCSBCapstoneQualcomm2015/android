@@ -268,17 +268,20 @@ public class ListDisplay extends AppCompatActivity implements AddItemDialogFragm
     }
 
     @Override
-    public void roomConfirm(DialogFragment dialog, String roomName, String length, String width) {
+    public void roomConfirm(DialogFragment dialog, String roomName, String length, String width, int roomFlag) {
         Log.d(roomName, length);
+        if (roomFlag == 1) {
+            sr.postRoom(user, roomName, width, length, new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
 
-        sr.postRoom(user, roomName, width, length, new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
+                }
 
-            }
-            @Override
-            public void onFailure(Throwable t) { }
-        });
+                @Override
+                public void onFailure(Throwable t) {
+                }
+            });
+        }
 
     Intent intent = new Intent(this, ListDisplay.class);
         bundle.putInt("displayFlag", 1);
@@ -312,21 +315,25 @@ public class ListDisplay extends AppCompatActivity implements AddItemDialogFragm
     }
 
     @Override
-    public void refTagConfirm(DialogFragment dialog, String tagName, String tagId, String x, String y)   {
-        room = (Room) getIntent().getExtras().getSerializable("room");
+    public void refTagConfirm(DialogFragment dialog, String tagName, String tagId, String x, String y, int refFlag)   {
+        Log.d(tagName, tagId);
+        if (refFlag == 1) {
+            sr.postReferenceTag(user, tagName, room.get_id(), tagId, x, y, new Callback<ResponseBody>() {      //NEED TO THROW IN X AND Y
+                @Override
+                public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
 
-        sr.postReferenceTag(user, tagName, room.get_id(), tagId, x, y, new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
+                }
+                @Override
+                public void onFailure(Throwable t) {
 
-            }
+                }
+            });
 
-            @Override
-            public void onFailure(Throwable t) {
-
-            }
-        });
-
+        }
+        else {
+            //PUT Reference Tag
+        }
+        
         Intent intent = new Intent(this, ListDisplay.class);
         bundle.putInt("displayFlag", 4);
         bundle.putSerializable("room", room);

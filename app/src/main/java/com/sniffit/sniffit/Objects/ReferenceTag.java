@@ -8,6 +8,8 @@ public class ReferenceTag extends  SniffitObject{
     Room room;
     String id;
     String x;
+    String y;
+
 
     public String getX() {
         return x;
@@ -24,8 +26,6 @@ public class ReferenceTag extends  SniffitObject{
     public void setY(String y) {
         this.y = y;
     }
-
-    String y;
 
     public Room getRoom() {
         return room;

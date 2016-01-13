@@ -17,7 +17,7 @@ import com.sniffit.sniffit.R;
  */
 public class AddRoomDialogFragment extends DialogFragment{
     public interface AddRoomListener {
-        public void roomConfirm(DialogFragment dialog, String roomName, String length, String width);
+        public void roomConfirm(DialogFragment dialog, String roomName, String length, String width, int roomFlag);
 
     }
 
@@ -56,7 +56,7 @@ public class AddRoomDialogFragment extends DialogFragment{
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         // Use the Builder class for convenient dialog construction
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        int flag = getArguments().getInt("num");
+        final int flag = getArguments().getInt("num");
         String roomName = getArguments().getString("roomName");
         String length = getArguments().getString("length");
         String width = getArguments().getString("width");
@@ -83,7 +83,7 @@ public class AddRoomDialogFragment extends DialogFragment{
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 mListener.roomConfirm(AddRoomDialogFragment.this, edit_roomName.getText().toString(),
-                        edit_length.getText().toString(), edit_width.getText().toString());
+                        edit_length.getText().toString(), edit_width.getText().toString(), flag);
             }
         })
                 .setNegativeButton(R.string.cancel, null);
