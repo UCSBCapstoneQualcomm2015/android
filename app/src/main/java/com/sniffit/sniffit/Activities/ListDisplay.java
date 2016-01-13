@@ -290,9 +290,6 @@ public class ListDisplay extends AppCompatActivity implements AddItemDialogFragm
     @Override
     public void snapdragonConfirm(DialogFragment dialog, String snapName, String ip, String xCoord, String yCoord) {
         room = (Room) getIntent().getExtras().getSerializable("room");
-        user = (User) getIntent().getExtras().getSerializable("user");
-        Log.d("hey", user.getUserId());
-        Log.d(snapName, ip);
 
         sr.postSnapdragon(user, snapName, room.get_id(), ip, xCoord, yCoord, new Callback<ResponseBody>() {
             @Override
@@ -316,9 +313,9 @@ public class ListDisplay extends AppCompatActivity implements AddItemDialogFragm
 
     @Override
     public void refTagConfirm(DialogFragment dialog, String tagName, String tagId, String x, String y)   {
-        Log.d (tagName, tagId);
+        room = (Room) getIntent().getExtras().getSerializable("room");
 
-        sr.postRFIDTag(user, tagId, tagName, new Callback<ResponseBody>() {         //NEED TO THROW IN X AND Y
+        sr.postReferenceTag(user, tagName, room.get_id(), tagId, x, y, new Callback<ResponseBody>() {
             @Override
             public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
 
@@ -326,8 +323,10 @@ public class ListDisplay extends AppCompatActivity implements AddItemDialogFragm
 
             @Override
             public void onFailure(Throwable t) {
+
             }
         });
+
         Intent intent = new Intent(this, ListDisplay.class);
         bundle.putInt("displayFlag", 4);
         bundle.putSerializable("room", room);

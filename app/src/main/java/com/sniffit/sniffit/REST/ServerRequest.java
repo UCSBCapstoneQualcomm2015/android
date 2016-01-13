@@ -116,7 +116,7 @@ public class ServerRequest {
 
         @FormUrlEncoded
         @POST("api/user/{user_id}/reftags/")
-        Call<ResponseBody> postReferenceTag(@Header("x-access-token") String token, @Path("user_id") String userId, @Field("tagId") String tagId, @Field("roomId") String roomId, @Field("x_position") String xPosition, @Field("y_position") String yPosition);
+        Call<ResponseBody> postReferenceTag(@Header("x-access-token") String token, @Path("user_id") String userId, @Field("tagName") String tagName, @Field("roomId") String roomId, @Field("tagId") String tagId, @Field("xCoord") String xCoord, @Field("yCoord") String yCoord);
 
         @FormUrlEncoded
         @PUT("api/user/{user_id}/reftags/{ref_tagId}")
@@ -337,19 +337,14 @@ public class ServerRequest {
         snapdragonCall.enqueue(callback);
     }
 
-    public void postReferenceTag(User user, retrofit.Callback<ResponseBody> callback){
-        //Hard coded
-        String tagId = "23424";
-        String roomId = "4321";
-        String xPosition = "1";
-        String yPosition = "1";
+    public void postReferenceTag(User user, String tagName, String roomId, String tagId, String xCoord, String yCoord, retrofit.Callback<ResponseBody> callback){
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(base_url)
                 .build();
         apiInterface loginService = retrofit.create(apiInterface.class);
 
-        Call<ResponseBody> snapdragonCall = loginService.postReferenceTag(user.getToken(), user.getUserId(), tagId, roomId, xPosition, yPosition);
+        Call<ResponseBody> snapdragonCall = loginService.postReferenceTag(user.getToken(), user.getUserId(), tagName, roomId, tagId, xCoord, yCoord);
         snapdragonCall.enqueue(callback);
     }
 

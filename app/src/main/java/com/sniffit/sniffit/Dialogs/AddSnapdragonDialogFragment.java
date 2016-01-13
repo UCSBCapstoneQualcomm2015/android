@@ -61,8 +61,8 @@ public class AddSnapdragonDialogFragment extends DialogFragment {
         int flag = getArguments().getInt("num");
         String snapName = getArguments().getString("snapdragonName");
         String snapIp = getArguments().getString("ip");
-        String snapX = getArguments().getString("x");
-        final String snapY = getArguments().getString("y");
+        String snapX = getArguments().getString("xCoord");
+        final String snapY = getArguments().getString("yCoord");
 
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View v = inflater.inflate(R.layout.add_snapdragon_dialog, null);
