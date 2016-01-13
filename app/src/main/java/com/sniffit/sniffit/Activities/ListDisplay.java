@@ -174,7 +174,7 @@ public class ListDisplay extends AppCompatActivity implements AddItemDialogFragm
 
         else if (flag == REFERENCE) {
             room = (Room) getIntent().getExtras().getSerializable("room");
-            header.setText("Reference Tags (Bedroom)");
+            header.setText("Reference Tags (" + room.getName() + ")");
             header.setTextSize(25);
             currentPage = (Button) findViewById(R.id.rooms_button);
             currentPage.setBackgroundColor(Color.parseColor("#294e6a"));
@@ -333,7 +333,7 @@ public class ListDisplay extends AppCompatActivity implements AddItemDialogFragm
         else {
             //PUT Reference Tag
         }
-        
+
         Intent intent = new Intent(this, ListDisplay.class);
         bundle.putInt("displayFlag", 4);
         bundle.putSerializable("room", room);
