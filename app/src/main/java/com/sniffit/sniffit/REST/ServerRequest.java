@@ -108,7 +108,7 @@ public class ServerRequest {
         Call<ResponseBody> deleteSnapdragon(@Header("x-access-token") String token, @Path("user_id") String userId, @Path("snapdragon_ip") String snapdragonIp);
 
         //Reference Tag API calls
-        @GET("api/user/{user_id}/reftags/{room_id}")
+        @GET("api/user/{user_id}/reftags/rooms/{room_id}")
         Call<ResponseBody> getReferenceTags(@Header("x-access-token") String token, @Path("user_id") String userId, @Path("room_id") String roomId);
 
         @GET("api/user/{user_id}/reftags/{ref_tagId}")
@@ -116,7 +116,7 @@ public class ServerRequest {
 
         @FormUrlEncoded
         @POST("api/user/{user_id}/reftags/")
-        Call<ResponseBody> postReferenceTag(@Header("x-access-token") String token, @Path("user_id") String userId, @Field("tagName") String tagName, @Field("roomId") String roomId, @Field("tagId") String tagId, @Field("xCoord") String xCoord, @Field("yCoord") String yCoord);
+        Call<ResponseBody> postReferenceTag(@Header("x-access-token") String token, @Path("user_id") String userId, @Field("name") String name, @Field("roomId") String roomId, @Field("tagId") String tagId, @Field("xCoord") String xCoord, @Field("yCoord") String yCoord);
 
         @FormUrlEncoded
         @PUT("api/user/{user_id}/reftags/{ref_tagId}")
