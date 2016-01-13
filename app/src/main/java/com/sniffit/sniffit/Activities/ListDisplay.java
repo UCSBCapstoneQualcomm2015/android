@@ -148,17 +148,17 @@ public class ListDisplay extends AppCompatActivity implements AddItemDialogFragm
             room = (Room) getIntent().getExtras().getSerializable("room");
             header.setText("Reference Tags (Bedroom)");
             header.setTextSize(25);
-            ReferenceTag tag1 = new ReferenceTag();
-            ReferenceTag tag2 = new ReferenceTag();
-            tag1.setRoom(room);
-            tag1.setId("29493929392");
-            tag1.setX("7");
-            tag1.setY("2");
-            tag1.setName("Bed 1");
-            tag2.setName("Bed 2");
+//            ReferenceTag tag1 = new ReferenceTag();
+//            ReferenceTag tag2 = new ReferenceTag();
+//            tag1.setRoom(room);
+//            tag1.setId("29493929392");
+//            tag1.setX("7");
+//            tag1.setY("2");
+//            tag1.setName("Bed 1");
+//            tag2.setName("Bed 2");
 
-            sniffitList.add(tag1);
-            sniffitList.add(tag2);
+//            sniffitList.add(tag1);
+//            sniffitList.add(tag2);
             currentPage = (Button) findViewById(R.id.rooms_button);
             currentPage.setBackgroundColor(Color.parseColor("#294e6a"));
         }
@@ -228,17 +228,20 @@ public class ListDisplay extends AppCompatActivity implements AddItemDialogFragm
     }
 
     @Override
-    public void roomConfirm(DialogFragment dialog, String roomName, String length, String width) {
+    public void roomConfirm(DialogFragment dialog, String roomName, String length, String width, int roomFlag) {
         Log.d(roomName, length);
+        if (roomFlag == 1) {
+            sr.postRoom(user, roomName, width, length, new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
 
-        sr.postRoom(user, roomName, width, length, new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
+                }
 
-            }
-            @Override
-            public void onFailure(Throwable t) { }
-        });
+                @Override
+                public void onFailure(Throwable t) {
+                }
+            });
+        }
 
     Intent intent = new Intent(this, ListDisplay.class);
         bundle.putInt("displayFlag", 1);
@@ -260,19 +263,21 @@ public class ListDisplay extends AppCompatActivity implements AddItemDialogFragm
     }
 
     @Override
-    public void refTagConfirm(DialogFragment dialog, String tagName, String tagId, String x, String y)   {
-        Log.d (tagName, tagId);
+    public void refTagConfirm(DialogFragment dialog, String tagName, String tagId, String x, String y, int refFlag)   {
+        Log.d(tagName, tagId);
+        if (refFlag == 1) {
+            sr.postRFIDTag(user, tagId, tagName, new Callback<ResponseBody>() {         //NEED TO THROW IN X AND Y
+                @Override
+                public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
 
-        sr.postRFIDTag(user, tagId, tagName, new Callback<ResponseBody>() {         //NEED TO THROW IN X AND Y
-            @Override
-            public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
+                }
 
-            }
-
-            @Override
-            public void onFailure(Throwable t) {
-            }
-        });
+                @Override
+                public void onFailure(Throwable t) {
+                }
+            });
+        }
+        else {}
         Intent intent = new Intent(this, ListDisplay.class);
         bundle.putInt("displayFlag", 4);
         bundle.putSerializable("room", room);

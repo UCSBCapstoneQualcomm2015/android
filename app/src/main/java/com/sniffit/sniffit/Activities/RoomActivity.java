@@ -68,7 +68,7 @@ public class RoomActivity extends Activity implements AddRoomDialogFragment.AddR
     }
 
     @Override
-    public void roomConfirm(DialogFragment dialog, String roomName, String length, String width) {
+    public void roomConfirm(DialogFragment dialog, String roomName, String length, String width, int flag) {
         Log.d(roomName, length);
         //would add it to the database here and reload the intent to update room
         Intent intent = new Intent(this, RoomActivity.class);
