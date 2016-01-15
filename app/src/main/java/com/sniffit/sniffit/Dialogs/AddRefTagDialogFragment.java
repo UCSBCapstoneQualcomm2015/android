@@ -92,7 +92,6 @@ public class AddRefTagDialogFragment extends DialogFragment{
         })
                 .setNegativeButton(R.string.cancel, null);
 
-
         // Create the AlertDialog object and return it
         return builder.create();
     }

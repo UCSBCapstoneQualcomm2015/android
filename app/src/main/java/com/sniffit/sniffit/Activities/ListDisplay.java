@@ -257,9 +257,20 @@ public class ListDisplay extends AppCompatActivity implements AddItemDialogFragm
     }
 
     @Override
-    public void itemConfirm(DialogFragment dialog, String itemName, String itemId) {
+    public void itemConfirm(DialogFragment dialog, String itemName, String itemId, int itemFlag) {
         Log.d(itemName, itemId);
-                //would add it to the database here and reload the intent to update list
+        if (itemFlag == 1) {
+            sr.postRFIDTag(user, itemId, itemName, new Callback<ResponseBody> () {
+                @Override
+                public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
+
+                }
+
+                @Override
+                public void onFailure(Throwable t) {
+                }
+            });
+        }
         Intent intent = new Intent(this, ListDisplay.class);
         bundle.putInt("displayFlag", 2);
         intent.putExtras(bundle);
@@ -304,20 +315,21 @@ public class ListDisplay extends AppCompatActivity implements AddItemDialogFragm
     }
 
     @Override
-    public void snapdragonConfirm(DialogFragment dialog, String snapName, String ip, String xCoord, String yCoord) {
+    public void snapdragonConfirm(DialogFragment dialog, String snapName, String ip, String xCoord, String yCoord, int snapFlag) {
         room = (Room) getIntent().getExtras().getSerializable("room");
+        if (snapFlag == 1) {
+            sr.postSnapdragon(user, snapName, room.get_id(), ip, xCoord, yCoord, new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
 
-        sr.postSnapdragon(user, snapName, room.get_id(), ip, xCoord, yCoord, new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
+                }
 
-            }
+                @Override
+                public void onFailure(Throwable t) {
 
-            @Override
-            public void onFailure(Throwable t) {
-
-            }
-        });
+                }
+            });
+        }
         Intent intent = new Intent(this, ListDisplay.class);
         bundle.putInt("displayFlag", 3);
         bundle.putSerializable("room", room);
@@ -336,6 +348,7 @@ public class ListDisplay extends AppCompatActivity implements AddItemDialogFragm
                 public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
 
                 }
+
                 @Override
                 public void onFailure(Throwable t) {
 

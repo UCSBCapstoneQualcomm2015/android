@@ -6,25 +6,25 @@ package com.sniffit.sniffit.Objects;
 public class ReferenceTag extends  SniffitObject{
 
     Room room;
-    String id;
-    String x;
-    String y;
+    String tagId;
+    String xCoord;
+    String yCoord;
 
 
     public String getX() {
-        return x;
+        return xCoord;
     }
 
     public void setX(String x) {
-        this.x = x;
+        this.xCoord = x;
     }
 
     public String getY() {
-        return y;
+        return yCoord;
     }
 
     public void setY(String y) {
-        this.y = y;
+        this.yCoord = y;
     }
 
     public Room getRoom() {
@@ -36,11 +36,11 @@ public class ReferenceTag extends  SniffitObject{
     }
 
     public String getId() {
-        return id;
+        return tagId;
     }
 
     public void setId(String id) {
-        this.id = id;
+        this.tagId = id;
     }
 
 

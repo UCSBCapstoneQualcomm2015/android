@@ -18,7 +18,7 @@ import com.sniffit.sniffit.R;
  */public class AddItemDialogFragment extends DialogFragment {
 
     public interface AddItemListener {
-        public void itemConfirm(DialogFragment dialog, String tagName, String tagId);
+        public void itemConfirm(DialogFragment dialog, String tagName, String tagId, int itemFlag);
     }
 
     AddItemListener mListener;
@@ -55,7 +55,7 @@ import com.sniffit.sniffit.R;
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         // Use the Builder class for convenient dialog construction
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        int flag = getArguments().getInt("num");
+        final int flag = getArguments().getInt("num");
         String itemName = getArguments().getString("itemName");
         String itemId = getArguments().getString("itemId");
         LayoutInflater inflater = getActivity().getLayoutInflater();
@@ -79,7 +79,7 @@ import com.sniffit.sniffit.R;
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 mListener.itemConfirm(AddItemDialogFragment.this, tagName.getText().toString(),
-                        tagId.getText().toString());
+                        tagId.getText().toString(), flag);
             }
         })
                 .setNegativeButton(R.string.cancel, null);

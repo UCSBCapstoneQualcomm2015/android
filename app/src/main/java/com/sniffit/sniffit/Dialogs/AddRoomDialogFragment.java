@@ -32,7 +32,7 @@ public class AddRoomDialogFragment extends DialogFragment{
         args.putInt("num", num);
         args.putString("roomName", roomName);
         args.putString("length",length);
-        args.putString("width",length);
+        args.putString("width",width);
         f.setArguments(args);
 
         return f;
@@ -60,6 +60,7 @@ public class AddRoomDialogFragment extends DialogFragment{
         final String oldName = getArguments().getString("roomName");
         String length = getArguments().getString("length");
         String width = getArguments().getString("width");
+        System.out.println("hi  " + width);
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View v = inflater.inflate(R.layout.add_room_dialog, null);
         builder.setView(v);
