@@ -260,6 +260,7 @@ public class ListDisplay extends AppCompatActivity implements AddItemDialogFragm
     public void itemConfirm(DialogFragment dialog, String itemName, String itemId) {
         Log.d(itemName, itemId);
                 //would add it to the database here and reload the intent to update list
+
         Intent intent = new Intent(this, ListDisplay.class);
         bundle.putInt("displayFlag", 2);
         intent.putExtras(bundle);

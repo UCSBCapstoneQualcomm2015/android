@@ -18,6 +18,8 @@ import com.squareup.okhttp.Headers;
 import com.squareup.okhttp.MediaType;
 import com.squareup.okhttp.ResponseBody;
 
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -52,14 +54,50 @@ public class LoginActivity extends Activity {
         register = (Button)findViewById(R.id.register);
         forgotPass = (Button)findViewById(R.id.forgot);
 
-        register.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent regActivity = new Intent(LoginActivity.this, RegisterActivity.class);
-                startActivity(regActivity);
-                finish();
-            }
-        });
+            register.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    emailString = email.getText().toString();
+                    passwordString = password.getText().toString();
+
+                    ServerRequest sr = new ServerRequest();
+
+                    sr.authenticate("register", emailString, passwordString, new Callback<ResponseBody>() {
+                        @Override
+                        public void onResponse(retrofit.Response<ResponseBody> response, Retrofit retrofit) {
+                            try {
+                                String jsonBody = response.body().string();
+
+                                Gson gson = new Gson();
+                                JSONObject object = new JSONObject(jsonBody);
+                                String message = object.getString("message");
+
+                                if (message.equals("Successful sign up.")) {
+                                    User user = gson.fromJson(jsonBody, User.class);
+                                    Intent intent = new Intent(getApplicationContext(), FindActivity.class);
+                                    Bundle bundle = new Bundle();
+                                    bundle.putSerializable("user", user);
+                                    intent.putExtras(bundle);
+                                    startActivity(intent);
+                                }else{
+                                    //Throw error
+                                    System.out.print(message);
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+
+                        }
+
+                        @Override
+                        public void onFailure(Throwable t) {
+                            Log.d("Error", t.toString());
+                        }
+                    });
+
+                }
+            });
+
 
         login.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -68,14 +106,14 @@ public class LoginActivity extends Activity {
                 passwordString = password.getText().toString();
 
                 //Hardcoded for testing
-                emailString = "b@gmail.com";
-                passwordString = "abc123";
+//                emailString = "b@gmail.com";
+//                passwordString = "abc123";
 
                 HashMap<String, String> params = new HashMap<String, String>();
 
                 ServerRequest sr = new ServerRequest();
 
-                sr.authenticate(csrfString, emailString, passwordString, new Callback<ResponseBody>() {
+                sr.authenticate("login", emailString, passwordString, new Callback<ResponseBody>() {
                     @Override
                     public void onResponse(retrofit.Response<ResponseBody> response, Retrofit retrofit) {
                         try {

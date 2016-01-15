@@ -49,7 +49,11 @@ public class ServerRequest {
         //Authentication
         @FormUrlEncoded
         @POST("api/login")
-        Call<ResponseBody> loginUser(@Field("_csrf") String csrf, @Field("email") String email, @Field("password") String password);
+        Call<ResponseBody> loginUser(@Field("email") String email, @Field("password") String password);
+
+        @FormUrlEncoded
+        @POST("api/signup")
+        Call<ResponseBody> registerUser(@Field("email") String email, @Field("password") String password);
 
         //RFID API calls
         @GET("api/user/{user_id}/rfidtags")
@@ -128,14 +132,24 @@ public class ServerRequest {
 
     }
 
-    public void authenticate(String csrf, String email, String password, retrofit.Callback<ResponseBody> callback){
+    public void authenticate(String request, String email, String password, retrofit.Callback<ResponseBody> callback){
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(base_url)
                 .build();
         apiInterface loginService = retrofit.create(apiInterface.class);
-        Call<ResponseBody> call = loginService.loginUser(csrf, email, password);
-        call.enqueue(callback);
+        switch (request.toLowerCase()) {
+            case "login":
+                Call<ResponseBody> call = loginService.loginUser(email, password);
+                call.enqueue(callback);
+                break;
+            case "register":
+                Call<ResponseBody> registerCall = loginService.registerUser(email, password);
+                registerCall.enqueue(callback);
+                break;
+        }
     }
+
+
 
     /*
         API helper function for general GET requests, with a "request" parameter that chooses which api call to make
