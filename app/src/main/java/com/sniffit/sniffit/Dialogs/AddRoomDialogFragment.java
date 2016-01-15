@@ -17,7 +17,7 @@ import com.sniffit.sniffit.R;
  */
 public class AddRoomDialogFragment extends DialogFragment{
     public interface AddRoomListener {
-        public void roomConfirm(DialogFragment dialog, String roomName, String length, String width, int roomFlag);
+        public void roomConfirm(DialogFragment dialog, String roomName, String length, String width, int roomFlag, String oldName);
 
     }
 
@@ -32,7 +32,7 @@ public class AddRoomDialogFragment extends DialogFragment{
         args.putInt("num", num);
         args.putString("roomName", roomName);
         args.putString("length",length);
-        args.putString("width",length);
+        args.putString("width",width);
         f.setArguments(args);
 
         return f;
@@ -57,16 +57,17 @@ public class AddRoomDialogFragment extends DialogFragment{
         // Use the Builder class for convenient dialog construction
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         final int flag = getArguments().getInt("num");
-        String roomName = getArguments().getString("roomName");
+        final String oldName = getArguments().getString("roomName");
         String length = getArguments().getString("length");
         String width = getArguments().getString("width");
+        System.out.println("hi  " + width);
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View v = inflater.inflate(R.layout.add_room_dialog, null);
         builder.setView(v);
         edit_roomName = (EditText) v.findViewById(R.id.room_name);
         edit_length = (EditText) v.findViewById(R.id.length);
         edit_width = (EditText) v.findViewById(R.id.width);
-        edit_roomName.setText(roomName);
+        edit_roomName.setText(oldName);
         edit_length.setText(length);
         edit_width.setText(width);
         switch (flag) {
@@ -83,7 +84,7 @@ public class AddRoomDialogFragment extends DialogFragment{
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 mListener.roomConfirm(AddRoomDialogFragment.this, edit_roomName.getText().toString(),
-                        edit_length.getText().toString(), edit_width.getText().toString(), flag);
+                        edit_length.getText().toString(), edit_width.getText().toString(), flag, oldName);
             }
         })
                 .setNegativeButton(R.string.cancel, null);

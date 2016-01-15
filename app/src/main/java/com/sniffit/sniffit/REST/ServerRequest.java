@@ -308,12 +308,13 @@ public class ServerRequest {
         rfidCall.enqueue(callback);
     }
 
-    public void putRoom(User user, retrofit.Callback<ResponseBody> callback){
+    public void putRoom(User user, String roomName, String roomWidth, String roomLength,
+                        String roomOldName, retrofit.Callback<ResponseBody> callback){
         //Hard coded
-        String width = "123";
-        String length = "1124";
-        String name = "and";
-        String oldName = "alkdsf";
+        String width = roomWidth;
+        String length = roomLength;
+        String name = roomName;
+        String oldName = roomOldName;
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(base_url)

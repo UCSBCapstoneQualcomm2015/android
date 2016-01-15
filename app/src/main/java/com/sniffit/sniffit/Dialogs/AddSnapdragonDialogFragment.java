@@ -19,7 +19,7 @@ import com.sniffit.sniffit.R;
 public class AddSnapdragonDialogFragment extends DialogFragment {
 
     public interface AddSnapDragonListener {
-        public void snapdragonConfirm(DialogFragment dialog, String tagName, String tagId, String x, String y);
+        public void snapdragonConfirm(DialogFragment dialog, String tagName, String tagId, String x, String y, int snapFlag);
     }
 
     AddSnapDragonListener mListener;
@@ -58,11 +58,11 @@ public class AddSnapdragonDialogFragment extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         // Use the Builder class for convenient dialog construction
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        int flag = getArguments().getInt("num");
+        final int flag = getArguments().getInt("num");
         String snapName = getArguments().getString("snapdragonName");
         String snapIp = getArguments().getString("ip");
-        String snapX = getArguments().getString("xCoord");
-        final String snapY = getArguments().getString("yCoord");
+        String snapX = getArguments().getString("x");
+        String snapY = getArguments().getString("y");
 
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View v = inflater.inflate(R.layout.add_snapdragon_dialog, null);
@@ -73,6 +73,9 @@ public class AddSnapdragonDialogFragment extends DialogFragment {
         y = (EditText) v.findViewById(R.id.snapY);
         snapdragonName.setText(snapName);
         ip.setText(snapIp);
+        x.setText(snapX);
+        y.setText(snapY);
+
         switch (flag) {
             case 1:
                 builder.setTitle("Add New Snapdragon");
@@ -90,7 +93,7 @@ public class AddSnapdragonDialogFragment extends DialogFragment {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 mListener.snapdragonConfirm(AddSnapdragonDialogFragment.this, snapdragonName.getText().toString(),
-                        ip.getText().toString(), x.getText().toString(), y.getText().toString());
+                        ip.getText().toString(), x.getText().toString(), y.getText().toString(), flag);
             }
         })
                 .setNegativeButton(R.string.cancel, null);

@@ -73,6 +73,7 @@ public class LoginActivity extends Activity {
                                 String message = object.getString("message");
 
                                 if (message.equals("Successful sign up.")) {
+                                    System.out.print(jsonBody);
                                     User user = gson.fromJson(jsonBody, User.class);
                                     Intent intent = new Intent(getApplicationContext(), FindActivity.class);
                                     Bundle bundle = new Bundle();

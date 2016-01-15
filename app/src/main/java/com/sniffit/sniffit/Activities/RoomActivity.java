@@ -14,7 +14,13 @@ import com.sniffit.sniffit.Dialogs.AddItemDialogFragment;
 import com.sniffit.sniffit.Dialogs.AddRoomDialogFragment;
 import com.sniffit.sniffit.R;
 import com.sniffit.sniffit.Objects.Room;
+import com.sniffit.sniffit.REST.ServerRequest;
 import com.sniffit.sniffit.REST.User;
+import com.squareup.okhttp.ResponseBody;
+
+import retrofit.Callback;
+import retrofit.Response;
+import retrofit.Retrofit;
 
 /**
  * Created by sohanshah on 11/19/15.
@@ -24,6 +30,8 @@ public class RoomActivity extends Activity implements AddRoomDialogFragment.AddR
     Button currentPage;
     User user;
     Bundle bundle;
+    final ServerRequest sr = new ServerRequest();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,11 +76,36 @@ public class RoomActivity extends Activity implements AddRoomDialogFragment.AddR
     }
 
     @Override
-    public void roomConfirm(DialogFragment dialog, String roomName, String length, String width, int flag) {
+    public void roomConfirm(DialogFragment dialog, String roomName, String length, String width, int roomFlag, String oldName) {
         Log.d(roomName, length);
-        //would add it to the database here and reload the intent to update room
-        Intent intent = new Intent(this, RoomActivity.class);
-        bundle.putSerializable("object", room);
+        if (roomFlag == 1) {
+            sr.postRoom(user, roomName, width, length, new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
+
+                }
+
+                @Override
+                public void onFailure(Throwable t) {
+                }
+            });
+        }
+        else {
+            sr.putRoom(user, roomName,width, length, oldName, new Callback<ResponseBody> () {
+                @Override
+                public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
+
+                }
+
+                @Override
+                public void onFailure(Throwable t) {
+                }
+            });
+        }
+
+
+        Intent intent = new Intent(this, ListDisplay.class);
+        bundle.putInt("displayFlag", 1);
         intent.putExtras(bundle);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
