@@ -1,5 +1,7 @@
 package com.sniffit.sniffit.REST;
 
+        import android.util.Log;
+
         import java.io.InputStream;
         import java.util.HashMap;
         import java.util.Map;
@@ -84,9 +86,9 @@ public class ServerRequest {
         @PUT("api/user/{user_id}/rooms/{room_name}")
         Call<ResponseBody> putRoom(@Header("x-access-token") String token, @Path("user_id") String userId, @Path("room_name") String oldRoom, @Field("name") String name, @Field("length") String length,  @Field("width") String width);
 
-        @FormUrlEncoded
-        @DELETE("api/user/{user_id}/rooms/{room_name}")
-        Call<ResponseBody> deleteRoom(@Header("x-access-token") String token, @Path("user_id") String userId, @Path("room_name") String roomName);
+
+        @DELETE("api/user/{user_id}/rooms/{room_id}")
+        Call<ResponseBody> deleteRoom(@Header("x-access-token") String token, @Path("user_id") String userId, @Path("room_id") String roomId);
 
         //Snapdragon API calls
         @GET("api/user/{user_id}/snapdragons/rooms/{room_id}")
@@ -365,8 +367,19 @@ public class ServerRequest {
         Call<ResponseBody> snapdragonCall = loginService.putReferenceTag(user.getToken(), user.getUserId(), oldTagId, tagId, roomId, xPosition, yPosition);
         snapdragonCall.enqueue(callback);
     }
+    //////////////////   DELETES /////////////////
 
+    public void deleteRoom(User user, String roomId, retrofit.Callback<ResponseBody> callback) {
+        String id = roomId;
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(base_url)
+                .build();
+        apiInterface loginService = retrofit.create(apiInterface.class);
 
+        Call<ResponseBody> roomCall = loginService.deleteRoom(user.getToken(), user.getUserId(), id);
+        roomCall.enqueue(callback);
+
+    }
 }
 
 

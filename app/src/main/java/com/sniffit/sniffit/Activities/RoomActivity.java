@@ -25,7 +25,7 @@ import retrofit.Retrofit;
 /**
  * Created by sohanshah on 11/19/15.
  */
-public class RoomActivity extends Activity implements AddRoomDialogFragment.AddRoomListener{
+public class RoomActivity extends Activity implements AddRoomDialogFragment.AddRoomListener, AddRoomDialogFragment.DeleteRoomListener {
     Room room;
     Button currentPage;
     User user;
@@ -51,7 +51,7 @@ public class RoomActivity extends Activity implements AddRoomDialogFragment.AddR
     // when edit room button is clicked
 
     public void editRoom(View view) {
-        DialogFragment editItem = AddRoomDialogFragment.newInstance(2, room.getName(), room.getLength(), room.getWidth());       //SHOULD PASS IN NAME AND ID OF SNIFFITLIST.GET(POSITION)
+        DialogFragment editItem = AddRoomDialogFragment.newInstance(2, room.getName(), room.getLength(), room.getWidth(), room.get_id());       //SHOULD PASS IN NAME AND ID OF SNIFFITLIST.GET(POSITION)
         editItem.show(getFragmentManager(), "editItem");
     }
 
@@ -104,6 +104,30 @@ public class RoomActivity extends Activity implements AddRoomDialogFragment.AddR
         }
 
 
+        Intent intent = new Intent(this, ListDisplay.class);
+        bundle.putInt("displayFlag", 1);
+        intent.putExtras(bundle);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+    }
+
+
+    @Override
+    public void roomDelete(DialogFragment dialog, String roomId) {
+        Log.d("test1 ", roomId);
+
+        sr.deleteRoom(user, roomId, new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
+                Log.d("delete: ", "success");
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                Log.d("delete:  ", "failed");
+            }
+        });
+        Log.d("hiiii", "test");
         Intent intent = new Intent(this, ListDisplay.class);
         bundle.putInt("displayFlag", 1);
         intent.putExtras(bundle);

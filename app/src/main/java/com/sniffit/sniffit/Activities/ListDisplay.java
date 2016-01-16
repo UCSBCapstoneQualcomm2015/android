@@ -49,7 +49,8 @@ import retrofit.Retrofit;
 public class ListDisplay extends AppCompatActivity implements AddItemDialogFragment.AddItemListener,
                                                                 AddRoomDialogFragment.AddRoomListener,
                                                                 AddSnapdragonDialogFragment.AddSnapDragonListener,
-                                                                AddRefTagDialogFragment.AddRefTagListener {
+                                                                AddRefTagDialogFragment.AddRefTagListener,
+                                                                 AddRoomDialogFragment.DeleteRoomListener {
     static final int ROOM = 1;
     static final int ITEM = 2;
     static final int SNAPDRAGON = 3;
@@ -237,7 +238,7 @@ public class ListDisplay extends AppCompatActivity implements AddItemDialogFragm
         switch (flag) {     //1: room     2:item
 
             case ROOM:
-                dialog = AddRoomDialogFragment.newInstance(1, "", "", "");
+                dialog = AddRoomDialogFragment.newInstance(1, "", "", "", "");
                 dialog.show(getFragmentManager(), "addRoom");
                 break;
             case ITEM:
@@ -294,7 +295,7 @@ public class ListDisplay extends AppCompatActivity implements AddItemDialogFragm
             });
         }
         else {
-            sr.putRoom(user, roomName,width, length, oldName, new Callback<ResponseBody> () {
+            sr.putRoom(user, roomName, width, length, oldName, new Callback<ResponseBody>() {
                 @Override
                 public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
 
@@ -367,6 +368,30 @@ public class ListDisplay extends AppCompatActivity implements AddItemDialogFragm
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
         //would add it to the database here and reload the intent to update list
+    }
+
+    ///////////////// DELETE LISTENERS /////////////////
+
+    @Override
+    public void roomDelete(DialogFragment dialog, String roomId) {
+        Log.d("test3 ", roomId);
+        sr.deleteRoom(user, roomId, new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
+
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+
+            }
+        });
+
+        Intent intent = new Intent(this, ListDisplay.class);
+        bundle.putInt("displayFlag", 1);
+        intent.putExtras(bundle);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
     }
 
 
