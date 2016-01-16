@@ -51,7 +51,11 @@ public class ServerRequest {
         //Authentication
         @FormUrlEncoded
         @POST("api/login")
-        Call<ResponseBody> loginUser(@Field("_csrf") String csrf, @Field("email") String email, @Field("password") String password);
+        Call<ResponseBody> loginUser(@Field("email") String email, @Field("password") String password);
+
+        @FormUrlEncoded
+        @POST("api/signup")
+        Call<ResponseBody> registerUser(@Field("email") String email, @Field("password") String password);
 
         //RFID API calls
         @GET("api/user/{user_id}/rfidtags")
@@ -62,7 +66,7 @@ public class ServerRequest {
 
         @FormUrlEncoded
         @POST("api/user/{user_id}/rfidtags")
-        Call<ResponseBody> postTag(@Header("x-access-token") String token, @Path("user_id") String userId, @Field("_csrf") String csrf, @Field("tagId") String tagId, @Field("name") String name);
+        Call<ResponseBody> postTag(@Header("x-access-token") String token, @Path("user_id") String userId, @Field("tagId") String tagId, @Field("name") String name);
 
         @FormUrlEncoded
         @PUT("api/user/{user_id}/rfidtags/{rfid_tag_id}")
@@ -83,8 +87,8 @@ public class ServerRequest {
         Call<ResponseBody> postRoom(@Header("x-access-token") String token, @Path("user_id") String userId, @Field("name") String name, @Field("length") String length,  @Field("width") String width);
 
         @FormUrlEncoded
-        @PUT("api/user/{user_id}/rooms/{room_name}")
-        Call<ResponseBody> putRoom(@Header("x-access-token") String token, @Path("user_id") String userId, @Path("room_name") String oldRoom, @Field("name") String name, @Field("length") String length,  @Field("width") String width);
+        @PUT("api/user/{user_id}/rooms/{room_id}")
+        Call<ResponseBody> putRoom(@Header("x-access-token") String token, @Path("user_id") String userId, @Path("room_id") String oldRoom, @Field("name") String name, @Field("length") String length,  @Field("width") String width);
 
 
         @DELETE("api/user/{user_id}/rooms/{room_id}")
@@ -130,14 +134,24 @@ public class ServerRequest {
 
     }
 
-    public void authenticate(String csrf, String email, String password, retrofit.Callback<ResponseBody> callback){
+    public void authenticate(String request, String email, String password, retrofit.Callback<ResponseBody> callback){
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(base_url)
                 .build();
         apiInterface loginService = retrofit.create(apiInterface.class);
-        Call<ResponseBody> call = loginService.loginUser(csrf, email, password);
-        call.enqueue(callback);
+        switch (request.toLowerCase()) {
+            case "login":
+                Call<ResponseBody> call = loginService.loginUser(email, password);
+                call.enqueue(callback);
+                break;
+            case "register":
+                Call<ResponseBody> registerCall = loginService.registerUser(email, password);
+                registerCall.enqueue(callback);
+                break;
+        }
     }
+
+
 
     /*
         API helper function for general GET requests, with a "request" parameter that chooses which api call to make
@@ -251,8 +265,6 @@ public class ServerRequest {
     }
 
     public void postRFIDTag(User user, String myTagId, String myName, retrofit.Callback<ResponseBody> callback){
-        //Hard coded
-        String csrf = "";
         String tagId = myTagId;
         String name = myName;
 
@@ -261,7 +273,7 @@ public class ServerRequest {
                 .build();
         apiInterface loginService = retrofit.create(apiInterface.class);
 
-        Call<ResponseBody> rfidCall = loginService.postTag(user.getToken(), user.getUserId(), csrf, tagId, name);
+        Call<ResponseBody> rfidCall = loginService.postTag(user.getToken(), user.getUserId(), tagId, name);
         rfidCall.enqueue(callback);
 
     }
