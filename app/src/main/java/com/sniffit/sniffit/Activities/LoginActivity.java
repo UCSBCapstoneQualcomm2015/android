@@ -119,15 +119,20 @@ public class LoginActivity extends Activity {
                     public void onResponse(retrofit.Response<ResponseBody> response, Retrofit retrofit) {
                         try {
                             String jsonBody = response.body().string();
-                            Gson gson = new Gson();
-                            User user = gson.fromJson(jsonBody, User.class);
 
-                            Intent intent = new Intent(getApplicationContext(), FindActivity.class);
-                            Bundle bundle = new Bundle();
-                            bundle.putSerializable("user", user);
-                            intent.putExtras(bundle);
-                            startActivity(intent);
-                        } catch (IOException e) {
+                            Gson gson = new Gson();
+                            JSONObject object = new JSONObject(jsonBody);
+                            String success = object.getString("success");
+
+                            if(success.equals("true")) {
+                                User user = gson.fromJson(jsonBody, User.class);
+                                Intent intent = new Intent(getApplicationContext(), FindActivity.class);
+                                Bundle bundle = new Bundle();
+                                bundle.putSerializable("user", user);
+                                intent.putExtras(bundle);
+                                startActivity(intent);
+                            }
+                        } catch (Exception e) {
                             e.printStackTrace();
                         }
 
