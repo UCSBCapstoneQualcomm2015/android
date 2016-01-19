@@ -1,5 +1,7 @@
 package com.sniffit.sniffit.REST;
 
+        import android.util.Log;
+
         import java.io.InputStream;
         import java.util.HashMap;
         import java.util.Map;
@@ -88,7 +90,7 @@ public class ServerRequest {
         @PUT("api/user/{user_id}/rooms/{room_id}")
         Call<ResponseBody> putRoom(@Header("x-access-token") String token, @Path("user_id") String userId, @Path("room_id") String oldRoom, @Field("name") String name, @Field("length") String length,  @Field("width") String width);
 
-        @FormUrlEncoded
+
         @DELETE("api/user/{user_id}/rooms/{room_id}")
         Call<ResponseBody> deleteRoom(@Header("x-access-token") String token, @Path("user_id") String userId, @Path("room_id") String roomId);
 
@@ -107,7 +109,6 @@ public class ServerRequest {
         @PUT("api/user/{user_id}/snapdragons/{snapdragon_ip}")
         Call<ResponseBody> putSnapdragon(@Header("x-access-token") String token, @Path("user_id") String userId, @Path("snapdragon_ip") String snapdragonIp, @Field("name") String name, @Field("roomId") String roomId,  @Field("ipAddress") String ipAddress);
 
-        @FormUrlEncoded
         @DELETE("api/user/{user_id}/snapdragons/{snapdragon_ip}")
         Call<ResponseBody> deleteSnapdragon(@Header("x-access-token") String token, @Path("user_id") String userId, @Path("snapdragon_ip") String snapdragonIp);
 
@@ -371,6 +372,53 @@ public class ServerRequest {
 
         Call<ResponseBody> snapdragonCall = loginService.putReferenceTag(user.getToken(), user.getUserId(), oldTagId, tagId, roomId, xPosition, yPosition);
         snapdragonCall.enqueue(callback);
+    }
+    //////////////////   DELETES /////////////////
+
+    public void deleteRoom(User user, String roomId, retrofit.Callback<ResponseBody> callback) {
+        String id = roomId;
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(base_url)
+                .build();
+        apiInterface loginService = retrofit.create(apiInterface.class);
+
+        Call<ResponseBody> roomCall = loginService.deleteRoom(user.getToken(), user.getUserId(), id);
+        roomCall.enqueue(callback);
+
+    }
+
+    public void deleteSnapdragon(User user, String snapIp, retrofit.Callback<ResponseBody> callback) {
+        String ip = snapIp;
+        Log.d("hi", ip);
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(base_url)
+                .build();
+        apiInterface loginService = retrofit.create(apiInterface.class);
+
+        Call<ResponseBody> snapCall = loginService.deleteSnapdragon(user.getToken(), user.getUserId(), ip);
+        snapCall.enqueue(callback);
+    }
+
+    public void deleteRefTag(User user, String refId, retrofit.Callback<ResponseBody> callback) {       //CHECK API CALL HERE: MAY BE WRONG
+        String id = refId;
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(base_url)
+                .build();
+        apiInterface loginService = retrofit.create(apiInterface.class);
+
+        Call<ResponseBody> refTagCall = loginService.deleteReferenceTag(user.getToken(), user.getUserId(), id);
+        refTagCall.enqueue(callback);
+    }
+
+    public void deleteItem(User user, String itemId, retrofit.Callback<ResponseBody> callback) {       //CHECK API CALL HERE: MAY BE WRONG
+        String id = itemId;
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(base_url)
+                .build();
+        apiInterface loginService = retrofit.create(apiInterface.class);
+
+        Call<ResponseBody> refTagCall = loginService.deleteTag(user.getToken(), user.getUserId(), id);
+        refTagCall.enqueue(callback);
     }
 
 

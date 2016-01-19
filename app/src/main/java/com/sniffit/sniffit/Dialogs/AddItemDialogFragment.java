@@ -20,8 +20,12 @@ import com.sniffit.sniffit.R;
     public interface AddItemListener {
         public void itemConfirm(DialogFragment dialog, String tagName, String tagId, int itemFlag);
     }
+    public interface DeleteItemListener {
+        public void itemDelete(DialogFragment dialog, String itemId);
+    }
 
     AddItemListener mListener;
+    DeleteItemListener dListener;
     private EditText tagName, tagId;
 
     public static AddItemDialogFragment newInstance(int num, String itemName, String itemId) {
@@ -57,7 +61,7 @@ import com.sniffit.sniffit.R;
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         final int flag = getArguments().getInt("num");
         String itemName = getArguments().getString("itemName");
-        String itemId = getArguments().getString("itemId");
+        final String itemId = getArguments().getString("itemId");
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View v = inflater.inflate(R.layout.add_item_dialog, null);
         builder.setView(v);
@@ -68,9 +72,16 @@ import com.sniffit.sniffit.R;
         switch (flag) {
             case 1:
                 builder.setTitle("Add New Item");
+                builder.setNegativeButton(R.string.cancel, null);
                 break;
             case 2:
                 builder.setTitle("Edit Item");
+                builder.setNegativeButton(R.string.delete, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dListener.itemDelete(AddItemDialogFragment.this, itemId);
+                    }
+                });
                 break;
             default:
                 break;
@@ -81,8 +92,7 @@ import com.sniffit.sniffit.R;
                 mListener.itemConfirm(AddItemDialogFragment.this, tagName.getText().toString(),
                         tagId.getText().toString(), flag);
             }
-        })
-                .setNegativeButton(R.string.cancel, null);
+        });
 
 
         // Create the AlertDialog object and return it

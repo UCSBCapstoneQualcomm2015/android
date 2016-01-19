@@ -6,6 +6,7 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -21,10 +22,15 @@ public class AddRoomDialogFragment extends DialogFragment{
 
     }
 
+    public interface DeleteRoomListener {
+        public void roomDelete(DialogFragment dialog, String roomId);
+    }
+
     AddRoomListener mListener;
+    DeleteRoomListener dListener;
     private EditText edit_roomName, edit_length, edit_width;
 
-    public static AddRoomDialogFragment newInstance(int num, String roomName, String length, String width) {
+    public static AddRoomDialogFragment newInstance(int num, String roomName, String length, String width, String id) {
         AddRoomDialogFragment f = new AddRoomDialogFragment();
 
         // Supply num input as an argument.
@@ -33,6 +39,7 @@ public class AddRoomDialogFragment extends DialogFragment{
         args.putString("roomName", roomName);
         args.putString("length",length);
         args.putString("width",width);
+        args.putString("id", id);
         f.setArguments(args);
 
         return f;
@@ -44,6 +51,7 @@ public class AddRoomDialogFragment extends DialogFragment{
         super.onAttach(activity);
         try {
             mListener = (AddRoomListener) activity;
+            dListener = (DeleteRoomListener) activity;
 
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
@@ -60,7 +68,7 @@ public class AddRoomDialogFragment extends DialogFragment{
         final String name = getArguments().getString("roomName");
         String length = getArguments().getString("length");
         String width = getArguments().getString("width");
-        System.out.println("hi  " + width);
+        final String id = getArguments().getString("id");
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View v = inflater.inflate(R.layout.add_room_dialog, null);
         builder.setView(v);
@@ -73,9 +81,17 @@ public class AddRoomDialogFragment extends DialogFragment{
         switch (flag) {
             case 1:
                 builder.setTitle("Add New Room");
+                builder.setNegativeButton("Cancel", null);
                 break;
             case 2:
                 builder.setTitle("Edit Room");
+                Log.d("test", id);
+                builder.setNegativeButton(R.string.delete, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dListener.roomDelete(AddRoomDialogFragment.this, id);
+                    }
+                });
                 break;
             default:
                 break;
@@ -84,10 +100,10 @@ public class AddRoomDialogFragment extends DialogFragment{
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 mListener.roomConfirm(AddRoomDialogFragment.this, edit_roomName.getText().toString(),
-                        edit_length.getText().toString(), edit_width.getText().toString(), flag, oldRoomId);
+                        edit_length.getText().toString(), edit_width.getText().toString(), flag, id);
             }
-        })
-                .setNegativeButton(R.string.cancel, null);
+        });
+
 
 
         // Create the AlertDialog object and return it
