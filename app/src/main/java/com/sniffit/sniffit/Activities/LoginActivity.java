@@ -1,6 +1,7 @@
 package com.sniffit.sniffit.Activities;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -9,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.sniffit.sniffit.R;
@@ -83,7 +85,12 @@ public class LoginActivity extends Activity {
                                     startActivity(intent);
                                 }else{
                                     //Throw error
-                                    System.out.print(message);
+                                    Context context = getApplicationContext();
+                                    CharSequence text = "Account with this email already exists";
+                                    int duration = Toast.LENGTH_SHORT;
+
+                                    Toast toast = Toast.makeText(context, text, duration);
+                                    toast.show();
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();
