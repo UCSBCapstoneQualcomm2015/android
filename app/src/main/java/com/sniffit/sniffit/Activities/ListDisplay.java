@@ -52,8 +52,7 @@ public class ListDisplay extends AppCompatActivity implements AddItemDialogFragm
                                                                 AddRefTagDialogFragment.AddRefTagListener,
                                                                 AddRoomDialogFragment.DeleteRoomListener,
                                                                 AddSnapdragonDialogFragment.DeleteSnapDragonListener,
-                                                                AddRefTagDialogFragment.DeleteRefTagListener,
-                                                                AddItemDialogFragment.DeleteItemListener
+                                                                AddRefTagDialogFragment.DeleteRefTagListener
 {
     static final int ROOM = 1;
     static final int ITEM = 2;
@@ -446,8 +445,10 @@ public class ListDisplay extends AppCompatActivity implements AddItemDialogFragm
     }
 
     @Override
-    public void itemDelete(DialogFragment dialog, String tagId) {
-        sr.deleteItem(user, tagId, new Callback<ResponseBody>() {
+    public void itemDelete(DialogFragment dialog, String id) {
+
+
+        sr.deleteItem(user, id, new Callback<ResponseBody>() {
             @Override
             public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
 
@@ -458,7 +459,6 @@ public class ListDisplay extends AppCompatActivity implements AddItemDialogFragm
 
             }
         });
-
         Intent intent = new Intent(this, ListDisplay.class);
         bundle.putInt("displayFlag", 2);
         intent.putExtras(bundle);

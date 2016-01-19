@@ -19,13 +19,11 @@ import com.sniffit.sniffit.R;
 
     public interface AddItemListener {
         public void itemConfirm(DialogFragment dialog, String tagName, String tagId, int itemFlag);
-    }
-    public interface DeleteItemListener {
-        public void itemDelete(DialogFragment dialog, String itemId);
+        public void itemDelete(DialogFragment dialog, String id);
     }
 
+
     AddItemListener mListener;
-    DeleteItemListener dListener;
     private EditText tagName, tagId;
 
     public static AddItemDialogFragment newInstance(int num, String itemName, String itemId) {
@@ -79,7 +77,7 @@ import com.sniffit.sniffit.R;
                 builder.setNegativeButton(R.string.delete, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        dListener.itemDelete(AddItemDialogFragment.this, itemId);
+                        mListener.itemDelete(AddItemDialogFragment.this, itemId);
                     }
                 });
                 break;
