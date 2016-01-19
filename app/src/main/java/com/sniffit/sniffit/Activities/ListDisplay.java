@@ -324,10 +324,22 @@ public class ListDisplay extends AppCompatActivity implements AddItemDialogFragm
     }
 
     @Override
-    public void snapdragonConfirm(DialogFragment dialog, String snapName, String ip, String xCoord, String yCoord, int snapFlag) {
+    public void snapdragonConfirm(DialogFragment dialog, String snapName, String ip, String xCoord, String yCoord, int snapFlag, String oldIp) {
         room = (Room) getIntent().getExtras().getSerializable("room");
         if (snapFlag == 1) {
             sr.postSnapdragon(user, snapName, room.get_id(), ip, xCoord, yCoord, new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
+
+                }
+
+                @Override
+                public void onFailure(Throwable t) {
+
+                }
+            });
+        } else {
+            sr.putSnapdragon(user, oldIp, snapName, room.get_id(), ip, xCoord, yCoord, new Callback<ResponseBody>() {
                 @Override
                 public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
 
