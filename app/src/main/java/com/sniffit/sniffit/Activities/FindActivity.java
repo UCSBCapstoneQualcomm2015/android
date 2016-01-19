@@ -21,7 +21,9 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.sniffit.sniffit.Objects.RFIDItem;
+import com.sniffit.sniffit.Objects.ReferenceTag;
 import com.sniffit.sniffit.Objects.Room;
+import com.sniffit.sniffit.Objects.Snapdragon;
 import com.sniffit.sniffit.R;
 import com.sniffit.sniffit.REST.ServerRequest;
 import com.sniffit.sniffit.REST.User;
@@ -52,6 +54,12 @@ public class FindActivity extends Activity {
     int roomPosition;
     int itemPosition;
     Button currentPage;
+    Room[] roomArray;
+    Snapdragon[] snapArray;
+    ReferenceTag[] referenceTagArray;
+
+    final ServerRequest sr = new ServerRequest();
+
 
 
     @Override
@@ -71,7 +79,6 @@ public class FindActivity extends Activity {
 
         user = (User) getIntent().getExtras().getSerializable("user");
         imageFlag = (Integer) getIntent().getExtras().getSerializable("flag");
-        final ServerRequest sr = new ServerRequest();
 
         bundle = new Bundle();
         bundle.putSerializable("user", user);
@@ -79,7 +86,10 @@ public class FindActivity extends Activity {
 
 
         pref =  getApplicationContext().getSharedPreferences("MyPref", 0);
+
+
         Log.d("pref", Integer.toString(pref.getInt("itemSpinnerPosition", -1)));
+
 
 
         final SharedPreferences.Editor editor = pref.edit();
@@ -91,7 +101,7 @@ public class FindActivity extends Activity {
                 try {
                     String json = response.body().string();
                     Gson gson = new Gson();
-                    Room[] roomArray = gson.fromJson(json, Room[].class);
+                    roomArray = gson.fromJson(json, Room[].class);
                     ArrayAdapter<Room> adapter;
                     adapter = new ArrayAdapter<Room>(getApplicationContext(),
                             R.layout.spinner_dropdown_item, roomArray);
@@ -108,15 +118,23 @@ public class FindActivity extends Activity {
             }
         });
 
-        roomPosition = pref.getInt("roomSpinnerPosition", 0);
-        roomSpinner.post(new Runnable() {
-            @Override
-            public void run() {
-                roomSpinner.setSelection(roomPosition);
-            }
-        });
+//        try
+//        {
+//            Thread.sleep(100);
+//        }
+//        catch (Exception e){}
 
 
+        roomPosition = pref.getInt("roomSpinnerPosition", -1);
+//        if (roomPosition >= 0) {
+//            roomSpinner.post(new Runnable() {
+//                @Override
+//                public void run() {
+//                    roomSpinner.setSelection(roomPosition);
+//                }
+//            });
+//
+//        }
 
         roomSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
@@ -137,7 +155,6 @@ public class FindActivity extends Activity {
 
 
 
-
         roomImage = (MapView) findViewById(R.id.find_view_room);
 
         int drawableResourceId = this.getResources().getIdentifier("rectangle", "drawable", this.getPackageName());
@@ -148,6 +165,55 @@ public class FindActivity extends Activity {
 //        scaled = Bitmap.createScaledBitmap(bitmap, 512, nh, true);
         roomImage.setImageBitmap(bitmap);
         roomImage.setFlag(imageFlag);
+
+        //GET ROOM'S SNAPDRAGONS//
+
+//        sr.getRoomIds("snapdragon", user, roomArray[roomPosition].get_id(), new Callback<ResponseBody>() {
+//            @Override
+//            public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
+//                try {
+//                    String json = response.body().string();
+//                    System.out.println();
+//                    Gson gson = new Gson();
+//                    snapArray = gson.fromJson(json, Snapdragon[].class);
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//
+//            }
+//
+//            @Override
+//            public void onFailure(Throwable t) {
+//
+//            }
+//        });
+//
+//        //GET ROOM'S REFERENCE TAGS//
+//
+//        sr.getRoomIds("reference", user, roomArray[roomPosition].get_id(), new Callback<ResponseBody>() {
+//            @Override
+//            public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
+//                try {
+//                    String json = response.body().string();
+//                    System.out.println(json);
+//                    Gson gson = new Gson();
+//                    referenceTagArray = gson.fromJson(json, ReferenceTag[].class);
+//
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//
+//            }
+//
+//            @Override
+//            public void onFailure(Throwable t) {
+//
+//            }
+//        });
+//
+//        roomImage.setRoom(roomArray[roomPosition]);
+//        roomImage.setSnapdragonArray(snapArray);
+//        roomImage.setReferenceTags(referenceTagArray);
 //        roomImage.invalidate();
 
         //Set item spinner value
@@ -161,12 +227,14 @@ public class FindActivity extends Activity {
                     RFIDItem[] rfidArray = gson.fromJson(json, RFIDItem[].class);
                     ArrayAdapter<RFIDItem> adapter = new ArrayAdapter<RFIDItem>(getApplicationContext(),
                             R.layout.spinner_dropdown_item, rfidArray);
-                    itemSpinner.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            itemSpinner.setSelection(itemPosition);
-                        }
-                    });
+//                    if (itemPosition >= 0) {
+//                        itemSpinner.post(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                itemSpinner.setSelection(itemPosition);
+//                            }
+//                        });
+//                    }
 
                     itemSpinner.setAdapter(adapter);
                 } catch (Exception e) {
@@ -181,9 +249,8 @@ public class FindActivity extends Activity {
             }
         });
 
-        itemPosition = pref.getInt("itemSpinnerPosition", 0);
+        itemPosition = pref.getInt("itemSpinnerPosition", -1);
         Log.d("should be 1", Integer.toString(itemPosition));
-
 
 
         itemSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {

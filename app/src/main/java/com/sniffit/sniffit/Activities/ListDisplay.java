@@ -184,28 +184,28 @@ public class ListDisplay extends AppCompatActivity implements AddItemDialogFragm
             currentPage.setBackgroundColor(Color.parseColor("#294e6a"));
 
             sr.getRoomIds("reference", user, room.get_id(), new Callback<ResponseBody>() {
-                @Override
-                public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
-                    try {
-                        String json = response.body().string();
-                        System.out.println(json);
-                        Gson gson = new Gson();
-                        ReferenceTag[] referenceTagArray = gson.fromJson(json, ReferenceTag[].class);
-                        for(ReferenceTag tag: referenceTagArray){
-                            sniffitList.add(tag);
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
+            @Override
+            public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
+                try {
+                    String json = response.body().string();
+                    System.out.println(json);
+                    Gson gson = new Gson();
+                    ReferenceTag[] referenceTagArray = gson.fromJson(json, ReferenceTag[].class);
+                    for(ReferenceTag tag: referenceTagArray){
+                        sniffitList.add(tag);
                     }
-
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
 
-                @Override
-                public void onFailure(Throwable t) {
+            }
 
-                }
-            });
-        }
+            @Override
+            public void onFailure(Throwable t) {
+
+            }
+        });
+    }
         TextView nodata = (TextView) findViewById(R.id.nodata);
 
         nodata.setVisibility(View.INVISIBLE);
