@@ -96,12 +96,12 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                         break;
                     case 3:
                         Snapdragon curr = (Snapdragon) sniffitList.get(position);
-                        DialogFragment editSnap = AddSnapdragonDialogFragment.newInstance(2, curr.getName(), curr.getIpAddress(),curr.getxCoord(),curr.getyCoord());
+                        DialogFragment editSnap = AddSnapdragonDialogFragment.newInstance(2, curr.getName(), curr.getIpAddress(),curr.getxCoord(),curr.getyCoord(), curr.get_id());
                         editSnap.show(manager, "editSnap");
                         break;
                     case 4:
                         ReferenceTag currRef = (ReferenceTag) sniffitList.get(position);
-                        DialogFragment editRefTag = AddRefTagDialogFragment.newInstance(2,currRef.getName(), currRef.getId(), currRef.getX(), currRef.getY());
+                        DialogFragment editRefTag = AddRefTagDialogFragment.newInstance(2,currRef.getName(), currRef.getId(), currRef.getX(), currRef.getY(), currRef.get_id());
                         editRefTag.show(manager, "editRefTag");
                         break;
                     default:

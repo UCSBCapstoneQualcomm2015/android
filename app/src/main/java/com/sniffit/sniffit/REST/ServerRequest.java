@@ -109,7 +109,6 @@ public class ServerRequest {
         @PUT("api/user/{user_id}/snapdragons/{snapdragon_ip}")
         Call<ResponseBody> putSnapdragon(@Header("x-access-token") String token, @Path("user_id") String userId, @Path("snapdragon_ip") String snapdragonIp, @Field("name") String name, @Field("roomId") String roomId,  @Field("ipAddress") String ipAddress);
 
-        @FormUrlEncoded
         @DELETE("api/user/{user_id}/snapdragons/{snapdragon_ip}")
         Call<ResponseBody> deleteSnapdragon(@Header("x-access-token") String token, @Path("user_id") String userId, @Path("snapdragon_ip") String snapdragonIp);
 
@@ -392,6 +391,42 @@ public class ServerRequest {
         roomCall.enqueue(callback);
 
     }
+
+    public void deleteSnapdragon(User user, String snapIp, retrofit.Callback<ResponseBody> callback) {
+        String ip = snapIp;
+        Log.d("hi", ip);
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(base_url)
+                .build();
+        apiInterface loginService = retrofit.create(apiInterface.class);
+
+        Call<ResponseBody> snapCall = loginService.deleteSnapdragon(user.getToken(), user.getUserId(), ip);
+        snapCall.enqueue(callback);
+    }
+
+    public void deleteRefTag(User user, String refId, retrofit.Callback<ResponseBody> callback) {       //CHECK API CALL HERE: MAY BE WRONG
+        String id = refId;
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(base_url)
+                .build();
+        apiInterface loginService = retrofit.create(apiInterface.class);
+
+        Call<ResponseBody> refTagCall = loginService.deleteReferenceTag(user.getToken(), user.getUserId(), id);
+        refTagCall.enqueue(callback);
+    }
+
+    public void deleteItem(User user, String itemId, retrofit.Callback<ResponseBody> callback) {       //CHECK API CALL HERE: MAY BE WRONG
+        String id = itemId;
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(base_url)
+                .build();
+        apiInterface loginService = retrofit.create(apiInterface.class);
+
+        Call<ResponseBody> refTagCall = loginService.deleteTag(user.getToken(), user.getUserId(), id);
+        refTagCall.enqueue(callback);
+    }
+
+
 }
 
 

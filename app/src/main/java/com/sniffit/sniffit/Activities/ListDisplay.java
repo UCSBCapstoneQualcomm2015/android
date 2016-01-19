@@ -50,7 +50,11 @@ public class ListDisplay extends AppCompatActivity implements AddItemDialogFragm
                                                                 AddRoomDialogFragment.AddRoomListener,
                                                                 AddSnapdragonDialogFragment.AddSnapDragonListener,
                                                                 AddRefTagDialogFragment.AddRefTagListener,
-                                                                 AddRoomDialogFragment.DeleteRoomListener {
+                                                                AddRoomDialogFragment.DeleteRoomListener,
+                                                                AddSnapdragonDialogFragment.DeleteSnapDragonListener,
+                                                                AddRefTagDialogFragment.DeleteRefTagListener,
+                                                                AddItemDialogFragment.DeleteItemListener
+{
     static final int ROOM = 1;
     static final int ITEM = 2;
     static final int SNAPDRAGON = 3;
@@ -203,19 +207,22 @@ public class ListDisplay extends AppCompatActivity implements AddItemDialogFragm
                 }
             });
         }
+        TextView nodata = (TextView) findViewById(R.id.nodata);
+
+        nodata.setVisibility(View.INVISIBLE);
 
 //        for (rooms in database) {
         //roomList: populate with list of user's rooms
 //        }
 
-        if (sniffitList.size() > 0) {
-            TextView nodata = (TextView) findViewById(R.id.nodata);
-            nodata.setVisibility(View.INVISIBLE);
-        }
-        else {
-            TextView nodata = (TextView) findViewById(R.id.nodata);
-            nodata.setVisibility(View.VISIBLE);
-        }
+//        if (sniffitList.size() > 0) {
+//            TextView nodata = (TextView) findViewById(R.id.nodata);
+//            nodata.setVisibility(View.INVISIBLE);
+//        }
+//        else {
+//            TextView nodata = (TextView) findViewById(R.id.nodata);
+//            nodata.setVisibility(View.VISIBLE);
+//        }
         // DATA SET CONTAINS THE STRING EACH TEXTVIEW WILL CONTAIN
 //        String[] myDataSet = {"THIS IS A STRING1", "THIS IS THE STRING 2", "THIS IS THE STRING 3","THIS IS THE STRING 4"};
 
@@ -246,11 +253,11 @@ public class ListDisplay extends AppCompatActivity implements AddItemDialogFragm
                 dialog.show(getFragmentManager(), "addItem");
                 break;
             case SNAPDRAGON:
-                dialog = AddSnapdragonDialogFragment.newInstance(1,"","","","");
+                dialog = AddSnapdragonDialogFragment.newInstance(1,"","","","", "");
                 dialog.show(getFragmentManager(), "addSnapdragon");
                 break;
             case REFERENCE:
-                dialog = AddRefTagDialogFragment.newInstance(1,"","","","");
+                dialog = AddRefTagDialogFragment.newInstance(1,"","","","","");
                 dialog.show(getFragmentManager(),"addRefTag");
             default:
                 break;
@@ -261,7 +268,7 @@ public class ListDisplay extends AppCompatActivity implements AddItemDialogFragm
     public void itemConfirm(DialogFragment dialog, String itemName, String itemId, int itemFlag) {
         Log.d(itemName, itemId);
         if (itemFlag == 1) {
-            sr.postRFIDTag(user, itemId, itemName, new Callback<ResponseBody> () {
+            sr.postRFIDTag(user, itemId, itemName, new Callback<ResponseBody>() {
                 @Override
                 public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
 
@@ -394,7 +401,70 @@ public class ListDisplay extends AppCompatActivity implements AddItemDialogFragm
         startActivity(intent);
     }
 
+    @Override
+    public void snapdragonDelete(DialogFragment dialog, String snapId) {
+        sr.deleteSnapdragon(user, snapId, new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
 
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+
+            }
+        });
+
+        Intent intent = new Intent(this, ListDisplay.class);
+        bundle.putInt("displayFlag", 3);
+        bundle.putSerializable("room", room);
+        intent.putExtras(bundle);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+    }
+
+    @Override
+    public void refTagDelete(DialogFragment dialog, String tagId) {
+        sr.deleteRefTag(user, tagId, new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
+
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+
+            }
+        });
+
+        Intent intent = new Intent(this, ListDisplay.class);
+        bundle.putInt("displayFlag", 4);
+        bundle.putSerializable("room", room);
+        intent.putExtras(bundle);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+    }
+
+    @Override
+    public void itemDelete(DialogFragment dialog, String tagId) {
+        sr.deleteItem(user, tagId, new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
+
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+
+            }
+        });
+
+        Intent intent = new Intent(this, ListDisplay.class);
+        bundle.putInt("displayFlag", 2);
+        intent.putExtras(bundle);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+    }
     /////STUFF FOR FOOTER/////
 
     public void goToFind(View view) {

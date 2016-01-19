@@ -3,11 +3,15 @@ package com.sniffit.sniffit.Activities;
 import android.app.Activity;
 import android.app.DialogFragment;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.sniffit.sniffit.Dialogs.AddItemDialogFragment;
@@ -31,8 +35,36 @@ public class RoomActivity extends Activity implements AddRoomDialogFragment.AddR
     User user;
     Bundle bundle;
     final ServerRequest sr = new ServerRequest();
+    ImageView roomImage;
+    Bitmap bitmap;
+    Paint myPaint;
 
-
+//    import android.graphics.Bitmap;
+//    import android.graphics.Canvas;
+//    import android.graphics.Paint;
+//    import android.graphics.RectF;
+//    import android.graphics.drawable.BitmapDrawable;
+//
+//    ImageView myImageView = ...
+//    Bitmap myBitmap = ...
+//    Paint myRectPaint = ...
+//    int x1 = ...
+//    int y1 = ...
+//    int x2 = ...
+//    int y2 = ...
+//
+//    //Create a new image bitmap and attach a brand new canvas to it
+//    Bitmap tempBitmap = Bitmap.createBitmap(myBitmap.getWidth(), myBitmap.getHeight(), Bitmap.Config.RGB_565);
+//    Canvas tempCanvas = new Canvas(tempBitmap);
+//
+////Draw the image bitmap into the cavas
+//    tempCanvas.drawBitmap(myBitmap, 0, 0, null);
+//
+////Draw everything else you want into the canvas, in this example a rectangle with rounded edges
+//    tempCanvas.drawRoundRect(new RectF(x1,y1,x2,y2), 2, 2, myPaint);
+//
+////Attach the canvas to the ImageView
+//    myImageView.setImageDrawable(new BitmapDrawable(getResources(), tempBitmap));
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,6 +78,16 @@ public class RoomActivity extends Activity implements AddRoomDialogFragment.AddR
         header.setText(room.getName());
         bundle = new Bundle();
         bundle.putSerializable("user", user);
+
+        //SET UP THE ROOM IMAGE
+        roomImage = (ImageView) findViewById(R.id.room_image);
+//        bitmap = Bitmap.createBitmap(100,100, Bitmap.Config.ARGB_8888);
+//        Canvas canvas = new Canvas(bitmap);
+//        myPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+//        myPaint.setColor(Color.BLACK);
+//        canvas.drawCircle(50, 50, 10, myPaint);
+//        roomImage.setImageBitmap(bitmap);
+
     }
 
     // when edit room button is clicked
