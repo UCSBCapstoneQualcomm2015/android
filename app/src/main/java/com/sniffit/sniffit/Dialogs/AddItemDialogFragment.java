@@ -18,7 +18,7 @@ import com.sniffit.sniffit.R;
  */public class AddItemDialogFragment extends DialogFragment {
 
     public interface AddItemListener {
-        public void itemConfirm(DialogFragment dialog, String tagName, String tagId, int itemFlag);
+        public void itemConfirm(DialogFragment dialog, String tagName, String tagId, int itemFlag, String oldId);
         public void itemDelete(DialogFragment dialog, String id);
     }
 
@@ -88,7 +88,7 @@ import com.sniffit.sniffit.R;
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 mListener.itemConfirm(AddItemDialogFragment.this, tagName.getText().toString(),
-                        tagId.getText().toString(), flag);
+                        tagId.getText().toString(), flag, itemId);
             }
         });
 

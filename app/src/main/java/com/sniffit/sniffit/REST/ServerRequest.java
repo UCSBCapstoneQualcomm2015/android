@@ -277,18 +277,14 @@ public class ServerRequest {
 
     }
 
-    public void putRFIDTag(User user, retrofit.Callback<ResponseBody> callback){
-        //Hard coded
-        String tagId = "564eb237b6b88d075c73f68d";
-        String newId = "lalalal";
-        String name = "and";
+    public void putRFIDTag(User user, String oldId, String tagId, String name, retrofit.Callback<ResponseBody> callback){
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(base_url)
                 .build();
         apiInterface loginService = retrofit.create(apiInterface.class);
 
-        Call<ResponseBody> rfidCall = loginService.putTag(user.getToken(), user.getUserId(), tagId, newId, name);
+        Call<ResponseBody> rfidCall = loginService.putTag(user.getToken(), user.getUserId(), oldId, tagId, name);
         rfidCall.enqueue(callback);
 
     }
