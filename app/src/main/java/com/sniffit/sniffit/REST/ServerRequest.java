@@ -107,7 +107,7 @@ public class ServerRequest {
 
         @FormUrlEncoded
         @PUT("api/user/{user_id}/snapdragons/{snapdragon_ip}")
-        Call<ResponseBody> putSnapdragon(@Header("x-access-token") String token, @Path("user_id") String userId, @Path("snapdragon_ip") String snapdragonIp, @Field("name") String name, @Field("roomId") String roomId,  @Field("ipAddress") String ipAddress);
+        Call<ResponseBody> putSnapdragon(@Header("x-access-token") String token, @Path("user_id") String userId, @Path("snapdragon_ip") String oldIp, @Field("name") String name, @Field("roomId") String roomId,  @Field("ipAddress") String ipAddress, @Field("xCoord") String xCoord, @Field("yCoord") String yCoord);
 
         @DELETE("api/user/{user_id}/snapdragons/{snapdragon_ip}")
         Call<ResponseBody> deleteSnapdragon(@Header("x-access-token") String token, @Path("user_id") String userId, @Path("snapdragon_ip") String snapdragonIp);
@@ -330,19 +330,14 @@ public class ServerRequest {
         snapdragonCall.enqueue(callback);
     }
 
-    public void putSnapdragon(User user, retrofit.Callback<ResponseBody> callback){
-        //Hard coded
-        String oldName = "23423";
-        String name = "and";
-        String roomId = "4321";
-        String ipAddress = "123123";
+    public void putSnapdragon(User user, String oldIp, String name, String roomId, String ipAddress, String xCoord, String yCoord, retrofit.Callback<ResponseBody> callback){
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(base_url)
                 .build();
         apiInterface loginService = retrofit.create(apiInterface.class);
 
-        Call<ResponseBody> snapdragonCall = loginService.putSnapdragon(user.getToken(), user.getUserId(), oldName, name, roomId, ipAddress);
+        Call<ResponseBody> snapdragonCall = loginService.putSnapdragon(user.getToken(), user.getUserId(), oldIp, name, roomId, ipAddress, xCoord, yCoord);
         snapdragonCall.enqueue(callback);
     }
 

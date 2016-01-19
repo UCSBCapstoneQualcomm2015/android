@@ -20,7 +20,7 @@ import com.sniffit.sniffit.R;
 public class AddSnapdragonDialogFragment extends DialogFragment {
 
     public interface AddSnapDragonListener {
-        public void snapdragonConfirm(DialogFragment dialog, String tagName, String tagId, String x, String y, int snapFlag);
+        public void snapdragonConfirm(DialogFragment dialog, String tagName, String tagId, String x, String y, int snapFlag, String oldIp);
 
     }
 
@@ -108,7 +108,7 @@ public class AddSnapdragonDialogFragment extends DialogFragment {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 mListener.snapdragonConfirm(AddSnapdragonDialogFragment.this, snapdragonName.getText().toString(),
-                        ip.getText().toString(), x.getText().toString(), y.getText().toString(), flag);
+                        ip.getText().toString(), x.getText().toString(), y.getText().toString(), flag, snapIp);
             }
         });
 
