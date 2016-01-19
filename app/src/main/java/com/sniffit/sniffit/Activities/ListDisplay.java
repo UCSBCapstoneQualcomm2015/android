@@ -264,10 +264,21 @@ public class ListDisplay extends AppCompatActivity implements AddItemDialogFragm
     }
 
     @Override
-    public void itemConfirm(DialogFragment dialog, String itemName, String itemId, int itemFlag) {
+    public void itemConfirm(DialogFragment dialog, String itemName, String itemId, int itemFlag, String oldId) {
         Log.d(itemName, itemId);
         if (itemFlag == 1) {
             sr.postRFIDTag(user, itemId, itemName, new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
+
+                }
+
+                @Override
+                public void onFailure(Throwable t) {
+                }
+            });
+        } else{
+            sr.putRFIDTag(user, oldId, itemId, itemName, new Callback<ResponseBody>() {
                 @Override
                 public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
 
