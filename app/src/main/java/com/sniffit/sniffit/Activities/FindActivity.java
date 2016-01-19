@@ -104,6 +104,8 @@ public class FindActivity extends Activity {
             }
         });
 
+
+
         //Find Button click
         findButton.setOnClickListener(new View.OnClickListener() {
             @Override
