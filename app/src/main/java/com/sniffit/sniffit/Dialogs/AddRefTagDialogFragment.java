@@ -17,7 +17,7 @@ import com.sniffit.sniffit.R;
  */
 public class AddRefTagDialogFragment extends DialogFragment{
     public interface AddRefTagListener {
-        public void refTagConfirm(DialogFragment dialog, String tagName, String tagId, String x, String y, int refFlag);
+        public void refTagConfirm(DialogFragment dialog, String tagName, String tagId, String x, String y, int refFlag, String oldId);
     }
 
     public interface DeleteRefTagListener {
@@ -102,7 +102,7 @@ public class AddRefTagDialogFragment extends DialogFragment{
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 mListener.refTagConfirm(AddRefTagDialogFragment.this, refTagName.getText().toString(),
-                        id.getText().toString(), x.getText().toString(), y.getText().toString(), flag);
+                        id.getText().toString(), x.getText().toString(), y.getText().toString(), flag, tagId);
             }
         });
 

@@ -360,7 +360,7 @@ public class ListDisplay extends AppCompatActivity implements AddItemDialogFragm
     }
 
     @Override
-    public void refTagConfirm(DialogFragment dialog, String tagName, String tagId, String x, String y, int refFlag)   {
+    public void refTagConfirm(DialogFragment dialog, String tagName, String tagId, String x, String y, int refFlag, String oldId)   {
         Log.d(tagName, tagId);
         if (refFlag == 1) {
             sr.postReferenceTag(user, tagName, room.get_id(), tagId, x, y, new Callback<ResponseBody>() {      //NEED TO THROW IN X AND Y
@@ -377,7 +377,17 @@ public class ListDisplay extends AppCompatActivity implements AddItemDialogFragm
 
         }
         else {
-            //PUT Reference Tag
+            sr.putReferenceTag(user, oldId, tagName, room.get_id(), tagId, x, y, new Callback<ResponseBody>() {      //NEED TO THROW IN X AND Y
+                @Override
+                public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
+
+                }
+
+                @Override
+                public void onFailure(Throwable t) {
+
+                }
+            });
         }
 
         Intent intent = new Intent(this, ListDisplay.class);

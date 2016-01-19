@@ -125,7 +125,7 @@ public class ServerRequest {
 
         @FormUrlEncoded
         @PUT("api/user/{user_id}/reftags/{ref_tagId}")
-        Call<ResponseBody> putReferenceTag(@Header("x-access-token") String token, @Path("user_id") String userId, @Path("ref_tagId") String oldTagId, @Field("tagId") String newTagId, @Field("roomId") String roomId, @Field("x_position") String xPosition, @Field("y_position") String yPosition);
+        Call<ResponseBody> putReferenceTag(@Header("x-access-token") String token, @Path("user_id") String userId, @Path("ref_tagId") String oldTagId, @Field("name") String tagName, @Field("tagId") String newTagId, @Field("roomId") String roomId, @Field("x_position") String xPosition, @Field("y_position") String yPosition);
 
         @DELETE("api/user/{user_id}/reftags/{ref_tagId}")
         Call<ResponseBody> deleteReferenceTag(@Header("x-access-token") String token, @Path("user_id") String userId, @Path("ref_tagId") String tagId);
@@ -352,20 +352,14 @@ public class ServerRequest {
         snapdragonCall.enqueue(callback);
     }
 
-    public void putReferenceTag(User user, retrofit.Callback<ResponseBody> callback){
-        //Hard coded
-        String oldTagId = "23423";
-        String tagId = "and";
-        String roomId = "12313";
-        String xPosition = "4321";
-        String yPosition = "123123";
+    public void putReferenceTag(User user, String oldTagId, String tagName, String roomId, String tagId, String xCoord, String yCoord, retrofit.Callback<ResponseBody> callback){
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(base_url)
                 .build();
         apiInterface loginService = retrofit.create(apiInterface.class);
 
-        Call<ResponseBody> snapdragonCall = loginService.putReferenceTag(user.getToken(), user.getUserId(), oldTagId, tagId, roomId, xPosition, yPosition);
+        Call<ResponseBody> snapdragonCall = loginService.putReferenceTag(user.getToken(), user.getUserId(), oldTagId, tagName, tagId, roomId, xCoord, yCoord);
         snapdragonCall.enqueue(callback);
     }
     //////////////////   DELETES /////////////////
