@@ -17,9 +17,9 @@
         android:layout_above="@+id/footer"
         android:layout_below="@+id/header">
         <!--room view would go here-->
-        <ImageView
+
+        <com.sniffit.sniffit.Activities.MapView
             android:id="@+id/room_image"
-            android:src="@drawable/rectangle"
             android:layout_width="wrap_content"
             android:layout_height= "250dp"
             android:paddingLeft="20dp"

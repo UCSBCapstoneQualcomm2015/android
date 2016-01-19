@@ -2,6 +2,7 @@ package com.sniffit.sniffit.Activities;
 
 import android.app.Activity;
 import android.app.DialogFragment;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -38,9 +39,11 @@ public class RoomActivity extends Activity implements AddRoomDialogFragment.AddR
     User user;
     Bundle bundle;
     final ServerRequest sr = new ServerRequest();
-    ImageView roomImage;
+    MapView roomImage;
     Bitmap bitmap;
+    Bitmap scaled;
     Paint myPaint;
+    Context context;
 
 //    import android.graphics.Bitmap;
 //    import android.graphics.Canvas;
@@ -82,15 +85,24 @@ public class RoomActivity extends Activity implements AddRoomDialogFragment.AddR
         bundle = new Bundle();
         bundle.putSerializable("user", user);
         //SET UP THE ROOM IMAGE
-        roomImage = (ImageView) findViewById(R.id.room_image);
-        Log.d("height", Integer.toString(roomImage.getHeight()));
+        roomImage = (MapView) findViewById(R.id.room_image);
+        int drawableResourceId = this.getResources().getIdentifier("rectangle", "drawable", this.getPackageName());
+        //Drawable roomDrawable = getResources().getDrawable(R.drawable.rectangle);
 
-        Bitmap viewBitmap = Bitmap.createBitmap(roomImage.getWidth(),roomImage.getHeight(),Bitmap.Config.ARGB_8888);//i is imageview whch u want to convert in bitmap
-        Canvas canvas = new Canvas(viewBitmap);
-        myPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        myPaint.setColor(Color.BLACK);
-        canvas.drawCircle(50, 50, 10, myPaint);
-        roomImage.draw(canvas);
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(),drawableResourceId);
+//        int nh = (int) ( bitmap.getHeight() * (512.0 / bitmap.getWidth()) );
+//        scaled = Bitmap.createScaledBitmap(bitmap, 512, nh, true);
+        roomImage.setImageBitmap(bitmap);
+
+//        Log.d("height", Integer.toString(roomImage.getHeight()));
+//        Bitmap b = Bitmap.createBitmap( roomImage.getLayoutParams().width, roomImage.getLayoutParams().height, Bitmap.Config.ARGB_8888);
+//        Canvas c = new Canvas(b);
+//        myPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+//        myPaint.setColor(Color.BLACK);
+//        canvas.drawCircle(50, 50, 10, myPaint);
+//        roomImage.draw(canvas);
+//        roomImage.setDrawingCacheEnabled(true);
+//        Bitmap scaledBitmap = roomImage.getDrawingCache();
 
 
     }
@@ -186,6 +198,7 @@ public class RoomActivity extends Activity implements AddRoomDialogFragment.AddR
 
     public void goToFind(View view){
         Intent intent = new Intent(this, FindActivity.class);
+        bundle.putSerializable("flag", -1);
         intent.putExtras(bundle);
         startActivity(intent);
     }

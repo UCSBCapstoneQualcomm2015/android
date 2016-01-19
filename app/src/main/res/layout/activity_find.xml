@@ -16,77 +16,104 @@
         tools:context=".DailyLogger"
         android:layout_above="@+id/footer"
         android:layout_below="@+id/header">
-    <LinearLayout
-        android:id="@+id/layout1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingRight="10dp"
-        android:paddingLeft="10dp"
-        android:paddingTop="15dp">
-
-        <TextView
-            android:id="@+id/room"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:id="@+id/layout1"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:textSize="20sp"
-            android:text="Room:"/>
+            android:paddingRight="10dp"
+            android:paddingLeft="10dp"
+            android:paddingTop="15dp">
+
+            <TextView
+                android:id="@+id/room"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textSize="20sp"
+                android:text="Room:"/>
 
 
-        <Spinner
-            android:id="@+id/room_spinner"
-            android:layout_width="wrap_content"
+            <Spinner
+                android:id="@+id/room_spinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="10"
+                android:textSize="20sp"/>
+
+
+        </LinearLayout>
+        <!--need to add imageView of current room-->
+
+        <LinearLayout
+            android:id="@+id/layout2"
+            android:layout_below="@+id/layout1"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:paddingRight="10dp"
+            android:paddingLeft="10dp"
+            android:paddingTop="15dp"
+            >
+
+            <com.sniffit.sniffit.Activities.MapView
+                android:id="@+id/find_view_room"
+                android:layout_below="@+id/layout1"
+                android:layout_above="@+id/layout3"
+                android:layout_width="wrap_content"
+                android:layout_height= "wrap_content"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/layout3"
+            android:layout_below="@+id/layout2"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="10"
-            android:textSize="20sp"/>
+            android:paddingRight="10dp"
+            android:paddingLeft="10dp"
+            android:paddingTop="15dp"
+            android:paddingBottom="15dp"
+            >
+
+            <TextView
+                android:id="@+id/item"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_below="@id/room"
+                android:textSize="20sp"
+                android:text="Item:"/>
 
 
-    </LinearLayout>
-    <!--need to add imageView of current room-->
-    <LinearLayout
-        android:id="@+id/layout3"
-        android:layout_below="@+id/layout1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingRight="10dp"
-        android:paddingLeft="10dp"
-        android:paddingTop="15dp">
+            <Spinner
+                android:id="@+id/item_spinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="10"
+                android:layout_below="@id/room_spinner"
+                android:textSize="20sp"/>
 
-        <TextView
-            android:id="@+id/item"
-            android:layout_width="wrap_content"
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_below="@id/room"
-            android:textSize="20sp"
-            android:text="Item:"/>
+            android:layout_below="@id/layout3">
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:id="@+id/sniff_button"
+                android:text="SNIFF"
+                android:textColor="#FFFFFF"
+                android:textSize="30sp" />
+
+        </LinearLayout>
 
 
-        <Spinner
-            android:id="@+id/item_spinner"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="10"
-            android:layout_below="@id/room_spinner"
-            android:textSize="20sp"/>
-
-
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/layout3">
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:id="@+id/sniff_button"
-            android:text="SNIFF"
-            android:textSize="30sp"/>
-
-    </LinearLayout>
-
-
- </RelativeLayout>
+    </RelativeLayout>
 </RelativeLayout>

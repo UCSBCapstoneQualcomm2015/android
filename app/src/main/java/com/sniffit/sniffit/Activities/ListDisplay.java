@@ -492,6 +492,7 @@ public class ListDisplay extends AppCompatActivity implements AddItemDialogFragm
 
     public void goToFind(View view) {
         Intent intent = new Intent(this, FindActivity.class);
+        bundle.putSerializable("flag", -1);
         intent.putExtras(bundle);
         startActivity(intent);
     }

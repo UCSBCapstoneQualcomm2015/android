@@ -2,14 +2,21 @@ package com.sniffit.sniffit.Activities;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -36,6 +43,16 @@ public class FindActivity extends Activity {
     User user;
     Spinner roomSpinner, itemSpinner;
     Bundle bundle;
+    MapView roomImage;
+    Bitmap b;
+    Paint myPaint;
+    int imageFlag;
+    Intent findIntent;
+    SharedPreferences pref;
+    int roomPosition;
+    int itemPosition;
+    Button currentPage;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,15 +62,27 @@ public class FindActivity extends Activity {
         header.setText("Find Tag");
         Button findButton = (Button) findViewById(R.id.sniff_button);
         findButton.setBackgroundColor(Color.parseColor("#293e6a"));
+
+        currentPage = (Button) findViewById(R.id.find_button);
+        currentPage.setBackgroundColor(Color.parseColor("#294e6a"));
         roomSpinner = (Spinner)findViewById(R.id.room_spinner);
+
         itemSpinner = (Spinner)findViewById(R.id.item_spinner);
 
-        Intent intent = getIntent();
         user = (User) getIntent().getExtras().getSerializable("user");
+        imageFlag = (Integer) getIntent().getExtras().getSerializable("flag");
         final ServerRequest sr = new ServerRequest();
 
         bundle = new Bundle();
         bundle.putSerializable("user", user);
+        findIntent = new Intent(this, FindActivity.class);
+
+
+        pref =  getApplicationContext().getSharedPreferences("MyPref", 0);
+        Log.d("pref", Integer.toString(pref.getInt("itemSpinnerPosition", -1)));
+
+
+        final SharedPreferences.Editor editor = pref.edit();
 
         //Set Room Spinner values
         sr.getIds("rooms", user, new Callback<ResponseBody>() {
@@ -61,7 +90,6 @@ public class FindActivity extends Activity {
             public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
                 try {
                     String json = response.body().string();
-                    System.out.println(json);
                     Gson gson = new Gson();
                     Room[] roomArray = gson.fromJson(json, Room[].class);
                     ArrayAdapter<Room> adapter;
@@ -80,6 +108,48 @@ public class FindActivity extends Activity {
             }
         });
 
+        roomPosition = pref.getInt("roomSpinnerPosition", 0);
+        roomSpinner.post(new Runnable() {
+            @Override
+            public void run() {
+                roomSpinner.setSelection(roomPosition);
+            }
+        });
+
+
+
+        roomSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                editor.putInt("roomSpinnerPosition", roomSpinner.getSelectedItemPosition());
+                editor.commit();
+                imageFlag = -1;
+
+                return;
+            }
+
+            public void onNothingSelected(AdapterView<?> adapterView) {
+                return;
+            }
+        });
+
+
+
+
+
+
+
+        roomImage = (MapView) findViewById(R.id.find_view_room);
+
+        int drawableResourceId = this.getResources().getIdentifier("rectangle", "drawable", this.getPackageName());
+        //Drawable roomDrawable = getResources().getDrawable(R.drawable.rectangle);
+
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), drawableResourceId);
+//        int nh = (int) ( bitmap.getHeight() * (512.0 / bitmap.getWidth()) );
+//        scaled = Bitmap.createScaledBitmap(bitmap, 512, nh, true);
+        roomImage.setImageBitmap(bitmap);
+        roomImage.setFlag(imageFlag);
+//        roomImage.invalidate();
+
         //Set item spinner value
         sr.getIds("rfid", user, new Callback<ResponseBody>() {
             @Override
@@ -91,6 +161,13 @@ public class FindActivity extends Activity {
                     RFIDItem[] rfidArray = gson.fromJson(json, RFIDItem[].class);
                     ArrayAdapter<RFIDItem> adapter = new ArrayAdapter<RFIDItem>(getApplicationContext(),
                             R.layout.spinner_dropdown_item, rfidArray);
+                    itemSpinner.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            itemSpinner.setSelection(itemPosition);
+                        }
+                    });
+
                     itemSpinner.setAdapter(adapter);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -104,35 +181,60 @@ public class FindActivity extends Activity {
             }
         });
 
+        itemPosition = pref.getInt("itemSpinnerPosition", 0);
+        Log.d("should be 1", Integer.toString(itemPosition));
+
+
+
+        itemSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                editor.putInt("itemSpinnerPosition", itemSpinner.getSelectedItemPosition());
+                editor.commit();
+                imageFlag = -1;
+
+                return;
+            }
+
+            public void onNothingSelected(AdapterView<?> adapterView) {
+                return;
+            }
+        });
+
 
 
         //Find Button click
         findButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                RFIDItem rfid = (RFIDItem) itemSpinner.getSelectedItem();
-                sr.getId("rfid", rfid.getTagId(), user, new Callback<ResponseBody>() {
-                    @Override
-                    public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
-                        try {
-                            int code = response.code();
-                            Headers h = response.headers();
-                            ResponseBody body = response.body();
-                            String bodyString = body.string();
-                            Log.d("Body", bodyString);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
+//                RFIDItem rfid = (RFIDItem) itemSpinner.getSelectedItem();
+//                sr.getId("rfid", rfid.getTagId(), user, new Callback<ResponseBody>() {
+//                    @Override
+//                    public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
+//                        try {
+//                            int code = response.code();
+//                            Headers h = response.headers();
+//                            ResponseBody body = response.body();
+//                            String bodyString = body.string();
+//                            Log.d("Body", bodyString);
+//                        } catch (IOException e) {
+//                            e.printStackTrace();
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onFailure(Throwable t) {
+//
+//                    }
+//                });
 
-                    @Override
-                    public void onFailure(Throwable t) {
-
-                    }
-                });
+                bundle.putSerializable("flag", 1);
+                findIntent.putExtras(bundle);
+                findIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(findIntent);
             }
         });
     }
+
 
 
     @Override
@@ -168,5 +270,10 @@ public class FindActivity extends Activity {
         startActivity(intent);
     }
 
-    public void goToFind(View view) {}
+    public void goToFind(View view) {
+        Intent intent = new Intent(this, FindActivity.class);
+        bundle.putSerializable("flag", -1);
+        intent.putExtras(bundle);
+        startActivity(intent);
+    }
 }

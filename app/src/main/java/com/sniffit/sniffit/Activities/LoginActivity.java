@@ -129,6 +129,7 @@ public class LoginActivity extends Activity {
                                 Intent intent = new Intent(getApplicationContext(), FindActivity.class);
                                 Bundle bundle = new Bundle();
                                 bundle.putSerializable("user", user);
+                                bundle.putSerializable("flag", -1);
                                 intent.putExtras(bundle);
                                 startActivity(intent);
                             }
