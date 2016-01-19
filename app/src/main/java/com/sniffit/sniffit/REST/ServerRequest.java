@@ -306,20 +306,15 @@ public class ServerRequest {
         rfidCall.enqueue(callback);
     }
 
-    public void putRoom(User user, String roomName, String roomWidth, String roomLength,
-                        String roomOldName, retrofit.Callback<ResponseBody> callback){
-        //Hard coded
-        String width = roomWidth;
-        String length = roomLength;
-        String name = roomName;
-        String oldName = roomOldName;
+    public void putRoom(User user, String oldRoomId, String roomName, String width, String length,
+                         retrofit.Callback<ResponseBody> callback){
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(base_url)
                 .build();
         apiInterface loginService = retrofit.create(apiInterface.class);
 
-        Call<ResponseBody> rfidCall = loginService.putRoom(user.getToken(), user.getUserId(), oldName, name, length, width);
+        Call<ResponseBody> rfidCall = loginService.putRoom(user.getToken(), user.getUserId(), oldRoomId, roomName, length, width);
         rfidCall.enqueue(callback);
     }
 

@@ -76,7 +76,7 @@ public class RoomActivity extends Activity implements AddRoomDialogFragment.AddR
     }
 
     @Override
-    public void roomConfirm(DialogFragment dialog, String roomName, String length, String width, int roomFlag, String oldName) {
+    public void roomConfirm(DialogFragment dialog, String roomName, String length, String width, int roomFlag, String oldRoomId) {
         Log.d(roomName, length);
         if (roomFlag == 1) {
             sr.postRoom(user, roomName, width, length, new Callback<ResponseBody>() {
@@ -91,7 +91,7 @@ public class RoomActivity extends Activity implements AddRoomDialogFragment.AddR
             });
         }
         else {
-            sr.putRoom(user, roomName,width, length, oldName, new Callback<ResponseBody> () {
+            sr.putRoom(user, oldRoomId, roomName, width, length, new Callback<ResponseBody> () {
                 @Override
                 public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
 
