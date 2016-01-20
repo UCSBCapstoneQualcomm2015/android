@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
@@ -16,7 +15,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -68,7 +66,7 @@ public class FindActivity extends Activity {
         setContentView(R.layout.activity_find);
         TextView header = (TextView)findViewById(R.id.header_title);
         header.setText("Find Tag");
-        Button findButton = (Button) findViewById(R.id.sniff_button);
+        final Button findButton = (Button) findViewById(R.id.sniff_button);
         findButton.setBackgroundColor(Color.parseColor("#293e6a"));
 
         currentPage = (Button) findViewById(R.id.find_button);
@@ -89,6 +87,8 @@ public class FindActivity extends Activity {
 
 
         Log.d("pref", Integer.toString(pref.getInt("itemSpinnerPosition", -1)));
+        final int drawableResourceId = this.getResources().getIdentifier("rectangle", "drawable", this.getPackageName());
+
 
 
 
@@ -106,173 +106,131 @@ public class FindActivity extends Activity {
                     adapter = new ArrayAdapter<Room>(getApplicationContext(),
                             R.layout.spinner_dropdown_item, roomArray);
                     roomSpinner.setAdapter(adapter);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-            }
-
-            @Override
-            public void onFailure(Throwable t) {
-
-            }
-        });
-
-//        try
-//        {
-//            Thread.sleep(100);
-//        }
-//        catch (Exception e){}
-
-
-        roomPosition = pref.getInt("roomSpinnerPosition", -1);
-        if (roomPosition >= 0) {
-            roomSpinner.post(new Runnable() {
-                @Override
-                public void run() {
-                    roomSpinner.setSelection(roomPosition);
-                }
-            });
-
-        }
-
-        roomSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                editor.putInt("roomSpinnerPosition", roomSpinner.getSelectedItemPosition());
-                editor.commit();
-                imageFlag = -1;
-
-                return;
-            }
-
-            public void onNothingSelected(AdapterView<?> adapterView) {
-                return;
-            }
-        });
-
-
-
-
-
-
-        roomImage = (MapView) findViewById(R.id.find_view_room);
-
-        int drawableResourceId = this.getResources().getIdentifier("rectangle", "drawable", this.getPackageName());
-        //Drawable roomDrawable = getResources().getDrawable(R.drawable.rectangle);
-
-        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), drawableResourceId);
-//        int nh = (int) ( bitmap.getHeight() * (512.0 / bitmap.getWidth()) );
-//        scaled = Bitmap.createScaledBitmap(bitmap, 512, nh, true);
-        roomImage.setImageBitmap(bitmap);
-        roomImage.setFlag(imageFlag);
-
-        //GET ROOM'S SNAPDRAGONS//
-
-//        sr.getRoomIds("snapdragon", user, roomArray[roomPosition].get_id(), new Callback<ResponseBody>() {
-//            @Override
-//            public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
-//                try {
-//                    String json = response.body().string();
-//                    System.out.println();
-//                    Gson gson = new Gson();
-//                    snapArray = gson.fromJson(json, Snapdragon[].class);
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//
-//            }
-//
-//            @Override
-//            public void onFailure(Throwable t) {
-//
-//            }
-//        });
-//
-//        //GET ROOM'S REFERENCE TAGS//
-//
-//        sr.getRoomIds("reference", user, roomArray[roomPosition].get_id(), new Callback<ResponseBody>() {
-//            @Override
-//            public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
-//                try {
-//                    String json = response.body().string();
-//                    System.out.println(json);
-//                    Gson gson = new Gson();
-//                    referenceTagArray = gson.fromJson(json, ReferenceTag[].class);
-//
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//
-//            }
-//
-//            @Override
-//            public void onFailure(Throwable t) {
-//
-//            }
-//        });
-//
-//        roomImage.setRoom(roomArray[roomPosition]);
-//        roomImage.setSnapdragonArray(snapArray);
-//        roomImage.setReferenceTags(referenceTagArray);
-//        roomImage.invalidate();
-
-        //Set item spinner value
-        sr.getIds("rfid", user, new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
-                try {
-                    String json = response.body().string();
-                    System.out.println(json);
-                    Gson gson = new Gson();
-                    RFIDItem[] rfidArray = gson.fromJson(json, RFIDItem[].class);
-                    ArrayAdapter<RFIDItem> adapter = new ArrayAdapter<RFIDItem>(getApplicationContext(),
-                            R.layout.spinner_dropdown_item, rfidArray);
-                    if (itemPosition >= 0) {
-                        itemSpinner.post(new Runnable() {
+                    roomPosition = pref.getInt("roomSpinnerPosition", -1);
+//        Log.d("roomPosition", Integer.toString(roomPosition));
+                    if (roomPosition >= 0) {
+                        roomSpinner.post(new Runnable() {
                             @Override
                             public void run() {
-                                itemSpinner.setSelection(itemPosition);
+                                roomSpinner.setSelection(roomPosition);
                             }
                         });
+
                     }
 
-                    itemSpinner.setAdapter(adapter);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                    roomSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                        public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                            Log.d("roomPosition", Integer.toString(roomSpinner.getSelectedItemPosition()));
 
-            }
+                            editor.putInt("roomSpinnerPosition", roomSpinner.getSelectedItemPosition());
+                            editor.commit();
+                            imageFlag = -1;
 
-            @Override
-            public void onFailure(Throwable t) {
+                            return;
+                        }
 
-            }
-        });
-
-        itemPosition = pref.getInt("itemSpinnerPosition", -1);
-        Log.d("should be 1", Integer.toString(itemPosition));
-
-
-        itemSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                editor.putInt("itemSpinnerPosition", itemSpinner.getSelectedItemPosition());
-                editor.commit();
-                imageFlag = -1;
-
-                return;
-            }
-
-            public void onNothingSelected(AdapterView<?> adapterView) {
-                return;
-            }
-        });
+                        public void onNothingSelected(AdapterView<?> adapterView) {
+                            return;
+                        }
+                    });
 
 
 
-        //Find Button click
-        findButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+
+
+
+                    roomImage = (MapView) findViewById(R.id.find_view_room);
+                    //Drawable roomDrawable = getResources().getDrawable(R.drawable.rectangle);
+
+                    Bitmap bitmap = BitmapFactory.decodeResource(getResources(), drawableResourceId);
+//        int nh = (int) ( bitmap.getHeight() * (512.0 / bitmap.getWidth()) );
+//        scaled = Bitmap.createScaledBitmap(bitmap, 512, nh, true);
+                    roomImage.setImageBitmap(bitmap);
+                    roomImage.setFlag(imageFlag);
+
+                    //GET ROOM'S SNAPDRAGONS//
+
+                    sr.getRoomIds("snapdragon", user, roomArray[roomPosition].get_id(), new Callback<ResponseBody>() {
+                        @Override
+                        public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
+                            try {
+                                String json = response.body().string();
+                                System.out.println();
+                                Gson gson = new Gson();
+                                snapArray = gson.fromJson(json, Snapdragon[].class);
+
+
+
+                                //SECOND NEST
+
+                                sr.getRoomIds("reference", user, roomArray[roomPosition].get_id(), new Callback<ResponseBody>() {
+                                    @Override
+                                    public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
+                                        try {
+                                            String json = response.body().string();
+                                            System.out.println(json);
+                                            Gson gson = new Gson();
+                                            referenceTagArray = gson.fromJson(json, ReferenceTag[].class);
+
+                                            ///THIRD NEST
+
+                                            Log.d("snapdragons:", Integer.toString(snapArray.length));
+                                            Log.d("reference tags:", Integer.toString(referenceTagArray.length));
+                                            roomImage.setFlag(2);
+                                            roomImage.setRoom(roomArray[roomPosition]);
+                                            roomImage.setSnapdragonArray(snapArray);
+                                            roomImage.setReferenceTags(referenceTagArray);
+                                            roomImage.invalidate();
+
+                                            //Set item spinner value
+                                            sr.getIds("rfid", user, new Callback<ResponseBody>() {
+                                                @Override
+                                                public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
+                                                    try {
+                                                        String json = response.body().string();
+                                                        System.out.println(json);
+                                                        Gson gson = new Gson();
+                                                        RFIDItem[] rfidArray = gson.fromJson(json, RFIDItem[].class);
+                                                        ArrayAdapter<RFIDItem> adapter = new ArrayAdapter<RFIDItem>(getApplicationContext(),
+                                                                R.layout.spinner_dropdown_item, rfidArray);
+
+                                                        if (itemPosition >= 0) {
+                                                            itemSpinner.post(new Runnable() {
+                                                                @Override
+                                                                public void run() {
+                                                                    itemSpinner.setSelection(itemPosition);
+                                                                }
+                                                            });
+                                                        }
+
+                                                        itemSpinner.setAdapter(adapter);
+
+                                                        //fourth nest
+
+                                                        itemPosition = pref.getInt("itemSpinnerPosition", -1);
+                                                        Log.d("should be 1", Integer.toString(itemPosition));
+
+
+                                                        itemSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                                                            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                                                                editor.putInt("itemSpinnerPosition", itemSpinner.getSelectedItemPosition());
+                                                                editor.commit();
+                                                                imageFlag = -1;
+
+                                                                return;
+                                                            }
+
+                                                            public void onNothingSelected(AdapterView<?> adapterView) {
+                                                                return;
+                                                            }
+                                                        });
+
+
+
+                                                        //Find Button click
+                                                        findButton.setOnClickListener(new View.OnClickListener() {
+                                                            @Override
+                                                            public void onClick(View view) {
 //                RFIDItem rfid = (RFIDItem) itemSpinner.getSelectedItem();
 //                sr.getId("rfid", rfid.getTagId(), user, new Callback<ResponseBody>() {
 //                    @Override
@@ -294,12 +252,273 @@ public class FindActivity extends Activity {
 //                    }
 //                });
 
-                bundle.putSerializable("flag", 1);
-                findIntent.putExtras(bundle);
-                findIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(findIntent);
+                                                                bundle.putSerializable("flag", 1);
+                                                                findIntent.putExtras(bundle);
+                                                                findIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                                                startActivity(findIntent);
+                                                            }
+                                                        });
+
+
+                                                    } catch (Exception e) {
+                                                        e.printStackTrace();
+                                                    }
+
+                                                }
+
+                                                @Override
+                                                public void onFailure(Throwable t) {
+
+                                                }
+                                            });
+
+
+
+
+
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                        }
+
+                                    }
+
+                                    @Override
+                                    public void onFailure(Throwable t) {
+
+                                    }
+                                });
+
+
+
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+
+
+
+
+
+
+
+
+                        }
+
+                        @Override
+                        public void onFailure(Throwable t) {
+
+                        }
+                    });
+
+
+
+
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+
             }
         });
+
+//        try
+//        {
+//            Thread.sleep(100);
+//        }
+//        catch (Exception e){}
+
+        ///lock 1///
+
+    ////START OF CHANGES/////////////
+
+//        roomPosition = pref.getInt("roomSpinnerPosition", -1);
+////        Log.d("roomPosition", Integer.toString(roomPosition));
+//        if (roomPosition >= 0) {
+//            roomSpinner.post(new Runnable() {
+//                @Override
+//                public void run() {
+//                    roomSpinner.setSelection(roomPosition);
+//                }
+//            });
+//
+//        }
+//
+//        roomSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+//                Log.d("roomPosition", Integer.toString(roomSpinner.getSelectedItemPosition()));
+//
+//                editor.putInt("roomSpinnerPosition", roomSpinner.getSelectedItemPosition());
+//                editor.commit();
+//                imageFlag = -1;
+//
+//                return;
+//            }
+//
+//            public void onNothingSelected(AdapterView<?> adapterView) {
+//                return;
+//            }
+//        });
+//
+//
+//
+//
+//
+//
+//        roomImage = (MapView) findViewById(R.id.find_view_room);
+//
+//        int drawableResourceId = this.getResources().getIdentifier("rectangle", "drawable", this.getPackageName());
+//        //Drawable roomDrawable = getResources().getDrawable(R.drawable.rectangle);
+//
+//        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), drawableResourceId);
+////        int nh = (int) ( bitmap.getHeight() * (512.0 / bitmap.getWidth()) );
+////        scaled = Bitmap.createScaledBitmap(bitmap, 512, nh, true);
+//        roomImage.setImageBitmap(bitmap);
+//        roomImage.setFlag(imageFlag);
+//
+//        //GET ROOM'S SNAPDRAGONS//
+//
+//        sr.getRoomIds("snapdragon", user, roomArray[roomPosition].get_id(), new Callback<ResponseBody>() {
+//            @Override
+//            public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
+//                try {
+//                    String json = response.body().string();
+//                    System.out.println();
+//                    Gson gson = new Gson();
+//                    snapArray = gson.fromJson(json, Snapdragon[].class);
+//                    lock = 2;
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//
+//            }
+//
+//            @Override
+//            public void onFailure(Throwable t) {
+//
+//            }
+//        });
+
+
+//        //GET ROOM'S REFERENCE TAGS//
+//
+//        sr.getRoomIds("reference", user, roomArray[roomPosition].get_id(), new Callback<ResponseBody>() {
+//            @Override
+//            public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
+//                try {
+//                    String json = response.body().string();
+//                    System.out.println(json);
+//                    Gson gson = new Gson();
+//                    referenceTagArray = gson.fromJson(json, ReferenceTag[].class);
+//                    lock = 3;
+//
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//
+//            }
+//
+//            @Override
+//            public void onFailure(Throwable t) {
+//
+//            }
+//        });
+
+
+//        roomImage.setRoom(roomArray[roomPosition]);
+//        roomImage.setSnapdragonArray(snapArray);
+//        roomImage.setReferenceTags(referenceTagArray);
+//        roomImage.invalidate();
+//
+//        //Set item spinner value
+//        sr.getIds("rfid", user, new Callback<ResponseBody>() {
+//            @Override
+//            public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
+//                try {
+//                    String json = response.body().string();
+//                    System.out.println(json);
+//                    Gson gson = new Gson();
+//                    RFIDItem[] rfidArray = gson.fromJson(json, RFIDItem[].class);
+//                    ArrayAdapter<RFIDItem> adapter = new ArrayAdapter<RFIDItem>(getApplicationContext(),
+//                            R.layout.spinner_dropdown_item, rfidArray);
+//
+//                    if (itemPosition >= 0) {
+//                        itemSpinner.post(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                itemSpinner.setSelection(itemPosition);
+//                            }
+//                        });
+//                    }
+//
+//                    itemSpinner.setAdapter(adapter);
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//
+//            }
+//
+//            @Override
+//            public void onFailure(Throwable t) {
+//
+//            }
+//        });
+
+//        itemPosition = pref.getInt("itemSpinnerPosition", -1);
+//        Log.d("should be 1", Integer.toString(itemPosition));
+//
+//
+//        itemSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+//                editor.putInt("itemSpinnerPosition", itemSpinner.getSelectedItemPosition());
+//                editor.commit();
+//                imageFlag = -1;
+//
+//                return;
+//            }
+//
+//            public void onNothingSelected(AdapterView<?> adapterView) {
+//                return;
+//            }
+//        });
+//
+//
+//
+//        //Find Button click
+//        findButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+////                RFIDItem rfid = (RFIDItem) itemSpinner.getSelectedItem();
+////                sr.getId("rfid", rfid.getTagId(), user, new Callback<ResponseBody>() {
+////                    @Override
+////                    public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
+////                        try {
+////                            int code = response.code();
+////                            Headers h = response.headers();
+////                            ResponseBody body = response.body();
+////                            String bodyString = body.string();
+////                            Log.d("Body", bodyString);
+////                        } catch (IOException e) {
+////                            e.printStackTrace();
+////                        }
+////                    }
+////
+////                    @Override
+////                    public void onFailure(Throwable t) {
+////
+////                    }
+////                });
+//
+//                bundle.putSerializable("flag", 1);
+//                findIntent.putExtras(bundle);
+//                findIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                startActivity(findIntent);
+//            }
+//        });
     }
 
 
