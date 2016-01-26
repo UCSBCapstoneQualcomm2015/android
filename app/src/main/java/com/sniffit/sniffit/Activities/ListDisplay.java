@@ -2,6 +2,7 @@ package com.sniffit.sniffit.Activities;
 
 import android.app.DialogFragment;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -69,6 +70,7 @@ public class ListDisplay extends AppCompatActivity implements AddItemDialogFragm
     User user;
     final ServerRequest sr = new ServerRequest();
     Bundle bundle;
+    SharedPreferences pref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,6 +106,14 @@ public class ListDisplay extends AppCompatActivity implements AddItemDialogFragm
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
+                    if (sniffitList.size() > 0) {
+                        TextView nodata = (TextView) findViewById(R.id.nodata);
+                        nodata.setVisibility(View.INVISIBLE);
+                    }
+                    else {
+                        TextView nodata = (TextView) findViewById(R.id.nodata);
+                        nodata.setVisibility(View.VISIBLE);
+                    }
 
                 }
 
@@ -133,6 +143,14 @@ public class ListDisplay extends AppCompatActivity implements AddItemDialogFragm
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
+                    if (sniffitList.size() > 0) {
+                        TextView nodata = (TextView) findViewById(R.id.nodata);
+                        nodata.setVisibility(View.INVISIBLE);
+                    }
+                    else {
+                        TextView nodata = (TextView) findViewById(R.id.nodata);
+                        nodata.setVisibility(View.VISIBLE);
+                    }
 
                 }
 
@@ -145,8 +163,8 @@ public class ListDisplay extends AppCompatActivity implements AddItemDialogFragm
         }
 
         else if (flag == SNAPDRAGON) {         //if we are adding a snapdragon (same with ref tag), we need to figure out way to add it to that specific room in db
-            header.setText("Snapdragon List");
             room = (Room) getIntent().getExtras().getSerializable("room");
+            header.setText("Snapdragons (" + room.getName() + ")");
             Log.d("room", room.get_id());
             currentPage = (Button) findViewById(R.id.rooms_button);
             currentPage.setBackgroundColor(Color.parseColor("#294e6a"));
@@ -164,6 +182,14 @@ public class ListDisplay extends AppCompatActivity implements AddItemDialogFragm
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
+                    }
+                    if (sniffitList.size() > 0) {
+                        TextView nodata = (TextView) findViewById(R.id.nodata);
+                        nodata.setVisibility(View.INVISIBLE);
+                    }
+                    else {
+                        TextView nodata = (TextView) findViewById(R.id.nodata);
+                        nodata.setVisibility(View.VISIBLE);
                     }
 
                 }
@@ -197,6 +223,14 @@ public class ListDisplay extends AppCompatActivity implements AddItemDialogFragm
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+                if (sniffitList.size() > 0) {
+                    TextView nodata = (TextView) findViewById(R.id.nodata);
+                    nodata.setVisibility(View.INVISIBLE);
+                }
+                else {
+                    TextView nodata = (TextView) findViewById(R.id.nodata);
+                    nodata.setVisibility(View.VISIBLE);
+                    }
 
             }
 
@@ -206,14 +240,14 @@ public class ListDisplay extends AppCompatActivity implements AddItemDialogFragm
             }
         });
     }
-        TextView nodata = (TextView) findViewById(R.id.nodata);
-
-        nodata.setVisibility(View.INVISIBLE);
+//        TextView nodata = (TextView) findViewById(R.id.nodata);
+//
+//        nodata.setVisibility(View.INVISIBLE);
 
 //        for (rooms in database) {
-        //roomList: populate with list of user's rooms
+//        roomList: populate with list of user's rooms
 //        }
-
+//
 //        if (sniffitList.size() > 0) {
 //            TextView nodata = (TextView) findViewById(R.id.nodata);
 //            nodata.setVisibility(View.INVISIBLE);
@@ -418,7 +452,10 @@ public class ListDisplay extends AppCompatActivity implements AddItemDialogFragm
         sr.deleteRoom(user, roomId, new Callback<ResponseBody>() {
             @Override
             public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
-
+                pref =  getApplicationContext().getSharedPreferences("MyPref", 0);
+                final SharedPreferences.Editor editor = pref.edit();
+                editor.putInt("roomSpinnerPosition", -1);
+                editor.commit();
             }
 
             @Override
@@ -485,7 +522,10 @@ public class ListDisplay extends AppCompatActivity implements AddItemDialogFragm
         sr.deleteItem(user, id, new Callback<ResponseBody>() {
             @Override
             public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
-
+                pref = getApplicationContext().getSharedPreferences("MyPref", 0);
+                final SharedPreferences.Editor editor = pref.edit();
+                editor.putInt("itemSpinnerPosition", -1);
+                editor.commit();
             }
 
             @Override

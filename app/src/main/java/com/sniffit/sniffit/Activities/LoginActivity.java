@@ -3,6 +3,7 @@ package com.sniffit.sniffit.Activities;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -37,6 +38,8 @@ public class LoginActivity extends Activity {
     Button login, register,forgotPass;
     String emailString, passwordString;
     User user;
+    SharedPreferences pref;
+
 
     public static final MediaType MEDIA_TYPE_MARKDOWN
             = MediaType.parse("application/x-www-form-urlencoded; charset=utf-8");
@@ -78,6 +81,12 @@ public class LoginActivity extends Activity {
                                     System.out.print(jsonBody);
                                     User user = gson.fromJson(jsonBody, User.class);
                                     Intent intent = new Intent(getApplicationContext(), FindActivity.class);
+                                    pref =  getApplicationContext().getSharedPreferences("MyPref", 0);
+                                    final SharedPreferences.Editor editor = pref.edit();
+                                    editor.putInt("roomSpinnerPosition", -1);
+                                    editor.putInt("itemSpinnerPosition", -1);
+                                    editor.commit();
+
                                     Bundle bundle = new Bundle();
                                     bundle.putSerializable("user", user);
                                     bundle.putSerializable("flag", -1);

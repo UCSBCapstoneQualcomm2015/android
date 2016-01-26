@@ -87,8 +87,8 @@ public class MapView extends ImageView {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         // matrix.setScale(mScaleFactor, mScaleFactor);
-//        if (myFlag == 1)
-//        canvas.drawCircle(300,300,30,paint);
+        if (myFlag == 1)
+        canvas.drawCircle(300,300,30,paint);
 
 
 //        canvas.save();
@@ -99,16 +99,16 @@ public class MapView extends ImageView {
 //        canvas.restore();
 
         //DRAW SNAPDRAGONS
-        if (myFlag == 2) {
-            for (int i = 0; i < snapdragons.length; i++) {
-                canvas.drawCircle(Integer.parseInt(snapdragons[i].getxCoord()) * 20, Integer.parseInt(snapdragons[i].getyCoord()) * 20, 12, paintSnaps);
-
-            }
-            for (int i = 0; i < referenceTags.length; i++) {
-                canvas.drawCircle(Integer.parseInt(referenceTags[i].getX()) * 20, Integer.parseInt(referenceTags[i].getY()) * 20, 12, paintRefTags);
-
-            }
-        }
+////        if (myFlag == 2) {
+////            for (int i = 0; i < snapdragons.length; i++) {
+////                canvas.drawCircle(Integer.parseInt(snapdragons[i].getxCoord()) * 20, Integer.parseInt(snapdragons[i].getyCoord()) * 20, 12, paintSnaps);
+////
+////            }
+////            for (int i = 0; i < referenceTags.length; i++) {
+////                canvas.drawCircle(Integer.parseInt(referenceTags[i].getX()) * 20, Integer.parseInt(referenceTags[i].getY()) * 20, 12, paintRefTags);
+////
+////            }
+//        }
 
     }
 
