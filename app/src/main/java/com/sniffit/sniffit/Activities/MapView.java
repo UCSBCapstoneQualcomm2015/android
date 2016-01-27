@@ -111,8 +111,6 @@ public class MapView extends ImageView {
         if (myFlag == 2) {
             width = Float.parseFloat(room.getWidth());
             length = Float.parseFloat(room.getLength());
-            scaledXUnit = RIGHT/width;
-            scaledYUnit = BOTTOM/length;
 
             if (length > width) {       //height > width: draw rect->top,
                 scaledSize = BOTTOM * width / length;
@@ -128,6 +126,10 @@ public class MapView extends ImageView {
                 BOTTOM -= diff;
                 canvas.drawRect(LEFT, TOP, RIGHT, BOTTOM, paint);
             }
+
+            scaledXUnit = (RIGHT - LEFT)/width;
+            scaledYUnit = (BOTTOM - TOP)/length;
+
                 ////LOAD SNAPDRAGONS/////
             for (int i = 0; i < snapdragons.length; i++) {
                 canvas.drawCircle(LEFT + Float.parseFloat(snapdragons[i].getxCoord()) * scaledXUnit, BOTTOM - Float.parseFloat(snapdragons[i].getyCoord()) * scaledYUnit, 8, paintSnaps);
