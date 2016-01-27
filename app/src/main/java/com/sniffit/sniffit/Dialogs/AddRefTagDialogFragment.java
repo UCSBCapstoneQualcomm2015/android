@@ -4,11 +4,13 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.sniffit.sniffit.R;
 
@@ -101,8 +103,24 @@ public class AddRefTagDialogFragment extends DialogFragment{
         builder.setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                mListener.refTagConfirm(AddRefTagDialogFragment.this, refTagName.getText().toString(),
-                        id.getText().toString(), x.getText().toString(), y.getText().toString(), flag, tagId);
+                String xText = x.getText().toString();
+                String yText = y.getText().toString();
+                Context context = getActivity();
+                int duration = Toast.LENGTH_LONG;
+                if(isEmpty(x) || isEmpty(y) || isEmpty(refTagName) || isEmpty(id)){
+                    CharSequence text = "Enter all required fields";
+                    Toast toast = Toast.makeText(context, text, duration);
+                    toast.show();
+                }
+                else if (!(isNumber(xText) && isNumber(yText))) {
+
+                    CharSequence text = "Coordinates must be valid numbers";
+                    Toast toast = Toast.makeText(context, text, duration);
+                    toast.show();
+                } else {
+                    mListener.refTagConfirm(AddRefTagDialogFragment.this, refTagName.getText().toString(),
+                            id.getText().toString(), x.getText().toString(), y.getText().toString(), flag, tagId);
+                }
             }
         });
 
@@ -110,4 +128,11 @@ public class AddRefTagDialogFragment extends DialogFragment{
         return builder.create();
     }
 
+        public static boolean isNumber(String str)
+        {
+            return str.matches("-?\\d+(\\.\\d+)?");  //match a number with optional '-' and decimal.
+        }
+    private boolean isEmpty(EditText myeditText) {
+        return myeditText.getText().toString().trim().length() == 0;
+    }
 }

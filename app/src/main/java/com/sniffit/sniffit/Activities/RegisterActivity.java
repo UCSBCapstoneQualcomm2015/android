@@ -71,12 +71,12 @@ public class RegisterActivity extends Activity {
                             JSONObject object = new JSONObject(jsonBody);
                             String message = object.getString("message");
                             Context context = getApplicationContext();
-                            int duration = Toast.LENGTH_SHORT;
+                            int duration = Toast.LENGTH_LONG;
 
                             if (message.equals("Successful sign up")) {
                                 System.out.print(jsonBody);
                                 User user = gson.fromJson(jsonBody, User.class);
-                                Intent intent = new Intent(getApplicationContext(), FindActivity.class);
+                                Intent intent = new Intent(getApplicationContext(), ListDisplay.class);
                                 Bundle bundle = new Bundle();
                                 bundle.putSerializable("user", user);
                                 bundle.putSerializable("flag", -1);

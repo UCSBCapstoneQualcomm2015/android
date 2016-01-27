@@ -4,12 +4,14 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.sniffit.sniffit.R;
 
@@ -99,10 +101,26 @@ public class AddRoomDialogFragment extends DialogFragment{
         builder.setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                mListener.roomConfirm(AddRoomDialogFragment.this, edit_roomName.getText().toString(),
-                        edit_length.getText().toString(), edit_width.getText().toString(), flag, id);
+                Context context = getActivity();
+                int duration = Toast.LENGTH_LONG;
+
+                String roomName = edit_roomName.getText().toString();
+                String length = edit_length.getText().toString();
+                String width = edit_width.getText().toString();
+
+                if(isEmpty(edit_roomName) || isEmpty(edit_length) || isEmpty(edit_width)) {
+                    CharSequence text = "Enter all required fields";
+                    Toast toast = Toast.makeText(context, text, duration);
+                    toast.show();
+                } else if (!(isNumber(length) && isNumber(width))) {
+                    CharSequence text = "Length/Width must be valid numbers";
+                    Toast toast = Toast.makeText(context, text, duration);
+                    toast.show();
+                } else {
+                mListener.roomConfirm(AddRoomDialogFragment.this, roomName,
+                        length, width, flag, id);
             }
-        });
+        }});
 
 
 
@@ -110,6 +128,14 @@ public class AddRoomDialogFragment extends DialogFragment{
         return builder.create();
     }
 
+    public static boolean isNumber(String str)
+    {
+        return str.matches("-?\\d+(\\.\\d+)?");  //match a number with optional '-' and decimal.
+    }
+
+    private boolean isEmpty(EditText myeditText) {
+        return myeditText.getText().toString().trim().length() == 0;
+    }
 }
 
 

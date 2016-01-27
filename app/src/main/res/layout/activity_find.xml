@@ -102,9 +102,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/layout3"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
+            android:paddingLeft="50dp"
+            android:paddingRight="50dp"
             android:paddingBottom="5dp"
+            android:layout_centerInParent="true"
             >
 
             <Button
@@ -112,9 +113,12 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:id="@+id/sniff_button"
-                android:text="SNIFF"
+                android:text="Find"
                 android:textColor="#FFFFFF"
-                android:textSize="30sp" />
+                android:textSize="30sp"
+                android:shadowRadius="1" />
+
+
 
         </LinearLayout>
 

@@ -1,6 +1,7 @@
 package com.sniffit.sniffit.Dialogs;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -9,6 +10,7 @@ import android.app.DialogFragment;
 import android.app.Dialog;
 import android.widget.EditText;
 import android.app.AlertDialog;
+import android.widget.Toast;
 
 import com.sniffit.sniffit.R;
 
@@ -87,6 +89,13 @@ import com.sniffit.sniffit.R;
         builder.setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                Context context = getActivity();
+                int duration = Toast.LENGTH_LONG;
+                if(isEmpty(tagId) || isEmpty(tagName)){
+                    CharSequence text = "Enter all required fields";
+                    Toast toast = Toast.makeText(context, text, duration);
+                    toast.show();
+                }
                 mListener.itemConfirm(AddItemDialogFragment.this, tagName.getText().toString(),
                         tagId.getText().toString(), flag, itemId);
             }
@@ -97,5 +106,8 @@ import com.sniffit.sniffit.R;
         return builder.create();
     }
 
+    private boolean isEmpty(EditText myeditText) {
+        return myeditText.getText().toString().trim().length() == 0;
+    }
 }
 
