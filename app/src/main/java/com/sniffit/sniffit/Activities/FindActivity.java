@@ -126,15 +126,15 @@ public class FindActivity extends Activity {
 
 
         roomPosition = pref.getInt("roomSpinnerPosition", -1);
-        if (roomPosition >= 0) {
-            roomSpinner.post(new Runnable() {
-                @Override
-                public void run() {
-                    roomSpinner.setSelection(roomPosition);
-                }
-            });
-
-        }
+//        if (roomPosition >= 0) {
+//            roomSpinner.post(new Runnable() {
+//                @Override
+//                public void run() {
+//                    roomSpinner.setSelection(roomPosition);
+//                }
+//            });
+//
+//        }
 
         roomSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
@@ -227,14 +227,14 @@ public class FindActivity extends Activity {
                     RFIDItem[] rfidArray = gson.fromJson(json, RFIDItem[].class);
                     ArrayAdapter<RFIDItem> adapter = new ArrayAdapter<RFIDItem>(getApplicationContext(),
                             R.layout.spinner_dropdown_item, rfidArray);
-                    if (itemPosition >= 0) {
-                        itemSpinner.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                itemSpinner.setSelection(itemPosition);
-                            }
-                        });
-                    }
+//                    if (itemPosition >= 0) {
+//                        itemSpinner.post(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                itemSpinner.setSelection(itemPosition);
+//                            }
+//                        });
+//                    }
 
                     itemSpinner.setAdapter(adapter);
                 } catch (Exception e) {

@@ -125,7 +125,7 @@ public class ServerRequest {
 
         @FormUrlEncoded
         @PUT("api/user/{user_id}/reftags/{ref_tagId}")
-        Call<ResponseBody> putReferenceTag(@Header("x-access-token") String token, @Path("user_id") String userId, @Path("ref_tagId") String oldTagId, @Field("name") String tagName, @Field("tagId") String newTagId, @Field("roomId") String roomId, @Field("x_position") String xPosition, @Field("y_position") String yPosition);
+        Call<ResponseBody> putReferenceTag(@Header("x-access-token") String token, @Path("user_id") String userId, @Path("ref_tagId") String oldTagId, @Field("name") String tagName, @Field("tagId") String newTagId, @Field("roomId") String roomId, @Field("xCoord") String xPosition, @Field("yCoord") String yPosition);
 
         @DELETE("api/user/{user_id}/reftags/{ref_tagId}")
         Call<ResponseBody> deleteReferenceTag(@Header("x-access-token") String token, @Path("user_id") String userId, @Path("ref_tagId") String tagId);

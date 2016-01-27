@@ -59,51 +59,8 @@ public class LoginActivity extends Activity {
             register.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    emailString = email.getText().toString();
-                    passwordString = password.getText().toString();
-
-                    ServerRequest sr = new ServerRequest();
-
-                    sr.authenticate("register", emailString, passwordString, new Callback<ResponseBody>() {
-                        @Override
-                        public void onResponse(retrofit.Response<ResponseBody> response, Retrofit retrofit) {
-                            try {
-                                String jsonBody = response.body().string();
-
-                                Gson gson = new Gson();
-                                JSONObject object = new JSONObject(jsonBody);
-                                String message = object.getString("message");
-
-                                if (message.equals("Successful sign up.")) {
-                                    System.out.print(jsonBody);
-                                    User user = gson.fromJson(jsonBody, User.class);
-                                    Intent intent = new Intent(getApplicationContext(), FindActivity.class);
-                                    Bundle bundle = new Bundle();
-                                    bundle.putSerializable("user", user);
-                                    bundle.putSerializable("flag", -1);
-                                    intent.putExtras(bundle);
-                                    startActivity(intent);
-                                }else{
-                                    //Throw error
-                                    Context context = getApplicationContext();
-                                    CharSequence text = "Account with this email already exists";
-                                    int duration = Toast.LENGTH_SHORT;
-
-                                    Toast toast = Toast.makeText(context, text, duration);
-                                    toast.show();
-                                }
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-
-                        }
-
-                        @Override
-                        public void onFailure(Throwable t) {
-                            Log.d("Error", t.toString());
-                        }
-                    });
-
+                    Intent intent = new Intent(getApplicationContext(), RegisterActivity.class);
+                    startActivity(intent);
                 }
             });
 
