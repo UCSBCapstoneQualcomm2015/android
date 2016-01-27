@@ -150,6 +150,14 @@ public class LoginActivity extends Activity {
                                 intent.putExtras(bundle);
                                 startActivity(intent);
                             }
+                            else {
+                                Context context = getApplicationContext();
+                                CharSequence text = ":(";
+                                int duration = Toast.LENGTH_SHORT;
+
+                                Toast toast = Toast.makeText(context, text, duration);
+                                toast.show();
+                            }
                         } catch (Exception e) {
                             e.printStackTrace();
                         }

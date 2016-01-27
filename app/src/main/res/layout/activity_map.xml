@@ -9,7 +9,7 @@
     tools:context="com.sniffit.sniffit.Activities.MapActivity">
 
     <View
-        android:id="@+id/view"
+        android:id="@+id/find_view"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent" />
 

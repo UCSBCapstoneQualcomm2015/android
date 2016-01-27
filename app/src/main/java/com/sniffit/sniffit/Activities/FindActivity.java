@@ -7,7 +7,9 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -56,6 +58,12 @@ public class FindActivity extends Activity {
     Snapdragon[] snapArray;
     ReferenceTag[] referenceTagArray;
 
+    int w;
+    int h;
+    int densityDpi;
+    int w_px;
+    int h_px;
+
     final ServerRequest sr = new ServerRequest();
 
 
@@ -86,7 +94,7 @@ public class FindActivity extends Activity {
         pref =  getApplicationContext().getSharedPreferences("MyPref", 0);
         final SharedPreferences.Editor editor = pref.edit();
 
-        final int drawableResourceId = this.getResources().getIdentifier("rectangle", "drawable", this.getPackageName());
+//        final int drawableResourceId = this.getResources().getIdentifier("rectangle", "drawable", this.getPackageName());
 
         Log.d("room position", Integer.toString(roomPosition));
 
@@ -146,16 +154,26 @@ public class FindActivity extends Activity {
 
 
 
-
                     roomImage = (MapView) findViewById(R.id.find_view_room);
-                    //Drawable roomDrawable = getResources().getDrawable(R.drawable.rectangle);
+//                    Drawable d = getResources().getDrawable(R.drawable.square);
+//                    roomImage.setBackground(d);
+//                    Drawable roomDrawable = getResources().getDrawable(R.drawable.rectangle);
 
-                    Bitmap bitmap = BitmapFactory.decodeResource(getResources(), drawableResourceId);
+//                    Bitmap bitmap = BitmapFactory.decodeResource(getResources(), drawableResourceId);
+
 //        int nh = (int) ( bitmap.getHeight() * (512.0 / bitmap.getWidth()) );
 //        scaled = Bitmap.createScaledBitmap(bitmap, 512, nh, true);
+//                    Bitmap bitmap = new Bitmap();
+
+                    DisplayMetrics metrics = getResources().getDisplayMetrics();
+                    densityDpi = (int)(metrics.density * 160f);
+                    Bitmap.Config conf = Bitmap.Config.ARGB_8888; // see other conf types
+                    h_px = 300 * (densityDpi/160);
+                    w_px = 300 * (densityDpi/160);
+
+                    Bitmap bitmap = Bitmap.createBitmap(w_px, h_px, conf); // this creates a MUTABLE bitmap
                     roomImage.setImageBitmap(bitmap);
                     roomImage.setFlag(imageFlag);
-                    Log.d("hi", Integer.toString(roomPosition));
 
                     //GET ROOM'S SNAPDRAGONS//
                     if (roomPosition >= 0) {
@@ -189,7 +207,7 @@ public class FindActivity extends Activity {
                                                 roomImage.setRoom(roomArray[roomPosition]);
                                                 roomImage.setSnapdragonArray(snapArray);
                                                 roomImage.setReferenceTags(referenceTagArray);
-//                                            roomImage.invalidate();
+                                                roomImage.invalidate();
 
                                                 //Set item spinner value
                                                 sr.getIds("rfid", user, new Callback<ResponseBody>() {

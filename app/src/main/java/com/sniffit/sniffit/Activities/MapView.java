@@ -42,6 +42,16 @@ public class MapView extends ImageView {
     Paint paintRefTags;
 
     Context context;
+    float length;
+    float width;
+    float scaledSize;
+    float diff;
+    float TOP;
+    float BOTTOM;
+    float LEFT;
+    float RIGHT;
+    float scaledXUnit;
+    float scaledYUnit;
 
     float d,newRot = 0f;
     ArrayList<PointF> points;
@@ -66,7 +76,7 @@ public class MapView extends ImageView {
         super(context, attrs, defStyle);
         this.context = context;
         paint = new Paint();
-        paint.setColor(Color.RED);
+        paint.setColor(Color.BLACK);
         paint.setStyle(Paint.Style.STROKE);
         paint.setStrokeWidth(5);
 
@@ -79,6 +89,7 @@ public class MapView extends ImageView {
         paintRefTags.setStyle(Paint.Style.FILL);
 
         points = new ArrayList<PointF>();
+
 //        matrix = new Matrix();
 //        copyMatrix = new Matrix();
     }
@@ -86,10 +97,52 @@ public class MapView extends ImageView {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        // matrix.setScale(mScaleFactor, mScaleFactor);
-        if (myFlag == 1)
-        canvas.drawCircle(300,300,30,paint);
+        Log.d("flag:", Integer.toString(myFlag));
 
+        // matrix.setScale(mScaleFactor, mScaleFactor);
+//        if (myFlag == 1)
+//        canvas.drawCircle(300,300,30,paint);
+        TOP = 0;
+        LEFT = 0;
+        RIGHT = this.getRight() - 30;
+        BOTTOM = this.getBottom() - 45;
+
+
+        if (myFlag == 2) {
+            width = Float.parseFloat(room.getWidth());
+            length = Float.parseFloat(room.getLength());
+            scaledXUnit = RIGHT/width;
+            scaledYUnit = BOTTOM/length;
+
+            if (length > width) {       //height > width: draw rect->top,
+                scaledSize = BOTTOM * width / length;
+                diff =  (BOTTOM - scaledSize)/2;
+                LEFT += diff;
+                RIGHT -= diff;
+                canvas.drawRect(LEFT , TOP, RIGHT, BOTTOM, paint);
+            }
+            else {
+                scaledSize = RIGHT * length/ width;
+                diff = (RIGHT - scaledSize)/2;
+                TOP += diff;
+                BOTTOM -= diff;
+                canvas.drawRect(LEFT, TOP, RIGHT, BOTTOM, paint);
+            }
+                ////LOAD SNAPDRAGONS/////
+            for (int i = 0; i < snapdragons.length; i++) {
+                canvas.drawCircle(LEFT + Float.parseFloat(snapdragons[i].getxCoord()) * scaledXUnit, BOTTOM - Float.parseFloat(snapdragons[i].getyCoord()) * scaledYUnit, 8, paintSnaps);
+            }
+
+            /////LOAD REFERENCE TAGS///////
+
+            for (int i = 0; i < referenceTags.length; i++) {
+                canvas.drawCircle(LEFT + Float.parseFloat(referenceTags[i].getX()) * scaledXUnit, BOTTOM - Float.parseFloat(referenceTags[i].getY()) * scaledYUnit, 8, paintRefTags);
+            }
+
+        }
+//        canvas.drawRect(LEFT, TOP, RIGHT, BOTTOM, paint);
+//        canvas.drawCircle(305, 305, 30, paint);
+//        canvas.drawCircle(30,45,50,paint);
 
 //        canvas.save();
 
