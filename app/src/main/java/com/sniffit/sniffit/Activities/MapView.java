@@ -99,14 +99,15 @@ public class MapView extends ImageView {
 //        canvas.restore();
 
         //DRAW SNAPDRAGONS
-
-//        for (int i = 0; i < snapdragons.length; i++) {
-//            canvas.drawCircle(Integer.parseInt(snapdragons[i].getxCoord()) * 20,Integer.parseInt(snapdragons[i].getyCoord()) * 20, 12, paintSnaps);
-//
-//        }
-//        for (int i = 0; i < referenceTags.length; i++) {
-//            canvas.drawCircle(Integer.parseInt(referenceTags[i].getX()) * 20,Integer.parseInt(referenceTags[i].getY()) * 20, 12, paintSnaps);
-//
+////        if (myFlag == 2) {
+////            for (int i = 0; i < snapdragons.length; i++) {
+////                canvas.drawCircle(Integer.parseInt(snapdragons[i].getxCoord()) * 20, Integer.parseInt(snapdragons[i].getyCoord()) * 20, 12, paintSnaps);
+////
+////            }
+////            for (int i = 0; i < referenceTags.length; i++) {
+////                canvas.drawCircle(Integer.parseInt(referenceTags[i].getX()) * 20, Integer.parseInt(referenceTags[i].getY()) * 20, 12, paintRefTags);
+////
+////            }
 //        }
 
     }

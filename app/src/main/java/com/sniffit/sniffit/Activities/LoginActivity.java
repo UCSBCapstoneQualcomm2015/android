@@ -3,6 +3,7 @@ package com.sniffit.sniffit.Activities;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -37,6 +38,8 @@ public class LoginActivity extends Activity {
     Button login, register,forgotPass;
     String emailString, passwordString;
     User user;
+    SharedPreferences pref;
+
 
     public static final MediaType MEDIA_TYPE_MARKDOWN
             = MediaType.parse("application/x-www-form-urlencoded; charset=utf-8");
@@ -72,8 +75,8 @@ public class LoginActivity extends Activity {
                 passwordString = password.getText().toString();
 
                 //Hardcoded for testing
-//                emailString = "b@gmail.com";
-//                passwordString = "abc123";
+                emailString = "b@gmail.com";
+                passwordString = "abc123";
 
                 HashMap<String, String> params = new HashMap<String, String>();
 
