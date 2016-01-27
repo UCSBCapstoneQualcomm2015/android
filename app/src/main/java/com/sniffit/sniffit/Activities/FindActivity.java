@@ -170,85 +170,6 @@ public class FindActivity extends Activity {
                                     Gson gson = new Gson();
                                     snapArray = gson.fromJson(json, Snapdragon[].class);
 
-
-<<<<<<< HEAD
-        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), drawableResourceId);
-//        int nh = (int) ( bitmap.getHeight() * (512.0 / bitmap.getWidth()) );
-//        scaled = Bitmap.createScaledBitmap(bitmap, 512, nh, true);
-        roomImage.setImageBitmap(bitmap);
-        roomImage.setFlag(imageFlag);
-
-        //GET ROOM'S SNAPDRAGONS//
-
-//        sr.getRoomIds("snapdragon", user, roomArray[roomPosition].get_id(), new Callback<ResponseBody>() {
-//            @Override
-//            public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
-//                try {
-//                    String json = response.body().string();
-//                    System.out.println();
-//                    Gson gson = new Gson();
-//                    snapArray = gson.fromJson(json, Snapdragon[].class);
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//
-//            }
-//
-//            @Override
-//            public void onFailure(Throwable t) {
-//
-//            }
-//        });
-//
-//        //GET ROOM'S REFERENCE TAGS//
-//
-//        sr.getRoomIds("reference", user, roomArray[roomPosition].get_id(), new Callback<ResponseBody>() {
-//            @Override
-//            public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
-//                try {
-//                    String json = response.body().string();
-//                    System.out.println(json);
-//                    Gson gson = new Gson();
-//                    referenceTagArray = gson.fromJson(json, ReferenceTag[].class);
-//
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//
-//            }
-//
-//            @Override
-//            public void onFailure(Throwable t) {
-//
-//            }
-//        });
-//
-//        roomImage.setRoom(roomArray[roomPosition]);
-//        roomImage.setSnapdragonArray(snapArray);
-//        roomImage.setReferenceTags(referenceTagArray);
-//        roomImage.invalidate();
-
-        //Set item spinner value
-        sr.getIds("rfid", user, new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
-                try {
-                    String json = response.body().string();
-                    System.out.println(json);
-                    Gson gson = new Gson();
-                    RFIDItem[] rfidArray = gson.fromJson(json, RFIDItem[].class);
-                    ArrayAdapter<RFIDItem> adapter = new ArrayAdapter<RFIDItem>(getApplicationContext(),
-                            R.layout.spinner_dropdown_item, rfidArray);
-//                    if (itemPosition >= 0) {
-//                        itemSpinner.post(new Runnable() {
-//                            @Override
-//                            public void run() {
-//                                itemSpinner.setSelection(itemPosition);
-//                            }
-//                        });
-//                    }
-=======
-
                                     //SECOND NEST
 
                                     sr.getRoomIds("reference", user, roomArray[roomPosition].get_id(), new Callback<ResponseBody>() {
@@ -380,8 +301,6 @@ public class FindActivity extends Activity {
 
 
                     }
->>>>>>> 46ff6706c74d10850a642e9ed6e158d07facf2c5
-
                     else {
                         //Set item spinner value
                         sr.getIds("rfid", user, new Callback<ResponseBody>() {
