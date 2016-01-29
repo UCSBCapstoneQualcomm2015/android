@@ -17,6 +17,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.sniffit.sniffit.Dialogs.AddItemDialogFragment;
 import com.sniffit.sniffit.Dialogs.AddRoomDialogFragment;
@@ -25,6 +26,8 @@ import com.sniffit.sniffit.Objects.Room;
 import com.sniffit.sniffit.REST.ServerRequest;
 import com.sniffit.sniffit.REST.User;
 import com.squareup.okhttp.ResponseBody;
+
+import org.json.JSONObject;
 
 import retrofit.Callback;
 import retrofit.Response;
@@ -153,7 +156,18 @@ public class RoomActivity extends Activity implements AddRoomDialogFragment.AddR
             sr.putRoom(user, oldRoomId, roomName, width, length, new Callback<ResponseBody> () {
                 @Override
                 public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
-
+                    try {
+                        String jsonBody = response.body().string();
+                        JSONObject object = new JSONObject(jsonBody);
+                        String message = object.getString("message");
+                        Context context = getApplicationContext();
+                        int duration = Toast.LENGTH_LONG;
+                        CharSequence text = message;
+                        Toast toast = Toast.makeText(context, text, duration);
+                        toast.show();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
 
                 @Override

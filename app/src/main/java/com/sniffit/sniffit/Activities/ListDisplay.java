@@ -1,6 +1,7 @@
 package com.sniffit.sniffit.Activities;
 
 import android.app.DialogFragment;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -13,6 +14,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.melnykov.fab.FloatingActionButton;
@@ -32,11 +34,14 @@ import com.sniffit.sniffit.REST.User;
 import com.sniffit.sniffit.REST.ServerRequest;
 import com.squareup.okhttp.ResponseBody;
 
+import org.json.JSONObject;
+
 import retrofit.Call;
 import retrofit.Callback;
 import retrofit.Response;
 import retrofit.Retrofit;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -304,7 +309,18 @@ public class ListDisplay extends AppCompatActivity implements AddItemDialogFragm
             sr.postRFIDTag(user, itemId, itemName, new Callback<ResponseBody>() {
                 @Override
                 public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
-
+                    try {
+                        String jsonBody = response.body().string();
+                        JSONObject object = new JSONObject(jsonBody);
+                        String message = object.getString("message");
+                        Context context = getApplicationContext();
+                        int duration = Toast.LENGTH_LONG;
+                        CharSequence text = message;
+                        Toast toast = Toast.makeText(context, text, duration);
+                        toast.show();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
 
                 @Override
@@ -315,7 +331,18 @@ public class ListDisplay extends AppCompatActivity implements AddItemDialogFragm
             sr.putRFIDTag(user, oldId, itemId, itemName, new Callback<ResponseBody>() {
                 @Override
                 public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
-
+                    try {
+                        String jsonBody = response.body().string();
+                        JSONObject object = new JSONObject(jsonBody);
+                        String message = object.getString("message");
+                        Context context = getApplicationContext();
+                        int duration = Toast.LENGTH_LONG;
+                        CharSequence text = message;
+                        Toast toast = Toast.makeText(context, text, duration);
+                        toast.show();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
 
                 @Override
@@ -337,7 +364,18 @@ public class ListDisplay extends AppCompatActivity implements AddItemDialogFragm
             sr.postRoom(user, roomName, width, length, new Callback<ResponseBody>() {
                 @Override
                 public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
-
+                    try {
+                        String jsonBody = response.body().string();
+                        JSONObject object = new JSONObject(jsonBody);
+                        String message = object.getString("message");
+                        Context context = getApplicationContext();
+                        int duration = Toast.LENGTH_LONG;
+                        CharSequence text = message;
+                        Toast toast = Toast.makeText(context, text, duration);
+                        toast.show();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
 
                 @Override
@@ -349,7 +387,18 @@ public class ListDisplay extends AppCompatActivity implements AddItemDialogFragm
             sr.putRoom(user, roomName, width, length, oldRoomId, new Callback<ResponseBody>() {
                 @Override
                 public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
-
+                    try {
+                        String jsonBody = response.body().string();
+                        JSONObject object = new JSONObject(jsonBody);
+                        String message = object.getString("message");
+                        Context context = getApplicationContext();
+                        int duration = Toast.LENGTH_LONG;
+                        CharSequence text = message;
+                        Toast toast = Toast.makeText(context, text, duration);
+                        toast.show();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
 
                 @Override
@@ -374,7 +423,18 @@ public class ListDisplay extends AppCompatActivity implements AddItemDialogFragm
             sr.postSnapdragon(user, snapName, room.get_id(), ip, xCoord, yCoord, new Callback<ResponseBody>() {
                 @Override
                 public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
-
+                    try {
+                        String jsonBody = response.body().string();
+                        JSONObject object = new JSONObject(jsonBody);
+                        String message = object.getString("message");
+                        Context context = getApplicationContext();
+                        int duration = Toast.LENGTH_LONG;
+                        CharSequence text = message;
+                        Toast toast = Toast.makeText(context, text, duration);
+                        toast.show();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
 
                 @Override
@@ -386,7 +446,18 @@ public class ListDisplay extends AppCompatActivity implements AddItemDialogFragm
             sr.putSnapdragon(user, oldIp, snapName, room.get_id(), ip, xCoord, yCoord, new Callback<ResponseBody>() {
                 @Override
                 public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
-
+                    try {
+                        String jsonBody = response.body().string();
+                        JSONObject object = new JSONObject(jsonBody);
+                        String message = object.getString("message");
+                        Context context = getApplicationContext();
+                        int duration = Toast.LENGTH_LONG;
+                        CharSequence text = message;
+                        Toast toast = Toast.makeText(context, text, duration);
+                        toast.show();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
 
                 @Override
@@ -411,7 +482,18 @@ public class ListDisplay extends AppCompatActivity implements AddItemDialogFragm
             sr.postReferenceTag(user, tagName, room.get_id(), tagId, x, y, new Callback<ResponseBody>() {      //NEED TO THROW IN X AND Y
                 @Override
                 public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
-
+                    try {
+                        String jsonBody = response.body().string();
+                        JSONObject object = new JSONObject(jsonBody);
+                        String message = object.getString("message");
+                        Context context = getApplicationContext();
+                        int duration = Toast.LENGTH_LONG;
+                        CharSequence text = message;
+                        Toast toast = Toast.makeText(context, text, duration);
+                        toast.show();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
 
                 @Override
@@ -425,7 +507,18 @@ public class ListDisplay extends AppCompatActivity implements AddItemDialogFragm
             sr.putReferenceTag(user, oldId, tagName, room.get_id(), tagId, x, y, new Callback<ResponseBody>() {      //NEED TO THROW IN X AND Y
                 @Override
                 public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
-
+                    try {
+                        String jsonBody = response.body().string();
+                        JSONObject object = new JSONObject(jsonBody);
+                        String message = object.getString("message");
+                        Context context = getApplicationContext();
+                        int duration = Toast.LENGTH_LONG;
+                        CharSequence text = message;
+                        Toast toast = Toast.makeText(context, text, duration);
+                        toast.show();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
 
                 @Override

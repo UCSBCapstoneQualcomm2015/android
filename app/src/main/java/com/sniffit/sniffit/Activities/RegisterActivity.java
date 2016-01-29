@@ -66,7 +66,6 @@ public class RegisterActivity extends Activity {
                     public void onResponse(retrofit.Response<ResponseBody> response, Retrofit retrofit) {
                         try {
                             String jsonBody = response.body().string();
-                            Log.d("body", jsonBody);
                             Gson gson = new Gson();
                             JSONObject object = new JSONObject(jsonBody);
                             String message = object.getString("message");

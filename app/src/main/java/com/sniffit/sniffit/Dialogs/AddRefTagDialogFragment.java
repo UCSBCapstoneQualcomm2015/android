@@ -113,7 +113,6 @@ public class AddRefTagDialogFragment extends DialogFragment{
                     toast.show();
                 }
                 else if (!(isNumber(xText) && isNumber(yText))) {
-
                     CharSequence text = "Coordinates must be valid numbers";
                     Toast toast = Toast.makeText(context, text, duration);
                     toast.show();
