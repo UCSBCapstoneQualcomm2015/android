@@ -9,6 +9,7 @@ import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.PointF;
+import android.graphics.RectF;
 import android.support.v4.view.MotionEventCompat;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -40,6 +41,7 @@ public class MapView extends ImageView {
     Paint paint;
     Paint paintSnaps;
     Paint paintRefTags;
+    Paint border;
 
     Context context;
     float length;
@@ -59,6 +61,7 @@ public class MapView extends ImageView {
     Room room;
     User user;
     ServerRequest sr = new ServerRequest();
+    RectF roomLayout;
 
     Snapdragon[] snapdragons;
     ReferenceTag[] referenceTags;
@@ -76,9 +79,14 @@ public class MapView extends ImageView {
         super(context, attrs, defStyle);
         this.context = context;
         paint = new Paint();
-        paint.setColor(Color.BLACK);
-        paint.setStyle(Paint.Style.STROKE);
+        paint.setColor(Color.WHITE);
+        paint.setStyle(Paint.Style.FILL);
         paint.setStrokeWidth(5);
+
+        border = new Paint();
+        border.setColor(Color.BLACK);
+        border.setStyle(Paint.Style.STROKE);
+        border.setStrokeWidth(5);
 
         paintSnaps = new Paint();
         paintSnaps.setColor(Color.BLUE);
@@ -117,14 +125,18 @@ public class MapView extends ImageView {
                 diff =  (BOTTOM - scaledSize)/2;
                 LEFT += diff;
                 RIGHT -= diff;
-                canvas.drawRect(LEFT , TOP, RIGHT, BOTTOM, paint);
+                roomLayout = new RectF(LEFT, TOP, RIGHT, BOTTOM);
+                canvas.drawRect(roomLayout, paint);
+                canvas.drawRect(roomLayout, border);
             }
             else {
                 scaledSize = RIGHT * length/ width;
                 diff = (RIGHT - scaledSize)/2;
                 TOP += diff;
                 BOTTOM -= diff;
-                canvas.drawRect(LEFT, TOP, RIGHT, BOTTOM, paint);
+                roomLayout = new RectF(LEFT, TOP, RIGHT, BOTTOM);
+                canvas.drawRect(roomLayout, paint);
+                canvas.drawRect(roomLayout, border);
             }
 
             scaledXUnit = (RIGHT - LEFT)/width;

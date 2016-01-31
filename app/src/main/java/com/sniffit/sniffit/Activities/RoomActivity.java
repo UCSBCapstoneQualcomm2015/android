@@ -12,14 +12,18 @@ import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.sniffit.sniffit.Dialogs.AddItemDialogFragment;
 import com.sniffit.sniffit.Dialogs.AddRoomDialogFragment;
+import com.sniffit.sniffit.Objects.ReferenceTag;
+import com.sniffit.sniffit.Objects.Snapdragon;
 import com.sniffit.sniffit.R;
 import com.sniffit.sniffit.Objects.Room;
 import com.sniffit.sniffit.REST.ServerRequest;
@@ -45,7 +49,14 @@ public class RoomActivity extends Activity implements AddRoomDialogFragment.AddR
     Paint myPaint;
     Context context;
 
-//    import android.graphics.Bitmap;
+    int densityDpi;
+    int h_px;
+    int w_px;
+
+    Snapdragon[] snapdragonArray;
+    ReferenceTag[] referenceTagArray;
+
+    //    import android.graphics.Bitmap;
 //    import android.graphics.Canvas;
 //    import android.graphics.Paint;
 //    import android.graphics.RectF;
@@ -86,13 +97,71 @@ public class RoomActivity extends Activity implements AddRoomDialogFragment.AddR
         bundle.putSerializable("user", user);
         //SET UP THE ROOM IMAGE
         roomImage = (MapView) findViewById(R.id.room_image);
-        int drawableResourceId = this.getResources().getIdentifier("rectangle", "drawable", this.getPackageName());
         //Drawable roomDrawable = getResources().getDrawable(R.drawable.rectangle);
 
-        Bitmap bitmap = BitmapFactory.decodeResource(getResources(),drawableResourceId);
 //        int nh = (int) ( bitmap.getHeight() * (512.0 / bitmap.getWidth()) );
 //        scaled = Bitmap.createScaledBitmap(bitmap, 512, nh, true);
-        roomImage.setImageBitmap(bitmap);
+        DisplayMetrics metrics = getResources().getDisplayMetrics();
+        densityDpi = (int) (metrics.density * 160f);
+        Bitmap.Config conf = Bitmap.Config.ARGB_8888; // see other conf types
+        h_px = 300 * (densityDpi/160);
+        w_px = 300 * (densityDpi/160);
+
+        final Bitmap bitmap = Bitmap.createBitmap(w_px, h_px, conf); // this creates a MUTABLE bitmap
+
+        sr.getRoomIds("snapdragon", user, room.get_id(), new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
+                try {
+                    String json = response.body().string();
+                    System.out.println();
+                    Gson gson = new Gson();
+                    snapdragonArray = gson.fromJson(json, Snapdragon[].class);
+
+
+                    //nest
+
+                    sr.getRoomIds("reference", user, room.get_id(), new Callback<ResponseBody>() {
+                        @Override
+                        public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
+                            try {
+                                String json = response.body().string();
+                                System.out.println(json);
+                                Gson gson = new Gson();
+                                referenceTagArray = gson.fromJson(json, ReferenceTag[].class);
+                                roomImage.setImageBitmap(bitmap);
+                                roomImage.setFlag(2);
+                                Log.d("hi","bye");
+                                roomImage.setRoom(room);
+                                roomImage.setSnapdragonArray(snapdragonArray);
+                                roomImage.setReferenceTags(referenceTagArray);
+                                roomImage.invalidate();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+
+                        }
+
+                        @Override
+                        public void onFailure(Throwable t) {
+
+                        }
+                    });
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+
+            }
+
+
+        });
+
 
 //        Log.d("height", Integer.toString(roomImage.getHeight()));
 //        Bitmap b = Bitmap.createBitmap( roomImage.getLayoutParams().width, roomImage.getLayoutParams().height, Bitmap.Config.ARGB_8888);
@@ -199,6 +268,7 @@ public class RoomActivity extends Activity implements AddRoomDialogFragment.AddR
     public void goToFind(View view){
         Intent intent = new Intent(this, FindActivity.class);
         bundle.putSerializable("flag", -1);
+        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         intent.putExtras(bundle);
         startActivity(intent);
     }

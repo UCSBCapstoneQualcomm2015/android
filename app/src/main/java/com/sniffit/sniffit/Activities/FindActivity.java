@@ -67,6 +67,9 @@ public class FindActivity extends Activity {
     final ServerRequest sr = new ServerRequest();
 
 
+    boolean firstLoad;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,6 +96,8 @@ public class FindActivity extends Activity {
 
         pref =  getApplicationContext().getSharedPreferences("MyPref", 0);
         final SharedPreferences.Editor editor = pref.edit();
+        firstLoad = true;
+
 
 //        final int drawableResourceId = this.getResources().getIdentifier("rectangle", "drawable", this.getPackageName());
 
@@ -121,14 +126,13 @@ public class FindActivity extends Activity {
                             roomPosition = 0;
                         }
                     }
-                    Log.d("room position after", Integer.toString(roomPosition));
 
 //        Log.d("roomPosition", Integer.toString(roomPosition));
                     if (roomPosition >= 0) {
                         roomSpinner.post(new Runnable() {
                             @Override
                             public void run() {
-                                roomSpinner.setSelection(roomPosition);
+                                roomSpinner.setSelection(roomPosition, false);
                             }
                         });
 
@@ -136,17 +140,24 @@ public class FindActivity extends Activity {
 
                     roomSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                         public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                            Log.d("roomPosition", Integer.toString(roomSpinner.getSelectedItemPosition()));
+                            if (firstLoad == false) {
+                                Log.d("roomPosition", "hi");
 
-                            editor.putInt("roomSpinnerPosition", roomSpinner.getSelectedItemPosition());
-                            editor.commit();
-                            imageFlag = -1;
+                                editor.putInt("roomSpinnerPosition", roomSpinner.getSelectedItemPosition());
+                                editor.commit();
+                                imageFlag = -1;
+                                Intent intent = new Intent(FindActivity.this, FindActivity.class);
+                                bundle.putSerializable("flag", -1);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                intent.putExtras(bundle);
+                                startActivity(intent);
 
-                            return;
+                            }
+//                            return;
                         }
 
                         public void onNothingSelected(AdapterView<?> adapterView) {
-                            return;
+//                            return;
                         }
                     });
 
@@ -170,6 +181,7 @@ public class FindActivity extends Activity {
                     Bitmap.Config conf = Bitmap.Config.ARGB_8888; // see other conf types
                     h_px = 300 * (densityDpi/160);
                     w_px = 300 * (densityDpi/160);
+                    Log.d("heightpx: ", Integer.toString(h_px));
 
                     Bitmap bitmap = Bitmap.createBitmap(w_px, h_px, conf); // this creates a MUTABLE bitmap
                     roomImage.setImageBitmap(bitmap);
@@ -267,6 +279,7 @@ public class FindActivity extends Activity {
                                                                     startActivity(findIntent);
                                                                 }
                                                             });
+                                                            firstLoad = false;
 
 
                                                         } catch (Exception e) {
@@ -354,7 +367,6 @@ public class FindActivity extends Activity {
                                     //fourth nest
 
 
-
                                     itemSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                                         public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                                             editor.putInt("itemSpinnerPosition", itemSpinner.getSelectedItemPosition());
@@ -374,7 +386,7 @@ public class FindActivity extends Activity {
                                     //Find Button click
                                     findButton.setOnClickListener(new View.OnClickListener() {
                                         @Override
-                                        public void onClick(View view) {
+                                        public void onClick(View view) {        //should just give toast that room doesn't exist
                                             bundle.putSerializable("flag", 1);
                                             findIntent.putExtras(bundle);
                                             findIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -408,7 +420,6 @@ public class FindActivity extends Activity {
 
             }
         });
-
 
     }
 
@@ -450,6 +461,7 @@ public class FindActivity extends Activity {
     public void goToFind(View view) {
         Intent intent = new Intent(this, FindActivity.class);
         bundle.putSerializable("flag", -1);
+        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         intent.putExtras(bundle);
         startActivity(intent);
     }
