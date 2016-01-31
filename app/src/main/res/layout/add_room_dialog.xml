@@ -21,15 +21,6 @@
         android:paddingBottom="15dp">
 
         <EditText
-            android:id="@+id/length"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:textSize="20sp"
-            android:hint="Length (ft)"/>
-
-
-        <EditText
             android:id="@+id/width"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -37,5 +28,14 @@
             android:textSize="20sp"
             android:paddingLeft="10sp"
             android:hint="Width (ft)"/>
+
+        <EditText
+            android:id="@+id/length"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="20sp"
+            android:hint="Length (ft)"/>
+
     </LinearLayout>
 </LinearLayout>
