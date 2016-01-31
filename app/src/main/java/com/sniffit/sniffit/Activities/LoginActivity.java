@@ -98,8 +98,17 @@ public class LoginActivity extends Activity {
                                 Bundle bundle = new Bundle();
                                 bundle.putSerializable("user", user);
                                 bundle.putSerializable("flag", -1);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                 intent.putExtras(bundle);
                                 startActivity(intent);
+                            }
+                            else {
+                                Context context = getApplicationContext();
+                                CharSequence text = ":(";
+                                int duration = Toast.LENGTH_SHORT;
+
+                                Toast toast = Toast.makeText(context, text, duration);
+                                toast.show();
                             }
                         } catch (Exception e) {
                             e.printStackTrace();

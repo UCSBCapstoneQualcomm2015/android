@@ -15,15 +15,16 @@
         android:id="@+id/daily_logger"
         tools:context=".DailyLogger"
         android:layout_above="@+id/footer"
-        android:layout_below="@+id/header">
+        android:layout_below="@+id/header"
+        android:paddingTop= "10dp"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp">
         <!--room view would go here-->
 
         <com.sniffit.sniffit.Activities.MapView
             android:id="@+id/room_image"
-            android:layout_width="wrap_content"
-            android:layout_height= "250dp"
-            android:paddingLeft="20dp"
-            android:paddingRight="20dp"
+            android:layout_width="match_parent"
+            android:layout_height= "300dp"
             />
 
         <Button

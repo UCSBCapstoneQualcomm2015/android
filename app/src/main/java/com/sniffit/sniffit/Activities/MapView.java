@@ -9,6 +9,7 @@ import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.PointF;
+import android.graphics.RectF;
 import android.support.v4.view.MotionEventCompat;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -40,8 +41,20 @@ public class MapView extends ImageView {
     Paint paint;
     Paint paintSnaps;
     Paint paintRefTags;
+    Paint border;
+    Paint textPaint;
 
     Context context;
+    float length;
+    float width;
+    float scaledSize;
+    float diff;
+    float TOP;
+    float BOTTOM;
+    float LEFT;
+    float RIGHT;
+    float scaledXUnit;
+    float scaledYUnit;
 
     float d,newRot = 0f;
     ArrayList<PointF> points;
@@ -49,6 +62,7 @@ public class MapView extends ImageView {
     Room room;
     User user;
     ServerRequest sr = new ServerRequest();
+    RectF roomLayout;
 
     Snapdragon[] snapdragons;
     ReferenceTag[] referenceTags;
@@ -66,9 +80,14 @@ public class MapView extends ImageView {
         super(context, attrs, defStyle);
         this.context = context;
         paint = new Paint();
-        paint.setColor(Color.RED);
-        paint.setStyle(Paint.Style.STROKE);
+        paint.setColor(Color.WHITE);
+        paint.setStyle(Paint.Style.FILL);
         paint.setStrokeWidth(5);
+
+        border = new Paint();
+        border.setColor(Color.BLACK);
+        border.setStyle(Paint.Style.STROKE);
+        border.setStrokeWidth(5);
 
         paintSnaps = new Paint();
         paintSnaps.setColor(Color.BLUE);
@@ -78,37 +97,82 @@ public class MapView extends ImageView {
         paintRefTags.setColor(Color.GREEN);
         paintRefTags.setStyle(Paint.Style.FILL);
 
+        textPaint = new Paint();
+        textPaint.setColor(Color.BLACK);
+        textPaint.setTextSize(40);
+
+
         points = new ArrayList<PointF>();
-//        matrix = new Matrix();
-//        copyMatrix = new Matrix();
+
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        // matrix.setScale(mScaleFactor, mScaleFactor);
-        if (myFlag == 1)
-        canvas.drawCircle(300,300,30,paint);
+        Log.d("flag:", Integer.toString(myFlag));
 
 
-//        canvas.save();
+        TOP = 50;
+        LEFT = 50;
+        RIGHT = this.getRight() - 80;
+        BOTTOM = this.getBottom() - 85;
+
+
+        if (myFlag == 2) {
+
+            //ADD LEGEND
+            canvas.drawText("SNAPDRAGONS: ",  ((LEFT + RIGHT)/2) - 400, TOP - 15, textPaint);
+            canvas.drawCircle(((LEFT + RIGHT)/2) - 50, TOP - 30, 15, paintSnaps);
+
+            canvas.drawText("REFERENCE TAGS: ",  ((LEFT + RIGHT) / 2) + 40, TOP - 15, textPaint);
+            canvas.drawCircle(((LEFT + RIGHT)/2) + 430, TOP - 30, 15, paintRefTags);
 
 
 
-        //   canvas.drawBitmap(MainActivity.scaled, matrix, null);
-//        canvas.restore();
 
-        //DRAW SNAPDRAGONS
-////        if (myFlag == 2) {
-////            for (int i = 0; i < snapdragons.length; i++) {
-////                canvas.drawCircle(Integer.parseInt(snapdragons[i].getxCoord()) * 20, Integer.parseInt(snapdragons[i].getyCoord()) * 20, 12, paintSnaps);
-////
-////            }
-////            for (int i = 0; i < referenceTags.length; i++) {
-////                canvas.drawCircle(Integer.parseInt(referenceTags[i].getX()) * 20, Integer.parseInt(referenceTags[i].getY()) * 20, 12, paintRefTags);
-////
-////            }
-//        }
+            //draw map
+            width = Float.parseFloat(room.getWidth());
+            length = Float.parseFloat(room.getLength());
+
+            if (length > width) {       //height > width: draw rect->top,
+                scaledSize = BOTTOM * width / length;
+                diff =  (BOTTOM - scaledSize)/2;
+                LEFT += diff;
+                RIGHT -= diff;
+                roomLayout = new RectF(LEFT, TOP, RIGHT, BOTTOM);
+                canvas.drawRect(roomLayout, paint);
+                canvas.drawRect(roomLayout, border);
+            }
+            else {
+                scaledSize = RIGHT * length/ width;
+                diff = (RIGHT - scaledSize)/2;
+                TOP += diff;
+                BOTTOM -= diff;
+                roomLayout = new RectF(LEFT, TOP, RIGHT, BOTTOM);
+                canvas.drawRect(roomLayout, paint);
+                canvas.drawRect(roomLayout, border);
+            }
+
+            scaledXUnit = (RIGHT - LEFT)/width;
+            scaledYUnit = (BOTTOM - TOP)/length;
+
+                ////LOAD SNAPDRAGONS/////
+            for (int i = 0; i < snapdragons.length; i++) {
+                canvas.drawCircle(LEFT + Float.parseFloat(snapdragons[i].getxCoord()) * scaledXUnit, BOTTOM - Float.parseFloat(snapdragons[i].getyCoord()) * scaledYUnit, 8, paintSnaps);
+            }
+
+            /////LOAD REFERENCE TAGS///////
+
+            for (int i = 0; i < referenceTags.length; i++) {
+                canvas.drawCircle(LEFT + Float.parseFloat(referenceTags[i].getX()) * scaledXUnit, BOTTOM - Float.parseFloat(referenceTags[i].getY()) * scaledYUnit, 8, paintRefTags);
+            }
+
+
+
+        }
+
+
+
 
     }
 
