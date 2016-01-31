@@ -1,6 +1,7 @@
 package com.sniffit.sniffit.Activities;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -19,6 +20,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.sniffit.sniffit.Objects.RFIDItem;
 import com.sniffit.sniffit.Objects.ReferenceTag;
@@ -42,34 +44,49 @@ import com.google.gson.*;
 
 public class FindActivity extends Activity {
 
+    //passed in all activities
     User user;
-    Spinner roomSpinner, itemSpinner;
     Bundle bundle;
-    MapView roomImage;
-    Bitmap b;
-    Paint myPaint;
-    int imageFlag;
-    Intent findIntent;
-    SharedPreferences pref;
-    int roomPosition = -1;
-    int itemPosition = -1;
-    Button currentPage;
+    Intent intent;
+    final ServerRequest sr = new ServerRequest();
+
+
+    //different arrays of points
     Room[] roomArray;
     Snapdragon[] snapArray;
     ReferenceTag[] referenceTagArray;
 
+    //Buttons
+    Button currentPage;
+    Button findButton;
+
+    //Map
+    MapView roomImage;
+    TextView noRooms;
+    Bitmap b;
+    Paint myPaint;
+    int imageFlag;
+
+    //Scaling
     int w;
     int h;
     int densityDpi;
     int w_px;
     int h_px;
 
-    final ServerRequest sr = new ServerRequest();
-
-
+    //for spinner
     boolean firstLoad;
+    Spinner roomSpinner, itemSpinner;
+    SharedPreferences pref;
+    int roomPosition = -1;
+    int itemPosition = -1;
 
 
+    //for toast
+    Context context;
+    Toast toast;
+    int duration = Toast.LENGTH_SHORT;
+    CharSequence text;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,7 +94,7 @@ public class FindActivity extends Activity {
         setContentView(R.layout.activity_find);
         TextView header = (TextView)findViewById(R.id.header_title);
         header.setText("Find Tag");
-        final Button findButton = (Button) findViewById(R.id.sniff_button);
+        findButton = (Button) findViewById(R.id.sniff_button);
         findButton.setBackgroundColor(Color.parseColor("#293e6a"));
 
         currentPage = (Button) findViewById(R.id.find_button);
@@ -91,17 +108,15 @@ public class FindActivity extends Activity {
 
         bundle = new Bundle();
         bundle.putSerializable("user", user);
-        findIntent = new Intent(this, FindActivity.class);
+        intent = new Intent(this, FindActivity.class);
 
 
         pref =  getApplicationContext().getSharedPreferences("MyPref", 0);
         final SharedPreferences.Editor editor = pref.edit();
         firstLoad = true;
+        noRooms = (TextView) findViewById(R.id.no_rooms);
 
-
-//        final int drawableResourceId = this.getResources().getIdentifier("rectangle", "drawable", this.getPackageName());
-
-        Log.d("room position", Integer.toString(roomPosition));
+        
 
         //Set Room Spinner values
         sr.getIds("rooms", user, new Callback<ResponseBody>() {
@@ -126,8 +141,6 @@ public class FindActivity extends Activity {
                             roomPosition = 0;
                         }
                     }
-
-//        Log.d("roomPosition", Integer.toString(roomPosition));
                     if (roomPosition >= 0) {
                         roomSpinner.post(new Runnable() {
                             @Override
@@ -141,7 +154,6 @@ public class FindActivity extends Activity {
                     roomSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                         public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                             if (firstLoad == false) {
-                                Log.d("roomPosition", "hi");
 
                                 editor.putInt("roomSpinnerPosition", roomSpinner.getSelectedItemPosition());
                                 editor.commit();
@@ -162,27 +174,13 @@ public class FindActivity extends Activity {
                     });
 
 
-
-
-
-
                     roomImage = (MapView) findViewById(R.id.find_view_room);
-//                    Drawable d = getResources().getDrawable(R.drawable.square);
-//                    roomImage.setBackground(d);
-//                    Drawable roomDrawable = getResources().getDrawable(R.drawable.rectangle);
-
-//                    Bitmap bitmap = BitmapFactory.decodeResource(getResources(), drawableResourceId);
-
-//        int nh = (int) ( bitmap.getHeight() * (512.0 / bitmap.getWidth()) );
-//        scaled = Bitmap.createScaledBitmap(bitmap, 512, nh, true);
-//                    Bitmap bitmap = new Bitmap();
 
                     DisplayMetrics metrics = getResources().getDisplayMetrics();
                     densityDpi = (int)(metrics.density * 160f);
                     Bitmap.Config conf = Bitmap.Config.ARGB_8888; // see other conf types
                     h_px = 300 * (densityDpi/160);
                     w_px = 300 * (densityDpi/160);
-                    Log.d("heightpx: ", Integer.toString(h_px));
 
                     Bitmap bitmap = Bitmap.createBitmap(w_px, h_px, conf); // this creates a MUTABLE bitmap
                     roomImage.setImageBitmap(bitmap);
@@ -273,10 +271,19 @@ public class FindActivity extends Activity {
                                                             findButton.setOnClickListener(new View.OnClickListener() {
                                                                 @Override
                                                                 public void onClick(View view) {
-                                                                    bundle.putSerializable("flag", 1);
-                                                                    findIntent.putExtras(bundle);
-                                                                    findIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                                                    startActivity(findIntent);
+                                                                    if (itemPosition == -1) {
+                                                                        context = getApplicationContext();
+                                                                        text = "No items in database";
+                                                                        Toast toast = Toast.makeText(context, text, duration);
+                                                                        toast.show();
+                                                                    } else {
+                                                                        bundle.putSerializable("flag", 1);
+                                                                        intent.putExtras(bundle);
+                                                                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                                                        startActivity(intent);
+                                                                    }
+
+
                                                                 }
                                                             });
                                                             firstLoad = false;
@@ -316,13 +323,6 @@ public class FindActivity extends Activity {
                                     e.printStackTrace();
                                 }
 
-
-
-
-
-
-
-
                             }
 
                             @Override
@@ -334,6 +334,8 @@ public class FindActivity extends Activity {
 
                     }
                     else {
+
+                        noRooms.setVisibility(View.VISIBLE);
                         //Set item spinner value
                         sr.getIds("rfid", user, new Callback<ResponseBody>() {
                             @Override
@@ -346,8 +348,6 @@ public class FindActivity extends Activity {
                                     Log.d("items", Integer.toString(rfidArray.length));
                                     ArrayAdapter<RFIDItem> adapter = new ArrayAdapter<RFIDItem>(getApplicationContext(),
                                             R.layout.spinner_dropdown_item, rfidArray);
-
-
 
 
                                     itemPosition = pref.getInt("itemSpinnerPosition", -1);
@@ -381,15 +381,14 @@ public class FindActivity extends Activity {
                                     });
 
 
-
                                     //Find Button click
                                     findButton.setOnClickListener(new View.OnClickListener() {
                                         @Override
-                                        public void onClick(View view) {        //should just give toast that room doesn't exist
-                                            bundle.putSerializable("flag", 1);
-                                            findIntent.putExtras(bundle);
-                                            findIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                            startActivity(findIntent);
+                                        public void onClick(View view) {
+                                            context = getApplicationContext();
+                                            text = "No rooms in database";
+                                            Toast toast = Toast.makeText(context, text, duration);
+                                            toast.show();
                                         }
                                     });
 
@@ -442,15 +441,24 @@ public class FindActivity extends Activity {
         }
         return super.onOptionsItemSelected(item);
     }
+
+
+
+    ////////////////HELPER METHODS///////////////
+
+
+
+
+
     public void goToRooms(View view) {
-        Intent intent = new Intent(this, ListDisplay.class);
+        intent = new Intent(this, ListDisplay.class);
         bundle.putInt("displayFlag", 1);
         intent.putExtras(bundle);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
     }
     public void goToItems(View view) {
-        Intent intent = new Intent(this, ListDisplay.class);
+        intent = new Intent(this, ListDisplay.class);
         bundle.putInt("displayFlag", 2);
         intent.putExtras(bundle);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -458,7 +466,7 @@ public class FindActivity extends Activity {
     }
 
     public void goToFind(View view) {
-        Intent intent = new Intent(this, FindActivity.class);
+        intent = new Intent(this, FindActivity.class);
         bundle.putSerializable("flag", -1);
         intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         intent.putExtras(bundle);
