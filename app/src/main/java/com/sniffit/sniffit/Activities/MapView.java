@@ -42,6 +42,7 @@ public class MapView extends ImageView {
     Paint paintSnaps;
     Paint paintRefTags;
     Paint border;
+    Paint textPaint;
 
     Context context;
     float length;
@@ -96,10 +97,13 @@ public class MapView extends ImageView {
         paintRefTags.setColor(Color.GREEN);
         paintRefTags.setStyle(Paint.Style.FILL);
 
+        textPaint = new Paint();
+        textPaint.setColor(Color.BLACK);
+        textPaint.setTextSize(40);
+
+
         points = new ArrayList<PointF>();
 
-//        matrix = new Matrix();
-//        copyMatrix = new Matrix();
     }
 
     @Override
@@ -107,16 +111,26 @@ public class MapView extends ImageView {
         super.onDraw(canvas);
         Log.d("flag:", Integer.toString(myFlag));
 
-        // matrix.setScale(mScaleFactor, mScaleFactor);
-//        if (myFlag == 1)
-//        canvas.drawCircle(300,300,30,paint);
-        TOP = 0;
-        LEFT = 0;
-        RIGHT = this.getRight() - 30;
-        BOTTOM = this.getBottom() - 45;
+
+        TOP = 50;
+        LEFT = 50;
+        RIGHT = this.getRight() - 80;
+        BOTTOM = this.getBottom() - 85;
 
 
         if (myFlag == 2) {
+
+            //ADD LEGEND
+            canvas.drawText("SNAPDRAGONS: ",  ((LEFT + RIGHT)/2) - 400, TOP - 15, textPaint);
+            canvas.drawCircle(((LEFT + RIGHT)/2) - 50, TOP - 30, 15, paintSnaps);
+
+            canvas.drawText("REFERENCE TAGS: ",  ((LEFT + RIGHT) / 2) + 40, TOP - 15, textPaint);
+            canvas.drawCircle(((LEFT + RIGHT)/2) + 430, TOP - 30, 15, paintRefTags);
+
+
+
+
+            //draw map
             width = Float.parseFloat(room.getWidth());
             length = Float.parseFloat(room.getLength());
 
@@ -153,29 +167,12 @@ public class MapView extends ImageView {
                 canvas.drawCircle(LEFT + Float.parseFloat(referenceTags[i].getX()) * scaledXUnit, BOTTOM - Float.parseFloat(referenceTags[i].getY()) * scaledYUnit, 8, paintRefTags);
             }
 
+
+
         }
-//        canvas.drawRect(LEFT, TOP, RIGHT, BOTTOM, paint);
-//        canvas.drawCircle(305, 305, 30, paint);
-//        canvas.drawCircle(30,45,50,paint);
-
-//        canvas.save();
 
 
 
-        //   canvas.drawBitmap(MainActivity.scaled, matrix, null);
-//        canvas.restore();
-
-        //DRAW SNAPDRAGONS
-////        if (myFlag == 2) {
-////            for (int i = 0; i < snapdragons.length; i++) {
-////                canvas.drawCircle(Integer.parseInt(snapdragons[i].getxCoord()) * 20, Integer.parseInt(snapdragons[i].getyCoord()) * 20, 12, paintSnaps);
-////
-////            }
-////            for (int i = 0; i < referenceTags.length; i++) {
-////                canvas.drawCircle(Integer.parseInt(referenceTags[i].getX()) * 20, Integer.parseInt(referenceTags[i].getY()) * 20, 12, paintRefTags);
-////
-////            }
-//        }
 
     }
 
