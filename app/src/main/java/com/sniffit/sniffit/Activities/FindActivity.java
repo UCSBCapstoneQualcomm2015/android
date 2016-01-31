@@ -165,6 +165,7 @@ public class FindActivity extends Activity {
 
 
 
+
                     roomImage = (MapView) findViewById(R.id.find_view_room);
 //                    Drawable d = getResources().getDrawable(R.drawable.square);
 //                    roomImage.setBackground(d);
@@ -198,8 +199,6 @@ public class FindActivity extends Activity {
                                     System.out.println();
                                     Gson gson = new Gson();
                                     snapArray = gson.fromJson(json, Snapdragon[].class);
-
-
 
                                     //SECOND NEST
 
@@ -333,7 +332,6 @@ public class FindActivity extends Activity {
 
 
                     }
-
                     else {
                         //Set item spinner value
                         sr.getIds("rfid", user, new Callback<ResponseBody>() {
