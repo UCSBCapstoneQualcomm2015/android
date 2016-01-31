@@ -190,6 +190,7 @@ public class FindActivity extends Activity {
 
                     //GET ROOM'S SNAPDRAGONS//
                     if (roomPosition >= 0) {
+                        //hi
 
                         sr.getRoomIds("snapdragon", user, roomArray[roomPosition].get_id(), new Callback<ResponseBody>() {
                             @Override
