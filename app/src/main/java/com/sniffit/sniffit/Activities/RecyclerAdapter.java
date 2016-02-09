@@ -1,5 +1,6 @@
 package com.sniffit.sniffit.Activities;
 
+import android.app.Activity;
 import android.app.DialogFragment;
 import android.app.FragmentManager;
 import android.content.Intent;
@@ -87,7 +88,10 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
                         intent.putExtras(bundle);
                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        v.getContext().startActivity(intent);
+                        Activity activity = (Activity) v.getContext();
+                        activity.startActivity(intent);
+                        activity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+
                         break;
                     case 2:         //updating one of the items (should edit it in the db)
                         RFIDItem currItem = (RFIDItem) sniffitList.get(position);

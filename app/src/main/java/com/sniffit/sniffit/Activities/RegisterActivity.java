@@ -4,12 +4,14 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -27,16 +29,24 @@ import retrofit.Callback;
 import retrofit.Retrofit;
 
 
-public class RegisterActivity extends Activity {
+public class RegisterActivity extends ActionBarActivity {
 
     EditText email, password, password2;
     Button login, register;
     String emailString, passwordString, password2String;
+    android.support.v7.widget.Toolbar toolbar;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
+        toolbar = (android.support.v7.widget.Toolbar)findViewById(R.id.header);
+        TextView header = (TextView) toolbar.findViewById(R.id.header_title);
+        toolbar.setTitle("");
+        header.setText("Register");
+        setSupportActionBar(toolbar);
+
 
         email = (EditText)findViewById(R.id.email);
         password = (EditText)findViewById(R.id.password);
@@ -81,6 +91,7 @@ public class RegisterActivity extends Activity {
                                 bundle.putSerializable("flag", -1);
                                 intent.putExtras(bundle);
                                 startActivity(intent);
+
                             }
                             if (message.equals("Account with that email address already exists")){
                                 CharSequence text = "Account with that email address already exists";
@@ -126,6 +137,7 @@ public class RegisterActivity extends Activity {
             public void onClick(View view) {
                 Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
                 startActivity(intent);
+
             }
         });
     }

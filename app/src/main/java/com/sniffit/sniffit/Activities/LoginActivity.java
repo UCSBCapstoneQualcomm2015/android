@@ -1,16 +1,20 @@
 package com.sniffit.sniffit.Activities;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -31,7 +35,7 @@ import java.util.Map;
 import retrofit.Callback;
 import retrofit.Retrofit;
 
-public class LoginActivity extends Activity {
+public class LoginActivity extends ActionBarActivity {
 
     ServerRequest sr;
     EditText email, password;
@@ -39,6 +43,7 @@ public class LoginActivity extends Activity {
     String emailString, passwordString;
     User user;
     SharedPreferences pref;
+    android.support.v7.widget.Toolbar toolbar;
 
 
     public static final MediaType MEDIA_TYPE_MARKDOWN
@@ -49,6 +54,12 @@ public class LoginActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        toolbar = (android.support.v7.widget.Toolbar)findViewById(R.id.header);
+        TextView mTitle = (TextView) toolbar.findViewById(R.id.header_title);
+        mTitle.setText("Login");
+        toolbar.setTitle("");
+        setSupportActionBar(toolbar);
+
         sr = new ServerRequest();
 
         //Implement csrf
@@ -101,6 +112,7 @@ public class LoginActivity extends Activity {
                                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                 intent.putExtras(bundle);
                                 startActivity(intent);
+//                                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                             }
                             else {
                                 Context context = getApplicationContext();

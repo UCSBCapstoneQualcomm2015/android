@@ -10,6 +10,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -76,6 +78,8 @@ public class ListDisplay extends AppCompatActivity implements AddItemDialogFragm
     final ServerRequest sr = new ServerRequest();
     Bundle bundle;
     SharedPreferences pref;
+    android.support.v7.widget.Toolbar toolbar;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,8 +87,12 @@ public class ListDisplay extends AppCompatActivity implements AddItemDialogFragm
         setContentView(R.layout.recycler_activity);
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
 //        fab = (FloatingActionButton) findViewById(R.id.fab);
-        getSupportActionBar().hide();
-        TextView header = (TextView)findViewById(R.id.header_title);
+        toolbar = (android.support.v7.widget.Toolbar)findViewById(R.id.header);
+        TextView header = (TextView) toolbar.findViewById(R.id.header_title);
+        toolbar.setTitle("");
+        setSupportActionBar(toolbar);
+
+
         sniffitList = new ArrayList<SniffitObject>();
         int displayFlag = getIntent().getExtras().getInt("displayFlag", -1);
         user = (User) getIntent().getExtras().getSerializable("user");
@@ -545,7 +553,7 @@ public class ListDisplay extends AppCompatActivity implements AddItemDialogFragm
         sr.deleteRoom(user, roomId, new Callback<ResponseBody>() {
             @Override
             public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
-                pref =  getApplicationContext().getSharedPreferences("MyPref", 0);
+                pref = getApplicationContext().getSharedPreferences("MyPref", 0);
                 final SharedPreferences.Editor editor = pref.edit();
                 editor.putInt("roomSpinnerPosition", -1);
                 editor.commit();
@@ -632,6 +640,36 @@ public class ListDisplay extends AppCompatActivity implements AddItemDialogFragm
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
     }
+
+
+    /// MENU STUFF /////
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.logged_in, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+        if (id == R.id.action_settings) {
+            return true;
+        }
+        if (id == R.id.log_out) {
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+
+
     /////STUFF FOR FOOTER/////
 
     public void goToFind(View view) {

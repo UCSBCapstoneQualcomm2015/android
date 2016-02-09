@@ -31,6 +31,7 @@
             android:layout_below="@id/room_image"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
             android:id="@+id/edit_room"
             android:text="Edit Room"
             android:onClick="editRoom"/>
@@ -40,6 +41,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/snapdragon_button"
             android:layout_below="@id/edit_room"
+            android:layout_marginTop="8dp"
             android:onClick="getSnapList"
             android:text="Snapdragons"/>
         <Button
@@ -47,6 +49,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/ref_button"
             android:layout_below="@id/snapdragon_button"
+            android:layout_marginTop="8dp"
             android:text="Reference Tags"
             android:onClick="getReferenceTagList"/>
 

@@ -1,11 +1,18 @@
+
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+    <include layout="@layout/header" />
+
+    <RelativeLayout
     android:layout_height="match_parent"
+    android:layout_width="match_parent"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
+    android:layout_below="@+id/header"
     tools:context="com.sniffit.sniffit.Activities.LoginActivity">
 
 
@@ -33,6 +40,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:layout_marginTop="40dp"
         android:id="@+id/register"
         android:textColor="#ffffff"
         android:textAlignment="center"
@@ -46,6 +54,7 @@
         android:layout_gravity="center"
         android:id="@+id/login"
         android:textColor="#ffffff"
+        android:layout_marginTop="8dp"
         android:textAlignment="center"
         android:text="Login"
         android:layout_below="@+id/register"/>
@@ -54,10 +63,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:layout_marginTop="8dp"
         android:id="@+id/forgot"
         android:textColor="#ffffff"
         android:textAlignment="center"
         android:text="Forgot Password?"
         android:layout_below="@+id/login"/>
-
+    </RelativeLayout>
 </RelativeLayout>

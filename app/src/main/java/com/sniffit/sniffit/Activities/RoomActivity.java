@@ -12,8 +12,11 @@ import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -40,12 +43,13 @@ import retrofit.Retrofit;
 /**
  * Created by sohanshah on 11/19/15.
  */
-public class RoomActivity extends Activity implements AddRoomDialogFragment.AddRoomListener, AddRoomDialogFragment.DeleteRoomListener {
+public class RoomActivity extends ActionBarActivity implements AddRoomDialogFragment.AddRoomListener, AddRoomDialogFragment.DeleteRoomListener {
     Room room;
     Button currentPage;
     User user;
     Bundle bundle;
     final ServerRequest sr = new ServerRequest();
+    android.support.v7.widget.Toolbar toolbar;
     MapView roomImage;
     Bitmap bitmap;
     Bitmap scaled;
@@ -89,13 +93,17 @@ public class RoomActivity extends Activity implements AddRoomDialogFragment.AddR
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.room);
-        TextView header = (TextView)findViewById(R.id.header_title);
+        toolbar = (android.support.v7.widget.Toolbar)findViewById(R.id.header);
+        TextView header = (TextView) toolbar.findViewById(R.id.header_title);
+        toolbar.setTitle("");
+        setSupportActionBar(toolbar);
+        TextView headerTitle = (TextView)findViewById(R.id.header_title);
         Intent intent = getIntent();
         room = (Room) intent.getExtras().getSerializable("room");
         user = (User) intent.getExtras().getSerializable("user");
         currentPage = (Button) findViewById(R.id.rooms_button);
         currentPage.setBackgroundColor(Color.parseColor("#294e6a"));
-        header.setText(room.getName());
+        headerTitle.setText(room.getName());
         bundle = new Bundle();
         bundle.putSerializable("user", user);
         //SET UP THE ROOM IMAGE
@@ -166,16 +174,6 @@ public class RoomActivity extends Activity implements AddRoomDialogFragment.AddR
         });
 
 
-//        Log.d("height", Integer.toString(roomImage.getHeight()));
-//        Bitmap b = Bitmap.createBitmap( roomImage.getLayoutParams().width, roomImage.getLayoutParams().height, Bitmap.Config.ARGB_8888);
-//        Canvas c = new Canvas(b);
-//        myPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-//        myPaint.setColor(Color.BLACK);
-//        canvas.drawCircle(50, 50, 10, myPaint);
-//        roomImage.draw(canvas);
-//        roomImage.setDrawingCacheEnabled(true);
-//        Bitmap scaledBitmap = roomImage.getDrawingCache();
-
 
     }
 
@@ -194,6 +192,8 @@ public class RoomActivity extends Activity implements AddRoomDialogFragment.AddR
         bundle.putSerializable("room", room);
         intent.putExtras(bundle);
         startActivity(intent);
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+
     }
 
     public void getReferenceTagList(View view) {
@@ -204,6 +204,7 @@ public class RoomActivity extends Activity implements AddRoomDialogFragment.AddR
         bundle.putSerializable("room", room);
         intent.putExtras(bundle);
         startActivity(intent);
+
     }
 
     @Override
@@ -251,6 +252,7 @@ public class RoomActivity extends Activity implements AddRoomDialogFragment.AddR
         intent.putExtras(bundle);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
+
     }
 
 
@@ -269,15 +271,45 @@ public class RoomActivity extends Activity implements AddRoomDialogFragment.AddR
                 Log.d("delete:  ", "failed");
             }
         });
-        Log.d("hiiii", "test");
         Intent intent = new Intent(this, ListDisplay.class);
         bundle.putInt("displayFlag", 1);
         intent.putExtras(bundle);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
+
+    }
+
+    ///////// MENU STUFF /////////////
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.logged_in, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+        if (id == R.id.action_settings) {
+            return true;
+        }
+        if (id == R.id.log_out) {
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+
+        }
+        return super.onOptionsItemSelected(item);
     }
 
 
+
+
+    ////////// FOOTER STUFF /////////////
 
     public void goToFind(View view){
         Intent intent = new Intent(this, FindActivity.class);
@@ -285,6 +317,7 @@ public class RoomActivity extends Activity implements AddRoomDialogFragment.AddR
         intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         intent.putExtras(bundle);
         startActivity(intent);
+
     }
 
     public void goToRooms(View view) {

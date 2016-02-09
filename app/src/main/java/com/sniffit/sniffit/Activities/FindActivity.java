@@ -10,6 +10,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Menu;
@@ -42,13 +43,15 @@ import retrofit.Retrofit;
 
 import com.google.gson.*;
 
-public class FindActivity extends Activity {
+public class FindActivity extends ActionBarActivity {
 
     //passed in all activities
     User user;
     Bundle bundle;
     Intent intent;
     final ServerRequest sr = new ServerRequest();
+    android.support.v7.widget.Toolbar toolbar;
+
 
 
     //different arrays of points
@@ -76,7 +79,7 @@ public class FindActivity extends Activity {
 
     //for spinner
     boolean firstLoad;
-    Spinner roomSpinner, itemSpinner;
+    android.support.v7.widget.AppCompatSpinner roomSpinner, itemSpinner;
     SharedPreferences pref;
     int roomPosition = -1;
     int itemPosition = -1;
@@ -91,17 +94,21 @@ public class FindActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_find);
-        TextView header = (TextView)findViewById(R.id.header_title);
-        header.setText("Find Tag");
+        toolbar = (android.support.v7.widget.Toolbar)findViewById(R.id.header);
+        TextView mTitle = (TextView) toolbar.findViewById(R.id.header_title);
+        mTitle.setText("Find");
+        toolbar.setTitle("");
+        setSupportActionBar(toolbar);
+
         findButton = (Button) findViewById(R.id.sniff_button);
-        findButton.setBackgroundColor(Color.parseColor("#293e6a"));
 
         currentPage = (Button) findViewById(R.id.find_button);
         currentPage.setBackgroundColor(Color.parseColor("#294e6a"));
-        roomSpinner = (Spinner)findViewById(R.id.room_spinner);
+        roomSpinner = (android.support.v7.widget.AppCompatSpinner)findViewById(R.id.room_spinner);
 
-        itemSpinner = (Spinner)findViewById(R.id.item_spinner);
+        itemSpinner = (android.support.v7.widget.AppCompatSpinner)findViewById(R.id.item_spinner);
 
         user = (User) getIntent().getExtras().getSerializable("user");
         imageFlag = (Integer) getIntent().getExtras().getSerializable("flag");
@@ -279,7 +286,7 @@ public class FindActivity extends Activity {
                                                                     } else {
                                                                         bundle.putSerializable("flag", 1);
                                                                         intent.putExtras(bundle);
-                                                                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                                                        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                                                                         startActivity(intent);
                                                                     }
 
@@ -426,7 +433,7 @@ public class FindActivity extends Activity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.find, menu);
+        getMenuInflater().inflate(R.menu.logged_in, menu);
         return true;
     }
 
@@ -438,6 +445,10 @@ public class FindActivity extends Activity {
         int id = item.getItemId();
         if (id == R.id.action_settings) {
             return true;
+        }
+        if (id == R.id.log_out) {
+            intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
         }
         return super.onOptionsItemSelected(item);
     }

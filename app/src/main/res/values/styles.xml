@@ -1,8 +1,43 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="android:Theme.Holo.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
+        <item name="android:windowNoTitle">true</item>
+        <!--We will be using the toolbar so no need to show ActionBar-->
+        <item name="android:windowActionBar">false</item>
+        <!-- Set theme colors from http://www.google.com/design/spec/style/color.html#color-color-palette-->
+        <!-- colorPrimary is used for the default action bar background -->
+        <item name="colorPrimary">#3B5998</item>
+        <!-- colorPrimaryDark is used for the status bar -->
+        <item name="colorPrimaryDark">#1976D2</item>
+        <!-- colorAccent is used as the default value for colorControlActivated
+             which is used to tint widgets -->
+        <item name="colorAccent">#FF4081</item>
+        <item name="android:popupMenuStyle">@android:style/Theme.Translucent</item>
+        <item name="android:itemBackground">#D8000000</item>
+        <item name="android:itemTextAppearance">@style/OptionText</item>
+        <item name="android:textViewStyle">@style/TextViewStyle</item>
+        <item name="buttonStyle">@style/ButtonStyle</item>
+        <!-- You can also set colorControlNormal, colorControlActivated
+           colorControlHighlight and colorSwitchThumbNormal. -->
     </style>
+
+
+    <style name="OptionText"
+        parent="style/TextAppearance.AppCompat.Widget.ActionBar.Title">
+        <item name="android:textColor">#FFFFFF</item>
+    </style>
+    <style name="TextViewStyle" parent="android:Widget.TextView">
+        <item name="android:fontFamily">sans-serif-light</item>
+        <item name="android:textColor">#3B5998</item>
+    </style>
+
+    <style name="ButtonStyle" parent="android:Widget.Holo.Light.Button">
+        <item name="android:fontFamily">sans-serif-light</item>
+        <item name="android:textColor">#FFFFFF</item>
+        <item name="android:background">@drawable/button</item>
+    </style>
+
 
 </resources>

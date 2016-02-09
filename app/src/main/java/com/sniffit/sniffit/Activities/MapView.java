@@ -122,10 +122,10 @@ public class MapView extends ImageView {
 
             //ADD LEGEND
             canvas.drawText("SNAPDRAGONS: ",  ((LEFT + RIGHT)/2) - 400, TOP - 15, textPaint);
-            canvas.drawCircle(((LEFT + RIGHT)/2) - 50, TOP - 30, 15, paintSnaps);
+            canvas.drawCircle(((LEFT + RIGHT) / 2) - 50, TOP - 30, 15, paintSnaps);
 
-            canvas.drawText("REFERENCE TAGS: ",  ((LEFT + RIGHT) / 2) + 40, TOP - 15, textPaint);
-            canvas.drawCircle(((LEFT + RIGHT)/2) + 430, TOP - 30, 15, paintRefTags);
+            canvas.drawText("REFERENCE TAGS: ", ((LEFT + RIGHT) / 2) + 40, TOP - 15, textPaint);
+            canvas.drawCircle(((LEFT + RIGHT) / 2) + 430, TOP - 30, 15, paintRefTags);
 
 
 

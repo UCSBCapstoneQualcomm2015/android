@@ -130,6 +130,9 @@ public class ServerRequest {
         @DELETE("api/user/{user_id}/reftags/{ref_tagId}")
         Call<ResponseBody> deleteReferenceTag(@Header("x-access-token") String token, @Path("user_id") String userId, @Path("ref_tagId") String tagId);
 
+        @POST("api/user/{user_id}/find/")
+        Call<ResponseBody> find(@Header("x-access-token") String token, @Path("user_id") String userId, @Path("room_name") String roomName, @Path("name") String itemName);
+
 
     }
 
@@ -406,6 +409,16 @@ public class ServerRequest {
         refTagCall.enqueue(callback);
     }
 
+    public void findItem(User user, String roomName, String itemName, retrofit.Callback<ResponseBody> callback) {
+        String item = itemName;
+        String room = roomName;
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(base_url)
+                .build();
+        apiInterface loginService = retrofit.create(apiInterface.class);
+        Call<ResponseBody> findCall = loginService.find(user.getToken(),user.getUserId(), room, item);
+        findCall.enqueue(callback);
+    }
 
 }
 
