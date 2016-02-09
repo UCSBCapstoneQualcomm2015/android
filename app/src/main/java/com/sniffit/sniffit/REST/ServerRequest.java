@@ -32,7 +32,7 @@ package com.sniffit.sniffit.REST;
 public class ServerRequest {
 
 //    private static final String base_url = "http://192.168.57.1:8080/";
- private static final String base_url = "http://10.0.3.2:8080/";
+ private static final String base_url = "http://192.168.2.4:8080/";
 
     //"http://ec2-52-27-212-208.us-west-2.compute.amazonaws.com/";
 
@@ -130,8 +130,9 @@ public class ServerRequest {
         @DELETE("api/user/{user_id}/reftags/{ref_tagId}")
         Call<ResponseBody> deleteReferenceTag(@Header("x-access-token") String token, @Path("user_id") String userId, @Path("ref_tagId") String tagId);
 
+        @FormUrlEncoded
         @POST("api/user/{user_id}/find/")
-        Call<ResponseBody> find(@Header("x-access-token") String token, @Path("user_id") String userId, @Path("room_name") String roomName, @Path("name") String itemName);
+        Call<ResponseBody> find(@Header("x-access-token") String token, @Path("user_id") String userId, @Field("name") String name, @Field("roomName") String roomName);
 
 
     }
@@ -416,7 +417,7 @@ public class ServerRequest {
                 .baseUrl(base_url)
                 .build();
         apiInterface loginService = retrofit.create(apiInterface.class);
-        Call<ResponseBody> findCall = loginService.find(user.getToken(),user.getUserId(), room, item);
+        Call<ResponseBody> findCall = loginService.find(user.getToken(),user.getUserId(), item, room);
         findCall.enqueue(callback);
     }
 

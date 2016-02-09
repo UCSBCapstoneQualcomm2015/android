@@ -23,6 +23,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.sniffit.sniffit.Objects.Location;
 import com.sniffit.sniffit.Objects.RFIDItem;
 import com.sniffit.sniffit.Objects.ReferenceTag;
 import com.sniffit.sniffit.Objects.Room;
@@ -58,6 +59,8 @@ public class FindActivity extends ActionBarActivity {
     Room[] roomArray;
     Snapdragon[] snapArray;
     ReferenceTag[] referenceTagArray;
+    RFIDItem[] rfidArray;
+    Location myLocation;
 
     //Buttons
     Button currentPage;
@@ -112,6 +115,9 @@ public class FindActivity extends ActionBarActivity {
 
         user = (User) getIntent().getExtras().getSerializable("user");
         imageFlag = (Integer) getIntent().getExtras().getSerializable("flag");
+        if (imageFlag == 1) {
+            myLocation = (Location) getIntent().getExtras().getSerializable("location");
+        }
 
         bundle = new Bundle();
         bundle.putSerializable("user", user);
@@ -219,12 +225,13 @@ public class FindActivity extends ActionBarActivity {
 
                                                 ///THIRD NEST
 
-
                                                 roomImage.setFlag(2);
                                                 roomImage.setRoom(roomArray[roomPosition]);
                                                 roomImage.setSnapdragonArray(snapArray);
                                                 roomImage.setReferenceTags(referenceTagArray);
+
                                                 roomImage.invalidate();
+
 
                                                 //Set item spinner value
                                                 sr.getIds("rfid", user, new Callback<ResponseBody>() {
@@ -234,7 +241,7 @@ public class FindActivity extends ActionBarActivity {
                                                             String json = response.body().string();
                                                             System.out.println(json);
                                                             Gson gson = new Gson();
-                                                            RFIDItem[] rfidArray = gson.fromJson(json, RFIDItem[].class);
+                                                            rfidArray = gson.fromJson(json, RFIDItem[].class);
                                                             Log.d("items", Integer.toString(rfidArray.length));
 
                                                             ArrayAdapter<RFIDItem> adapter = new ArrayAdapter<RFIDItem>(getApplicationContext(),
@@ -285,9 +292,31 @@ public class FindActivity extends ActionBarActivity {
                                                                         toast.show();
                                                                     } else {
                                                                         bundle.putSerializable("flag", 1);
-                                                                        intent.putExtras(bundle);
-                                                                        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                                                                        startActivity(intent);
+                                                                        sr.findItem(user, roomArray[roomPosition].getName(), rfidArray[itemPosition].getName(), new Callback<ResponseBody>() {
+                                                                            @Override
+                                                                            public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
+                                                                                try {
+                                                                                    Log.d("flag", "is one");
+                                                                                    String json = response.body().string();
+                                                                                    System.out.println(json);
+                                                                                    Gson gson = new Gson();
+                                                                                    myLocation = gson.fromJson(json, Location.class);
+                                                                                    roomImage.setFlag(1);
+                                                                                    roomImage.setLocation(myLocation);
+                                                                                    roomImage.setRoom(roomArray[roomPosition]);
+                                                                                    roomImage.setSnapdragonArray(snapArray);
+                                                                                    roomImage.setReferenceTags(referenceTagArray);
+                                                                                    roomImage.invalidate();
+                                                                                } catch (Exception e) {
+                                                                                    e.printStackTrace();
+                                                                                }
+                                                                            }
+
+                                                                            @Override
+                                                                            public void onFailure(Throwable t) {
+
+                                                                            }
+                                                                        });
                                                                     }
 
 
@@ -351,7 +380,7 @@ public class FindActivity extends ActionBarActivity {
                                     String json = response.body().string();
                                     System.out.println(json);
                                     Gson gson = new Gson();
-                                    RFIDItem[] rfidArray = gson.fromJson(json, RFIDItem[].class);
+                                    rfidArray = gson.fromJson(json, RFIDItem[].class);
                                     Log.d("items", Integer.toString(rfidArray.length));
                                     ArrayAdapter<RFIDItem> adapter = new ArrayAdapter<RFIDItem>(getApplicationContext(),
                                             R.layout.spinner_dropdown_item, rfidArray);

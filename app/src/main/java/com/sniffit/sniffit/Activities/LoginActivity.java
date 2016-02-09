@@ -86,8 +86,8 @@ public class LoginActivity extends ActionBarActivity {
                 passwordString = password.getText().toString();
 
                 //Hardcoded for testing
-                emailString = "b@gmail.com";
-                passwordString = "abc123";
+//                emailString = "b@gmail.com";
+//                passwordString = "abc123";
 
                 HashMap<String, String> params = new HashMap<String, String>();
 

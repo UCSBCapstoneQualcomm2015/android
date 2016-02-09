@@ -20,6 +20,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.sniffit.sniffit.Objects.Location;
 import com.sniffit.sniffit.Objects.ReferenceTag;
 import com.sniffit.sniffit.Objects.Room;
 import com.sniffit.sniffit.Objects.Snapdragon;
@@ -43,6 +44,7 @@ public class MapView extends ImageView {
     Paint paintRefTags;
     Paint border;
     Paint textPaint;
+    Paint locationPaint;
 
     Context context;
     float length;
@@ -66,7 +68,7 @@ public class MapView extends ImageView {
 
     Snapdragon[] snapdragons;
     ReferenceTag[] referenceTags;
-
+    Location location;
 
     public MapView(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
@@ -101,6 +103,12 @@ public class MapView extends ImageView {
         textPaint.setColor(Color.BLACK);
         textPaint.setTextSize(40);
 
+        locationPaint = new Paint();
+        locationPaint.setColor(Color.RED);
+        locationPaint.setStyle(Paint.Style.STROKE);
+        locationPaint.setStrokeWidth(5);
+
+
 
         points = new ArrayList<PointF>();
 
@@ -118,7 +126,7 @@ public class MapView extends ImageView {
         BOTTOM = this.getBottom() - 85;
 
 
-        if (myFlag == 2) {
+        if (myFlag == 2 || myFlag == 1) {
 
             //ADD LEGEND
             canvas.drawText("SNAPDRAGONS: ",  ((LEFT + RIGHT)/2) - 400, TOP - 15, textPaint);
@@ -167,6 +175,16 @@ public class MapView extends ImageView {
                 canvas.drawCircle(LEFT + Float.parseFloat(referenceTags[i].getX()) * scaledXUnit, BOTTOM - Float.parseFloat(referenceTags[i].getY()) * scaledYUnit, 8, paintRefTags);
             }
 
+            if (myFlag == 1) {
+                if (Float.parseFloat(location.getxCoord()) != -1) {
+                    canvas.drawCircle(LEFT + Float.parseFloat(location.getxCoord()) * scaledXUnit, BOTTOM - Float.parseFloat(location.getyCoord()) * scaledYUnit, 20, locationPaint);
+                }
+                else {
+                    canvas.drawText("YOUR FUCKING TAG ISNT HERE ", ((LEFT + RIGHT) / 2) , (TOP + BOTTOM)/ 2, textPaint);
+
+                }
+            }
+
 
 
         }
@@ -192,5 +210,7 @@ public class MapView extends ImageView {
     public void setReferenceTags(ReferenceTag[] refTags) {
         this.referenceTags = refTags;
     }
+
+    public void setLocation(Location location) {this.location = location;}
 
 }
