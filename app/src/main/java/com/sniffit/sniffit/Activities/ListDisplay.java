@@ -73,6 +73,7 @@ public class ListDisplay extends AppCompatActivity implements AddItemDialogFragm
     Button currentPage;
     FloatingActionButton fab;
     private int flag;
+    int displayFlag = -1;
     Room room;
     User user;
     final ServerRequest sr = new ServerRequest();
@@ -94,7 +95,7 @@ public class ListDisplay extends AppCompatActivity implements AddItemDialogFragm
 
 
         sniffitList = new ArrayList<SniffitObject>();
-        int displayFlag = getIntent().getExtras().getInt("displayFlag", -1);
+        displayFlag = getIntent().getExtras().getInt("displayFlag", -1);
         user = (User) getIntent().getExtras().getSerializable("user");
         bundle = new Bundle();
         bundle.putSerializable("user", user);
@@ -116,17 +117,13 @@ public class ListDisplay extends AppCompatActivity implements AddItemDialogFragm
                         for(Room room: roomArray){
                             sniffitList.add(room);
                         }
+                        setVisibility(sniffitList);
+
+                        setView();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                    if (sniffitList.size() > 0) {
-                        TextView nodata = (TextView) findViewById(R.id.nodata);
-                        nodata.setVisibility(View.INVISIBLE);
-                    }
-                    else {
-                        TextView nodata = (TextView) findViewById(R.id.nodata);
-                        nodata.setVisibility(View.VISIBLE);
-                    }
+
 
                 }
 
@@ -152,17 +149,13 @@ public class ListDisplay extends AppCompatActivity implements AddItemDialogFragm
                         RFIDItem[] rfidArray = gson.fromJson(json, RFIDItem[].class);
                         for(RFIDItem item: rfidArray){
                             sniffitList.add(item);
+                            setVisibility(sniffitList);
+
+                            setView();
+
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
-                    }
-                    if (sniffitList.size() > 0) {
-                        TextView nodata = (TextView) findViewById(R.id.nodata);
-                        nodata.setVisibility(View.INVISIBLE);
-                    }
-                    else {
-                        TextView nodata = (TextView) findViewById(R.id.nodata);
-                        nodata.setVisibility(View.VISIBLE);
                     }
 
                 }
@@ -177,7 +170,7 @@ public class ListDisplay extends AppCompatActivity implements AddItemDialogFragm
 
         else if (flag == SNAPDRAGON) {         //if we are adding a snapdragon (same with ref tag), we need to figure out way to add it to that specific room in db
             room = (Room) getIntent().getExtras().getSerializable("room");
-            header.setText("Snapdragons (" + room.getName() + ")");
+            header.setText("SENSORS (" + room.getName().substring(0,1).toUpperCase() + room.getName().substring(1) + ")");
             Log.d("room", room.get_id());
             currentPage = (Button) findViewById(R.id.rooms_button);
             currentPage.setBackgroundColor(Color.parseColor("#294e6a"));
@@ -193,17 +186,12 @@ public class ListDisplay extends AppCompatActivity implements AddItemDialogFragm
                         for(Snapdragon snapdragon: snapdragonArray){
                             sniffitList.add(snapdragon);
                         }
+                        setVisibility(sniffitList);
+                        setView();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                    if (sniffitList.size() > 0) {
-                        TextView nodata = (TextView) findViewById(R.id.nodata);
-                        nodata.setVisibility(View.INVISIBLE);
-                    }
-                    else {
-                        TextView nodata = (TextView) findViewById(R.id.nodata);
-                        nodata.setVisibility(View.VISIBLE);
-                    }
+
 
                 }
 
@@ -217,7 +205,7 @@ public class ListDisplay extends AppCompatActivity implements AddItemDialogFragm
 
         else if (flag == REFERENCE) {
             room = (Room) getIntent().getExtras().getSerializable("room");
-            header.setText("Reference Tags (" + room.getName() + ")");
+            header.setText("Reference Tags (" + room.getName().substring(0,1).toUpperCase() + room.getName().substring(1) + ")");
             header.setTextSize(25);
             currentPage = (Button) findViewById(R.id.rooms_button);
             currentPage.setBackgroundColor(Color.parseColor("#294e6a"));
@@ -233,17 +221,12 @@ public class ListDisplay extends AppCompatActivity implements AddItemDialogFragm
                     for(ReferenceTag tag: referenceTagArray){
                         sniffitList.add(tag);
                     }
+                    setVisibility(sniffitList);
+                    setView();
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                if (sniffitList.size() > 0) {
-                    TextView nodata = (TextView) findViewById(R.id.nodata);
-                    nodata.setVisibility(View.INVISIBLE);
-                }
-                else {
-                    TextView nodata = (TextView) findViewById(R.id.nodata);
-                    nodata.setVisibility(View.VISIBLE);
-                    }
 
             }
 
@@ -274,17 +257,32 @@ public class ListDisplay extends AppCompatActivity implements AddItemDialogFragm
 
         // use this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView
+    }
+
+    public void setVisibility(ArrayList<SniffitObject> sniffitList) {
+        if (sniffitList.size() > 0) {
+            TextView nodata = (TextView) findViewById(R.id.nodata);
+            nodata.setVisibility(View.INVISIBLE);
+        }
+        else {
+            TextView nodata = (TextView) findViewById(R.id.nodata);
+            nodata.setVisibility(View.VISIBLE);
+        }
+
+    }
+
+    public void setView() {
         mRecyclerView.setHasFixedSize(true);
-
-        // use a linear layout manager
-        mLayoutManager = new LinearLayoutManager(this);
+        mLayoutManager = new LinearLayoutManager(getApplicationContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
-
-        // specify an adapter (see also next example)
         mAdapter = new RecyclerAdapter(sniffitList, displayFlag,user, getFragmentManager());
         mRecyclerView.setAdapter(mAdapter);
-        Log.d("adapter set", "adapter");
+
     }
+
+
+
+
     /// ADDING AN OBJECT //////
     public void addObject(View view) {
         DialogFragment dialog;

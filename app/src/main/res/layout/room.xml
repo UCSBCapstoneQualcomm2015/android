@@ -43,7 +43,7 @@
             android:layout_below="@id/edit_room"
             android:layout_marginTop="8dp"
             android:onClick="getSnapList"
-            android:text="Snapdragons"/>
+            android:text="Sensors"/>
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

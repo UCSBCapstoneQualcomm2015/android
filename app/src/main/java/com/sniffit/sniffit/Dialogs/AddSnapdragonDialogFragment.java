@@ -58,7 +58,6 @@ public class AddSnapdragonDialogFragment extends DialogFragment {
         try {
             mListener = (AddSnapDragonListener) activity;
             dListener = (DeleteSnapDragonListener) activity;
-
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
                     + "must implement AddSnapdragonListener");
@@ -71,7 +70,7 @@ public class AddSnapdragonDialogFragment extends DialogFragment {
         // Use the Builder class for convenient dialog construction
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         final int flag = getArguments().getInt("num");
-        String snapName = getArguments().getString("snapdragonName");
+        final String snapName = getArguments().getString("snapdragonName");
         final String snapIp = getArguments().getString("ip");
         String snapX = getArguments().getString("x");
         String snapY = getArguments().getString("y");
@@ -91,11 +90,11 @@ public class AddSnapdragonDialogFragment extends DialogFragment {
 
         switch (flag) {
             case 1:
-                builder.setTitle("Add New Snapdragon");
+                builder.setTitle("Add New Sensor");
                 builder.setNegativeButton("Cancel", null);
                 break;
             case 2:
-                builder.setTitle("Edit Snapdragon");
+                builder.setTitle("Edit Sensor");
                 builder.setNegativeButton(R.string.delete, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -123,7 +122,8 @@ public class AddSnapdragonDialogFragment extends DialogFragment {
                     Toast toast = Toast.makeText(context, text, duration);
                     toast.show();
                 }else {
-                    mListener.snapdragonConfirm(AddSnapdragonDialogFragment.this, snapdragonName.getText().toString(),
+                    String name = snapdragonName.getText().toString();
+                    mListener.snapdragonConfirm(AddSnapdragonDialogFragment.this, name.substring(0,1).toUpperCase() + name.substring(1),
                             ip.getText().toString(), xText, yText, flag, snapIp);
                 }
             }

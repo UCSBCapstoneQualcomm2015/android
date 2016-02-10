@@ -85,13 +85,13 @@ public class RegisterActivity extends ActionBarActivity {
                             if (message.equals("Successful sign up")) {
                                 System.out.print(jsonBody);
                                 User user = gson.fromJson(jsonBody, User.class);
-                                Intent intent = new Intent(getApplicationContext(), ListDisplay.class);
+                                Intent intent = new Intent(getApplicationContext(), FindActivity.class);
                                 Bundle bundle = new Bundle();
                                 bundle.putSerializable("user", user);
                                 bundle.putSerializable("flag", -1);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                 intent.putExtras(bundle);
                                 startActivity(intent);
-
                             }
                             if (message.equals("Account with that email address already exists")){
                                 CharSequence text = "Account with that email address already exists";

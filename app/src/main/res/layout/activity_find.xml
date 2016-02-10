@@ -67,11 +67,17 @@
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:visibility="invisible"
-                android:text="No rooms in database; go to ROOMS tab"
+                android:text="Need to add a room"
                 android:textSize="20dp"
                 android:textStyle="italic"
                 android:gravity="center"
                 />
+            <ProgressBar
+                android:id="@+id/progressBar1"
+                style="?android:attr/progressBarStyleLargeInverse"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_centerHorizontal="true" />
         </RelativeLayout>
 
 

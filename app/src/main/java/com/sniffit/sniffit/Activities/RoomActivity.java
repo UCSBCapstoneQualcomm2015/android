@@ -12,6 +12,7 @@ import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBarActivity;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -98,12 +99,13 @@ public class RoomActivity extends ActionBarActivity implements AddRoomDialogFrag
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
         TextView headerTitle = (TextView)findViewById(R.id.header_title);
+//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         Intent intent = getIntent();
         room = (Room) intent.getExtras().getSerializable("room");
         user = (User) intent.getExtras().getSerializable("user");
         currentPage = (Button) findViewById(R.id.rooms_button);
         currentPage.setBackgroundColor(Color.parseColor("#294e6a"));
-        headerTitle.setText(room.getName());
+        headerTitle.setText(room.getName().substring(0,1).toUpperCase() + room.getName().substring(1));
         bundle = new Bundle();
         bundle.putSerializable("user", user);
         //SET UP THE ROOM IMAGE
@@ -303,6 +305,15 @@ public class RoomActivity extends ActionBarActivity implements AddRoomDialogFrag
             overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 
         }
+//        if (id == android.R.id.home) {
+//            Intent intent = new Intent(this, ListDisplay.class);
+//            bundle.putInt("displayFlag", 1);
+//            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//            intent.putExtras(bundle);
+//            startActivity(intent);
+//            overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+//
+//        }
         return super.onOptionsItemSelected(item);
     }
 

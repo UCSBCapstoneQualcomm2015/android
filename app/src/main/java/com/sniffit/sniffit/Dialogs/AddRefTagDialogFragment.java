@@ -117,7 +117,8 @@ public class AddRefTagDialogFragment extends DialogFragment{
                     Toast toast = Toast.makeText(context, text, duration);
                     toast.show();
                 } else {
-                    mListener.refTagConfirm(AddRefTagDialogFragment.this, refTagName.getText().toString(),
+                    String name = refTagName.getText().toString();
+                    mListener.refTagConfirm(AddRefTagDialogFragment.this, name.substring(0,1).toUpperCase() + name.substring(1),
                             id.getText().toString(), x.getText().toString(), y.getText().toString(), flag, tagId);
                 }
             }

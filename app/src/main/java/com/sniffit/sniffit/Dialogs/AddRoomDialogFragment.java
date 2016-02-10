@@ -117,7 +117,7 @@ public class AddRoomDialogFragment extends DialogFragment{
                     Toast toast = Toast.makeText(context, text, duration);
                     toast.show();
                 } else {
-                mListener.roomConfirm(AddRoomDialogFragment.this, roomName,
+                mListener.roomConfirm(AddRoomDialogFragment.this, roomName.substring(0,1).toUpperCase() + roomName.substring(1),
                         length, width, flag, id);
             }
         }});

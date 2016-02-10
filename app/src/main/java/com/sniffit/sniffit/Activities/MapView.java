@@ -129,7 +129,7 @@ public class MapView extends ImageView {
         if (myFlag == 2 || myFlag == 1) {
 
             //ADD LEGEND
-            canvas.drawText("SNAPDRAGONS: ",  ((LEFT + RIGHT)/2) - 400, TOP - 15, textPaint);
+            canvas.drawText("SENSORS: ",  ((LEFT + RIGHT)/2) - 400, TOP - 15, textPaint);
             canvas.drawCircle(((LEFT + RIGHT) / 2) - 50, TOP - 30, 15, paintSnaps);
 
             canvas.drawText("REFERENCE TAGS: ", ((LEFT + RIGHT) / 2) + 40, TOP - 15, textPaint);
@@ -166,21 +166,26 @@ public class MapView extends ImageView {
 
                 ////LOAD SNAPDRAGONS/////
             for (int i = 0; i < snapdragons.length; i++) {
-                canvas.drawCircle(LEFT + Float.parseFloat(snapdragons[i].getxCoord()) * scaledXUnit, BOTTOM - Float.parseFloat(snapdragons[i].getyCoord()) * scaledYUnit, 8, paintSnaps);
+                canvas.drawCircle(LEFT + Float.parseFloat(snapdragons[i].getxCoord()) * scaledXUnit, BOTTOM - Float.parseFloat(snapdragons[i].getyCoord()) * scaledYUnit, 30, paintSnaps);
             }
 
             /////LOAD REFERENCE TAGS///////
 
             for (int i = 0; i < referenceTags.length; i++) {
-                canvas.drawCircle(LEFT + Float.parseFloat(referenceTags[i].getX()) * scaledXUnit, BOTTOM - Float.parseFloat(referenceTags[i].getY()) * scaledYUnit, 8, paintRefTags);
+                canvas.drawCircle(LEFT + Float.parseFloat(referenceTags[i].getX()) * scaledXUnit, BOTTOM - Float.parseFloat(referenceTags[i].getY()) * scaledYUnit, 30, paintRefTags);
             }
 
             if (myFlag == 1) {
                 if (Float.parseFloat(location.getxCoord()) != -1) {
-                    canvas.drawCircle(LEFT + Float.parseFloat(location.getxCoord()) * scaledXUnit, BOTTOM - Float.parseFloat(location.getyCoord()) * scaledYUnit, 20, locationPaint);
+                    canvas.drawCircle(LEFT + Float.parseFloat(location.getxCoord()) * scaledXUnit, BOTTOM - Float.parseFloat(location.getyCoord()) * scaledYUnit, 50, locationPaint);
+                    canvas.drawCircle(LEFT + Float.parseFloat(location.getxCoord()) * scaledXUnit, BOTTOM - Float.parseFloat(location.getyCoord()) * scaledYUnit, 75, locationPaint);
+                    canvas.drawCircle(LEFT + Float.parseFloat(location.getxCoord()) * scaledXUnit, BOTTOM - Float.parseFloat(location.getyCoord()) * scaledYUnit, 100, locationPaint);
+
                 }
                 else {
-                    canvas.drawText("YOUR FUCKING TAG ISNT HERE ", ((LEFT + RIGHT) / 2) , (TOP + BOTTOM)/ 2, textPaint);
+                    CharSequence text = "Item not found in " + room.getName() ;
+                    Toast toast = Toast.makeText(context, text, Toast.LENGTH_LONG);
+                    toast.show();
 
                 }
             }

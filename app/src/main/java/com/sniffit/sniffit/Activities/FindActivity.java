@@ -19,6 +19,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -72,6 +73,8 @@ public class FindActivity extends ActionBarActivity {
     Bitmap b;
     Paint myPaint;
     int imageFlag;
+    ProgressBar progressBar;
+
 
     //Scaling
     int w;
@@ -119,6 +122,10 @@ public class FindActivity extends ActionBarActivity {
             myLocation = (Location) getIntent().getExtras().getSerializable("location");
         }
 
+        progressBar = (ProgressBar)findViewById(R.id.progressBar1);
+        progressBar.setVisibility(View.GONE);
+        noRooms = (TextView) findViewById(R.id.no_rooms);
+
         bundle = new Bundle();
         bundle.putSerializable("user", user);
         intent = new Intent(this, FindActivity.class);
@@ -127,9 +134,7 @@ public class FindActivity extends ActionBarActivity {
         pref =  getApplicationContext().getSharedPreferences("MyPref", 0);
         final SharedPreferences.Editor editor = pref.edit();
         firstLoad = true;
-        noRooms = (TextView) findViewById(R.id.no_rooms);
 
-        
 
         //Set Room Spinner values
         sr.getIds("rooms", user, new Callback<ResponseBody>() {
@@ -199,6 +204,8 @@ public class FindActivity extends ActionBarActivity {
                     roomImage.setImageBitmap(bitmap);
                     roomImage.setFlag(imageFlag);
 
+
+
                     //GET ROOM'S SNAPDRAGONS//
                     if (roomPosition >= 0) {
                         //hi
@@ -208,7 +215,6 @@ public class FindActivity extends ActionBarActivity {
                             public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
                                 try {
                                     String json = response.body().string();
-                                    System.out.println();
                                     Gson gson = new Gson();
                                     snapArray = gson.fromJson(json, Snapdragon[].class);
 
@@ -219,7 +225,6 @@ public class FindActivity extends ActionBarActivity {
                                         public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
                                             try {
                                                 String json = response.body().string();
-                                                System.out.println(json);
                                                 Gson gson = new Gson();
                                                 referenceTagArray = gson.fromJson(json, ReferenceTag[].class);
 
@@ -239,10 +244,9 @@ public class FindActivity extends ActionBarActivity {
                                                     public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
                                                         try {
                                                             String json = response.body().string();
-                                                            System.out.println(json);
                                                             Gson gson = new Gson();
                                                             rfidArray = gson.fromJson(json, RFIDItem[].class);
-                                                            Log.d("items", Integer.toString(rfidArray.length));
+//                                                            Log.d("items", Integer.toString(rfidArray.length));
 
                                                             ArrayAdapter<RFIDItem> adapter = new ArrayAdapter<RFIDItem>(getApplicationContext(),
                                                                     R.layout.spinner_dropdown_item, rfidArray);
@@ -292,13 +296,12 @@ public class FindActivity extends ActionBarActivity {
                                                                         toast.show();
                                                                     } else {
                                                                         bundle.putSerializable("flag", 1);
+                                                                        progressBar.setVisibility(View.VISIBLE);
                                                                         sr.findItem(user, roomArray[roomPosition].getName(), rfidArray[itemPosition].getName(), new Callback<ResponseBody>() {
                                                                             @Override
                                                                             public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
                                                                                 try {
-                                                                                    Log.d("flag", "is one");
                                                                                     String json = response.body().string();
-                                                                                    System.out.println(json);
                                                                                     Gson gson = new Gson();
                                                                                     myLocation = gson.fromJson(json, Location.class);
                                                                                     roomImage.setFlag(1);
@@ -307,6 +310,7 @@ public class FindActivity extends ActionBarActivity {
                                                                                     roomImage.setSnapdragonArray(snapArray);
                                                                                     roomImage.setReferenceTags(referenceTagArray);
                                                                                     roomImage.invalidate();
+                                                                                    progressBar.setVisibility(View.GONE);
                                                                                 } catch (Exception e) {
                                                                                     e.printStackTrace();
                                                                                 }
@@ -370,18 +374,19 @@ public class FindActivity extends ActionBarActivity {
 
                     }
                     else {
+                        Log.d("roomposition", Integer.toString(roomPosition));
 
                         noRooms.setVisibility(View.VISIBLE);
+                        Log.d("visibility",Integer.toString(noRooms.getVisibility()));
                         //Set item spinner value
                         sr.getIds("rfid", user, new Callback<ResponseBody>() {
                             @Override
                             public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
                                 try {
                                     String json = response.body().string();
-                                    System.out.println(json);
                                     Gson gson = new Gson();
                                     rfidArray = gson.fromJson(json, RFIDItem[].class);
-                                    Log.d("items", Integer.toString(rfidArray.length));
+//                                    Log.d("items", Integer.toString(rfidArray.length));
                                     ArrayAdapter<RFIDItem> adapter = new ArrayAdapter<RFIDItem>(getApplicationContext(),
                                             R.layout.spinner_dropdown_item, rfidArray);
 
