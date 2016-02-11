@@ -1,6 +1,7 @@
 package com.sniffit.sniffit.Activities;
 
 import android.app.Activity;
+import android.app.DialogFragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -24,6 +25,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.sniffit.sniffit.Dialogs.ConfirmDialogFragment;
 import com.sniffit.sniffit.Objects.Location;
 import com.sniffit.sniffit.Objects.RFIDItem;
 import com.sniffit.sniffit.Objects.ReferenceTag;
@@ -45,7 +47,7 @@ import retrofit.Retrofit;
 
 import com.google.gson.*;
 
-public class FindActivity extends ActionBarActivity {
+public class FindActivity extends ActionBarActivity implements ConfirmDialogFragment.ConfirmDialogListener {
 
     //passed in all activities
     User user;
@@ -96,6 +98,17 @@ public class FindActivity extends ActionBarActivity {
     Toast toast;
     int duration = Toast.LENGTH_SHORT;
     CharSequence text;
+
+    //confirm dialog listener methods
+    @Override
+    public void onDialogPositiveClick(DialogFragment dialog) {
+
+    }
+
+    @Override
+    public void onDialogNegativeClick(DialogFragment dialog) {
+        System.out.print("negative");
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -289,6 +302,10 @@ public class FindActivity extends ActionBarActivity {
                                                             findButton.setOnClickListener(new View.OnClickListener() {
                                                                 @Override
                                                                 public void onClick(View view) {
+                                                                    //Confirm dialog shown, not fully functional
+                                                                    DialogFragment dialog = new ConfirmDialogFragment();
+                                                                    dialog.show(getFragmentManager(), "confirm");
+
                                                                     if (itemPosition == -1) {
                                                                         context = getApplicationContext();
                                                                         text = "No items in database";
@@ -377,7 +394,7 @@ public class FindActivity extends ActionBarActivity {
                         Log.d("roomposition", Integer.toString(roomPosition));
 
                         noRooms.setVisibility(View.VISIBLE);
-                        Log.d("visibility",Integer.toString(noRooms.getVisibility()));
+                        Log.d("visibility", Integer.toString(noRooms.getVisibility()));
                         //Set item spinner value
                         sr.getIds("rfid", user, new Callback<ResponseBody>() {
                             @Override
