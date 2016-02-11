@@ -96,9 +96,11 @@ import com.sniffit.sniffit.R;
                     Toast toast = Toast.makeText(context, text, duration);
                     toast.show();
                 }
-                String name = tagName.getText().toString();
-                mListener.itemConfirm(AddItemDialogFragment.this, name.substring(0,1).toUpperCase() + name.substring(1),
-                        tagId.getText().toString(), flag, itemId);
+                else {
+                    String name = tagName.getText().toString();
+                    mListener.itemConfirm(AddItemDialogFragment.this, name.substring(0, 1).toUpperCase() + name.substring(1),
+                            tagId.getText().toString(), flag, itemId);
+                }
             }
         });
 
