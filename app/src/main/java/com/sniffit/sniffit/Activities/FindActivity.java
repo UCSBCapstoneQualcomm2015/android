@@ -1,6 +1,7 @@
 package com.sniffit.sniffit.Activities;
 
 import android.app.Activity;
+import android.app.DialogFragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -9,6 +10,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.DisplayMetrics;
@@ -24,6 +26,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.sniffit.sniffit.Dialogs.ConfirmDialogFragment;
 import com.sniffit.sniffit.Objects.Location;
 import com.sniffit.sniffit.Objects.RFIDItem;
 import com.sniffit.sniffit.Objects.ReferenceTag;
@@ -45,7 +48,11 @@ import retrofit.Retrofit;
 
 import com.google.gson.*;
 
-public class FindActivity extends ActionBarActivity {
+import com.github.amlcurran.showcaseview.ShowcaseView;
+import com.github.amlcurran.showcaseview.targets.Target;
+import com.github.amlcurran.showcaseview.targets.ViewTarget;
+
+public class FindActivity extends ActionBarActivity implements ConfirmDialogFragment.ConfirmDialogListener, View.OnClickListener{
 
     //passed in all activities
     User user;
@@ -66,6 +73,8 @@ public class FindActivity extends ActionBarActivity {
     //Buttons
     Button currentPage;
     Button findButton;
+    Button roomsButton;
+    Button itemsButton;
 
     //Map
     MapView roomImage;
@@ -97,6 +106,57 @@ public class FindActivity extends ActionBarActivity {
     int duration = Toast.LENGTH_SHORT;
     CharSequence text;
 
+    //ShowcaseView
+    private ShowcaseView showcaseView;
+    int counter = 0;
+
+    //confirm dialog listener methods
+    @Override
+    public void onDialogPositiveClick(DialogFragment dialog) {
+
+    }
+
+    @Override
+    public void onDialogNegativeClick(DialogFragment dialog) {
+        System.out.print("negative");
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (counter) {
+            case 0:
+                showcaseView.setShowcase(new ViewTarget(findButton), true);
+                showcaseView.setContentText("After selecting a room and item, click here to locate your item");
+                break;
+
+//            case 1:
+//                showcaseView.setShowcase(new ViewTarget(), true);
+//                break;
+//
+//            case 2:
+//                showcaseView.setTarget(Target.NONE);
+//                showcaseView.setContentTitle("Check it out");
+//                showcaseView.setContentText("You don't always need a target to showcase");
+//                showcaseView.setButtonText(getString(R.string.close));
+//                setAlpha(0.4f, textView1, textView2, textView3);
+//                break;
+//
+//            case 3:
+//                showcaseView.hide();
+//                setAlpha(1.0f, textView1, textView2, textView3);
+//                break;
+        }
+        counter++;
+    }
+
+    private void setAlpha(float alpha, View... views) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            for (View view : views) {
+                view.setAlpha(alpha);
+            }
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -107,6 +167,20 @@ public class FindActivity extends ActionBarActivity {
         mTitle.setText("Find");
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
+
+        roomsButton = (Button)findViewById(R.id.rooms_button);
+
+
+        showcaseView = new ShowcaseView.Builder(this)
+                .withMaterialShowcase()
+                .setTarget(new ViewTarget(roomsButton))
+                .setOnClickListener(this)
+                .build();
+        setAlpha(1f, roomsButton);
+        showcaseView.setButtonText("Next");
+        showcaseView.setContentTitle("Getting Started");
+        showcaseView.setContentText("Click here to register rooms as well as snapdragons and reference tags");
+
 
         findButton = (Button) findViewById(R.id.sniff_button);
 
@@ -289,6 +363,10 @@ public class FindActivity extends ActionBarActivity {
                                                             findButton.setOnClickListener(new View.OnClickListener() {
                                                                 @Override
                                                                 public void onClick(View view) {
+                                                                    //Confirm dialog shown, not fully functional
+                                                                    DialogFragment dialog = new ConfirmDialogFragment();
+                                                                    dialog.show(getFragmentManager(), "confirm");
+
                                                                     if (itemPosition == -1) {
                                                                         context = getApplicationContext();
                                                                         text = "No items in database";
@@ -377,7 +455,7 @@ public class FindActivity extends ActionBarActivity {
                         Log.d("roomposition", Integer.toString(roomPosition));
 
                         noRooms.setVisibility(View.VISIBLE);
-                        Log.d("visibility",Integer.toString(noRooms.getVisibility()));
+                        Log.d("visibility", Integer.toString(noRooms.getVisibility()));
                         //Set item spinner value
                         sr.getIds("rfid", user, new Callback<ResponseBody>() {
                             @Override
