@@ -30,7 +30,7 @@ package com.sniffit.sniffit.REST;
  * Created by andrewpang on 11/2/15.
  */
 public class ServerRequest {
-    
+
     private static final String base_url = "http://10.0.3.2:8080/";
     //private static final String base_url = "http://192.168.2.3";
 

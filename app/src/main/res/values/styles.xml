@@ -19,6 +19,8 @@
         <item name="android:itemTextAppearance">@style/OptionText</item>
         <item name="android:textViewStyle">@style/TextViewStyle</item>
         <item name="buttonStyle">@style/ButtonStyle</item>
+        <item name="showcaseViewStyle">@style/CustomShowcaseTheme</item>
+
         <!-- You can also set colorControlNormal, colorControlActivated
            colorControlHighlight and colorSwitchThumbNormal. -->
     </style>
@@ -43,5 +45,10 @@
         <item name="android:windowBackground">@drawable/splash_background</item>
     </style>
 
+    <style name="CustomShowcaseTheme" parent="ShowcaseView.Light">
+        <item name="sv_backgroundColor">#046ee5</item>
+        <item name="android:textColor">#ffffff</item>
+        <item name="android:alpha">0.1</item>
+    </style>
 
 </resources>
