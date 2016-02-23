@@ -31,7 +31,7 @@ package com.sniffit.sniffit.REST;
  */
 public class ServerRequest {
 
-    private static final String base_url = "http://10.0.3.2:8080/";
+    private static final String base_url = "http://52.34.215.175:8080/";
 
     //"http://ec2-52-27-212-208.us-west-2.compute.amazonaws.com/";
 

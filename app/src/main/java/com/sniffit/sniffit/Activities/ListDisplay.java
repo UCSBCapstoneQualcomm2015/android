@@ -311,6 +311,10 @@ public class ListDisplay extends AppCompatActivity implements AddItemDialogFragm
     @Override
     public void itemConfirm(DialogFragment dialog, String itemName, String itemId, int itemFlag, String oldId) {
         Log.d(itemName, itemId);
+        final Intent intent = new Intent(this, ListDisplay.class);
+        bundle.putInt("displayFlag", 2);
+        intent.putExtras(bundle);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         if (itemFlag == 1) {
             sr.postRFIDTag(user, itemId, itemName, new Callback<ResponseBody>() {
                 @Override
@@ -324,6 +328,7 @@ public class ListDisplay extends AppCompatActivity implements AddItemDialogFragm
                         CharSequence text = message;
                         Toast toast = Toast.makeText(context, text, duration);
                         toast.show();
+                        startActivity(intent);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -346,6 +351,7 @@ public class ListDisplay extends AppCompatActivity implements AddItemDialogFragm
                         CharSequence text = message;
                         Toast toast = Toast.makeText(context, text, duration);
                         toast.show();
+                        startActivity(intent);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -356,16 +362,16 @@ public class ListDisplay extends AppCompatActivity implements AddItemDialogFragm
                 }
             });
         }
-        Intent intent = new Intent(this, ListDisplay.class);
-        bundle.putInt("displayFlag", 2);
-        intent.putExtras(bundle);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(intent);
+
     }
 
     @Override
     public void roomConfirm(DialogFragment dialog, String roomName, String length, String width, int roomFlag, String oldRoomId) {
         Log.d(roomName, length);
+        final Intent intent = new Intent(this, ListDisplay.class);
+        bundle.putInt("displayFlag", 1);
+        intent.putExtras(bundle);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         if (roomFlag == 1) {
             sr.postRoom(user, roomName, width, length, new Callback<ResponseBody>() {
                 @Override
@@ -379,6 +385,7 @@ public class ListDisplay extends AppCompatActivity implements AddItemDialogFragm
                         CharSequence text = message;
                         Toast toast = Toast.makeText(context, text, duration);
                         toast.show();
+                        startActivity(intent);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -402,6 +409,7 @@ public class ListDisplay extends AppCompatActivity implements AddItemDialogFragm
                         CharSequence text = message;
                         Toast toast = Toast.makeText(context, text, duration);
                         toast.show();
+                        startActivity(intent);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -415,16 +423,16 @@ public class ListDisplay extends AppCompatActivity implements AddItemDialogFragm
 
 
 
-        Intent intent = new Intent(this, ListDisplay.class);
-        bundle.putInt("displayFlag", 1);
-        intent.putExtras(bundle);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(intent);
     }
 
     @Override
     public void snapdragonConfirm(DialogFragment dialog, String snapName, String ip, String xCoord, String yCoord, int snapFlag, String oldIp) {
         room = (Room) getIntent().getExtras().getSerializable("room");
+        final Intent intent = new Intent(this, ListDisplay.class);
+        bundle.putInt("displayFlag", 3);
+        bundle.putSerializable("room", room);
+        intent.putExtras(bundle);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         if (snapFlag == 1) {
             sr.postSnapdragon(user, snapName, room.get_id(), ip, xCoord, yCoord, new Callback<ResponseBody>() {
                 @Override
@@ -438,6 +446,7 @@ public class ListDisplay extends AppCompatActivity implements AddItemDialogFragm
                         CharSequence text = message;
                         Toast toast = Toast.makeText(context, text, duration);
                         toast.show();
+                        startActivity(intent);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -461,6 +470,7 @@ public class ListDisplay extends AppCompatActivity implements AddItemDialogFragm
                         CharSequence text = message;
                         Toast toast = Toast.makeText(context, text, duration);
                         toast.show();
+                        startActivity(intent);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -472,18 +482,18 @@ public class ListDisplay extends AppCompatActivity implements AddItemDialogFragm
                 }
             });
         }
-        Intent intent = new Intent(this, ListDisplay.class);
-        bundle.putInt("displayFlag", 3);
-        bundle.putSerializable("room", room);
-        intent.putExtras(bundle);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(intent);
+
         //would add it to the database here and reload the intent to update list
     }
 
     @Override
     public void refTagConfirm(DialogFragment dialog, String tagName, String tagId, String x, String y, int refFlag, String oldId)   {
         Log.d(tagName, tagId);
+        final Intent intent = new Intent(this, ListDisplay.class);
+        bundle.putInt("displayFlag", 4);
+        bundle.putSerializable("room", room);
+        intent.putExtras(bundle);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         if (refFlag == 1) {
             sr.postReferenceTag(user, tagName, room.get_id(), tagId, x, y, new Callback<ResponseBody>() {      //NEED TO THROW IN X AND Y
                 @Override
@@ -497,6 +507,8 @@ public class ListDisplay extends AppCompatActivity implements AddItemDialogFragm
                         CharSequence text = message;
                         Toast toast = Toast.makeText(context, text, duration);
                         toast.show();
+                        startActivity(intent);
+
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -522,6 +534,7 @@ public class ListDisplay extends AppCompatActivity implements AddItemDialogFragm
                         CharSequence text = message;
                         Toast toast = Toast.makeText(context, text, duration);
                         toast.show();
+                        startActivity(intent);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -534,12 +547,6 @@ public class ListDisplay extends AppCompatActivity implements AddItemDialogFragm
             });
         }
 
-        Intent intent = new Intent(this, ListDisplay.class);
-        bundle.putInt("displayFlag", 4);
-        bundle.putSerializable("room", room);
-        intent.putExtras(bundle);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(intent);
         //would add it to the database here and reload the intent to update list
     }
 
@@ -548,6 +555,10 @@ public class ListDisplay extends AppCompatActivity implements AddItemDialogFragm
     @Override
     public void roomDelete(DialogFragment dialog, String roomId) {
         Log.d("test3 ", roomId);
+        final Intent intent = new Intent(this, ListDisplay.class);
+        bundle.putInt("displayFlag", 1);
+        intent.putExtras(bundle);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         sr.deleteRoom(user, roomId, new Callback<ResponseBody>() {
             @Override
             public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
@@ -555,6 +566,8 @@ public class ListDisplay extends AppCompatActivity implements AddItemDialogFragm
                 final SharedPreferences.Editor editor = pref.edit();
                 editor.putInt("roomSpinnerPosition", -1);
                 editor.commit();
+                startActivity(intent);
+
             }
 
             @Override
@@ -563,41 +576,19 @@ public class ListDisplay extends AppCompatActivity implements AddItemDialogFragm
             }
         });
 
-        Intent intent = new Intent(this, ListDisplay.class);
-        bundle.putInt("displayFlag", 1);
-        intent.putExtras(bundle);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(intent);
     }
 
     @Override
     public void snapdragonDelete(DialogFragment dialog, String snapId) {
-        sr.deleteSnapdragon(user, snapId, new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
-
-            }
-
-            @Override
-            public void onFailure(Throwable t) {
-
-            }
-        });
-
-        Intent intent = new Intent(this, ListDisplay.class);
+        final Intent intent = new Intent(this, ListDisplay.class);
         bundle.putInt("displayFlag", 3);
         bundle.putSerializable("room", room);
         intent.putExtras(bundle);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(intent);
-    }
-
-    @Override
-    public void refTagDelete(DialogFragment dialog, String tagId) {
-        sr.deleteRefTag(user, tagId, new Callback<ResponseBody>() {
+        sr.deleteSnapdragon(user, snapId, new Callback<ResponseBody>() {
             @Override
             public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
-
+                startActivity(intent);
             }
 
             @Override
@@ -606,18 +597,36 @@ public class ListDisplay extends AppCompatActivity implements AddItemDialogFragm
             }
         });
 
-        Intent intent = new Intent(this, ListDisplay.class);
+    }
+
+    @Override
+    public void refTagDelete(DialogFragment dialog, String tagId) {
+        final Intent intent = new Intent(this, ListDisplay.class);
         bundle.putInt("displayFlag", 4);
         bundle.putSerializable("room", room);
         intent.putExtras(bundle);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(intent);
+        sr.deleteRefTag(user, tagId, new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
+                startActivity(intent);
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+
+            }
+        });
+
     }
 
     @Override
     public void itemDelete(DialogFragment dialog, String id) {
 
-
+        final Intent intent = new Intent(this, ListDisplay.class);
+        bundle.putInt("displayFlag", 2);
+        intent.putExtras(bundle);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         sr.deleteItem(user, id, new Callback<ResponseBody>() {
             @Override
             public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
@@ -625,6 +634,7 @@ public class ListDisplay extends AppCompatActivity implements AddItemDialogFragm
                 final SharedPreferences.Editor editor = pref.edit();
                 editor.putInt("itemSpinnerPosition", -1);
                 editor.commit();
+                startActivity(intent);
             }
 
             @Override
@@ -632,11 +642,6 @@ public class ListDisplay extends AppCompatActivity implements AddItemDialogFragm
 
             }
         });
-        Intent intent = new Intent(this, ListDisplay.class);
-        bundle.putInt("displayFlag", 2);
-        intent.putExtras(bundle);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(intent);
     }
 
 
