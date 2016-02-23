@@ -111,15 +111,7 @@ public class FindActivity extends ActionBarActivity implements ConfirmDialogFrag
     int counter = 0;
 
     //confirm dialog listener methods
-    @Override
-    public void onDialogPositiveClick(DialogFragment dialog) {
 
-    }
-
-    @Override
-    public void onDialogNegativeClick(DialogFragment dialog) {
-        System.out.print("negative");
-    }
 
     @Override
     public void onClick(View v) {
@@ -225,6 +217,10 @@ public class FindActivity extends ActionBarActivity implements ConfirmDialogFrag
                     roomSpinner.setAdapter(adapter);
 
                     roomPosition = pref.getInt("roomSpinnerPosition", -1);
+                    if (roomArray.length > 0 && roomPosition == -1) {
+                        roomPosition = 0;
+                    }
+                    Log.d(":<", Integer.toString(roomPosition));
                     if (roomPosition >= roomArray.length) {
                         if (roomArray.length == 0) {
                             roomPosition = -1;
@@ -242,6 +238,7 @@ public class FindActivity extends ActionBarActivity implements ConfirmDialogFrag
                         });
 
                     }
+
 
                     roomSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                         public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
@@ -364,43 +361,8 @@ public class FindActivity extends ActionBarActivity implements ConfirmDialogFrag
                                                                 @Override
                                                                 public void onClick(View view) {
                                                                     //Confirm dialog shown, not fully functional
-                                                                    DialogFragment dialog = new ConfirmDialogFragment();
+                                                                    DialogFragment dialog = ConfirmDialogFragment.newInstance(rfidArray[itemPosition].getName(), roomArray[roomPosition].getName());
                                                                     dialog.show(getFragmentManager(), "confirm");
-
-                                                                    if (itemPosition == -1) {
-                                                                        context = getApplicationContext();
-                                                                        text = "No items in database";
-                                                                        Toast toast = Toast.makeText(context, text, duration);
-                                                                        toast.show();
-                                                                    } else {
-                                                                        bundle.putSerializable("flag", 1);
-                                                                        progressBar.setVisibility(View.VISIBLE);
-                                                                        sr.findItem(user, roomArray[roomPosition].getName(), rfidArray[itemPosition].getName(), new Callback<ResponseBody>() {
-                                                                            @Override
-                                                                            public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
-                                                                                try {
-                                                                                    String json = response.body().string();
-                                                                                    Gson gson = new Gson();
-                                                                                    myLocation = gson.fromJson(json, Location.class);
-                                                                                    roomImage.setFlag(1);
-                                                                                    roomImage.setLocation(myLocation);
-                                                                                    roomImage.setRoom(roomArray[roomPosition]);
-                                                                                    roomImage.setSnapdragonArray(snapArray);
-                                                                                    roomImage.setReferenceTags(referenceTagArray);
-                                                                                    roomImage.invalidate();
-                                                                                    progressBar.setVisibility(View.GONE);
-                                                                                } catch (Exception e) {
-                                                                                    e.printStackTrace();
-                                                                                }
-                                                                            }
-
-                                                                            @Override
-                                                                            public void onFailure(Throwable t) {
-
-                                                                            }
-                                                                        });
-                                                                    }
-
 
                                                                 }
                                                             });
@@ -595,4 +557,47 @@ public class FindActivity extends ActionBarActivity implements ConfirmDialogFrag
         intent.putExtras(bundle);
         startActivity(intent);
     }
+
+
+    ////Confirm Dialog/////
+    @Override
+    public void onConfirmPositiveClick(DialogFragment dialog) {
+        if (itemPosition == -1) {
+            context = getApplicationContext();
+            text = "No items in database";
+            Toast toast = Toast.makeText(context, text, duration);
+            toast.show();
+        } else {
+            bundle.putSerializable("flag", 1);
+            progressBar.setVisibility(View.VISIBLE);
+            sr.findItem(user, roomArray[roomPosition].getName(), rfidArray[itemPosition].getName(), new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
+                    try {
+                        String json = response.body().string();
+                        Gson gson = new Gson();
+                        myLocation = gson.fromJson(json, Location.class);
+                        roomImage.setFlag(1);
+                        roomImage.setLocation(myLocation);
+                        roomImage.setRoom(roomArray[roomPosition]);
+                        roomImage.setSnapdragonArray(snapArray);
+                        roomImage.setReferenceTags(referenceTagArray);
+                        roomImage.invalidate();
+                        progressBar.setVisibility(View.GONE);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onFailure(Throwable t) {
+
+                }
+            });
+        }
+
+
+    }
+
+
 }
