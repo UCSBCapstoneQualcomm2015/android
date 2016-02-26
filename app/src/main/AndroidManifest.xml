@@ -62,6 +62,10 @@
             android:name=".Activities.RoomActivity"
             android:label="RoomActivity" >
         </activity>
+        <activity
+            android:name=".Activities.ItemActivity"
+            android:label="@string/title_activity_item" >
+        </activity>
     </application>
 
 </manifest>

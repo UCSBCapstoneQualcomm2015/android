@@ -94,9 +94,21 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
                         break;
                     case 2:         //updating one of the items (should edit it in the db)
-                        RFIDItem currItem = (RFIDItem) sniffitList.get(position);
-                        DialogFragment editItem = AddItemDialogFragment.newInstance(2, currItem.getName(), currItem.getTagId());       //SHOULD PASS IN NAME AND ID OF SNIFFITLIST.GET(POSITION)
-                        editItem.show(manager, "editItem");
+                        intent = new Intent(v.getContext(), ItemActivity.class);
+                        bundle = new Bundle();
+                        bundle.putSerializable("item",sniffitList.get(position));
+                        bundle.putSerializable("user", user);
+
+                        intent.putExtras(bundle);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        Activity itemActivity = (Activity) v.getContext();
+                        itemActivity.startActivity(intent);
+                        itemActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+
+
+//                        RFIDItem currItem = (RFIDItem) sniffitList.get(position);
+//                        DialogFragment editItem = AddItemDialogFragment.newInstance(2, currItem.getName(), currItem.getTagId());       //SHOULD PASS IN NAME AND ID OF SNIFFITLIST.GET(POSITION)
+//                        editItem.show(manager, "editItem");
                         break;
                     case 3:
                         Snapdragon curr = (Snapdragon) sniffitList.get(position);
