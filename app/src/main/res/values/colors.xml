@@ -3,5 +3,7 @@
 
     <item name="light_red" type="color">#db4437</item>
     <item name="dark_red" type="color">#c74338</item>
+    <item name="white" type="color">#FFFFFF</item>
+    <item name="baby_blue" type="color">#cdebf9</item>
 
 </resources>

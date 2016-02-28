@@ -17,5 +17,7 @@
     <string name="confirm">Confirm</string>
     <string name="delete">Delete</string>
     <string name="cancel">Cancel</string>
+    <string name="title_activity_splash">SplashActivity</string>
+    <string name="title_activity_item">ItemActivity</string>
 
 </resources>
