@@ -91,6 +91,14 @@ public class FindActivity extends ActionBarActivity implements ConfirmDialogFrag
     ProgressBar progressBar;
     RelativeLayout.LayoutParams imgParams;
     RelativeLayout mapLayout;
+    int TOP, LEFT, RIGHT, BOTTOM;
+    float width, length, scaledSize, diff, scaledXUnit, scaledYUnit;
+
+    Bitmap rfidMap;
+    Bitmap scaledRfid;
+    Bitmap snapMap;
+    Bitmap scaledSnap;
+    Resources res;
 
 
 
@@ -170,8 +178,7 @@ public class FindActivity extends ActionBarActivity implements ConfirmDialogFrag
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
 
-//<<<<<<< HEAD
-//=======
+
         roomsButton = (Button)findViewById(R.id.rooms_button);
         itemsButton = (Button)findViewById(R.id.items_button);
 
@@ -215,6 +222,13 @@ public class FindActivity extends ActionBarActivity implements ConfirmDialogFrag
         final SharedPreferences.Editor editor = pref.edit();
         firstLoad = true;
 
+        res = getApplicationContext().getResources();
+
+        rfidMap = BitmapFactory.decodeResource(res, R.mipmap.rfid_image);
+        scaledRfid = Bitmap.createScaledBitmap(rfidMap,
+                70, 70, false);
+        snapMap = BitmapFactory.decodeResource(res, R.mipmap.sensor_image);
+        scaledSnap = Bitmap.createScaledBitmap(snapMap, 70, 70, false);
 
         //Set Room Spinner values
         sr.getIds("rooms", user, new Callback<ResponseBody>() {
@@ -330,52 +344,8 @@ public class FindActivity extends ActionBarActivity implements ConfirmDialogFrag
                                                 roomImage.setReferenceTags(referenceTagArray);
 
                                                 roomImage.invalidate();
+                                                setupRoom();
 
-                                                roomImage.setOnClickListener(new View.OnClickListener() {
-                                                    public void onClick(View v) {
-                                                        CharSequence text = roomArray[roomPosition].getName() +
-                                                                " dimensions: " + roomArray[roomPosition].getWidth() +
-                                                                " x " + roomArray[roomPosition].getLength() ;
-
-                                                        Toast roomToast = Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT);
-                                                        roomToast.setGravity(Gravity.CENTER|Gravity.CENTER_HORIZONTAL, 0, 0);
-                                                        roomToast.show();
-                                                    }
-                                                });
-
-                                                ///SET IMAGES FOR REFERENCE TAGS AND SNAPDRAGONS
-
-//                                                roomImage.setVisibility(View.INVISIBLE);
-                                                mapLayout = (RelativeLayout) findViewById(R.id.layout2);
-
-                                                imgParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-                                                Resources res = getApplicationContext().getResources();
-                                                Bitmap rfidMap = BitmapFactory.decodeResource(res, R.mipmap.rfid_image);
-                                                Bitmap scaledRfid = Bitmap.createScaledBitmap(rfidMap,
-                                                        70, 70, false);
-                                                int TOP = 50;
-                                                int LEFT = 50;
-                                                int RIGHT = mapLayout.getRight() - 110;
-                                                int BOTTOM = mapLayout.getBottom() - 85 - 192;
-                                                float width = Float.parseFloat(roomArray[roomPosition].getWidth());
-                                                float length = Float.parseFloat(roomArray[roomPosition].getLength());
-                                                float diff;
-                                                float scaledSize;
-                                                if (length > width) {       //height > width: draw rect->top,
-                                                    scaledSize = BOTTOM * width / length;
-                                                    diff = (BOTTOM - scaledSize) / 2;
-                                                    LEFT += diff;
-                                                    RIGHT -= diff;
-                                                }
-                                                else {
-                                                    scaledSize = RIGHT * length/ width;
-                                                    diff = (RIGHT - scaledSize)/2;
-                                                    TOP += diff;
-                                                    BOTTOM -= diff;
-                                                }
-                                                float scaledXUnit = (RIGHT - LEFT)/width;
-                                                float scaledYUnit = (BOTTOM - TOP)/length;
-                                                addRefTags(scaledRfid, LEFT, BOTTOM, scaledXUnit, scaledYUnit);
 
 
                                                 //// ITEM STUFF ////
@@ -746,6 +716,7 @@ public class FindActivity extends ActionBarActivity implements ConfirmDialogFrag
                                                             roomImage.setSnapdragonArray(snapArray);
                                                             roomImage.setReferenceTags(referenceTagArray);
                                                             roomImage.invalidate();
+                                                            setupRoom();
                                                         } catch (Exception e) {
                                                             e.printStackTrace();
                                                         }
@@ -771,12 +742,13 @@ public class FindActivity extends ActionBarActivity implements ConfirmDialogFrag
                                     });
                                 }
                                 else if (currentRoom == roomPosition - 1) {
-                                    roomImage.setFlag(-1);
+                                    roomImage.setFlag(1);
                                     roomImage.setLocation(myLocation);
                                     roomImage.setRoom(roomArray[currentRoom]);
                                     roomImage.setSnapdragonArray(snapArray);
                                     roomImage.setReferenceTags(referenceTagArray);
                                     roomImage.invalidate();
+                                    setupRoom();
                                     progressBar.setVisibility(View.GONE);
                                 }
 
@@ -809,6 +781,7 @@ public class FindActivity extends ActionBarActivity implements ConfirmDialogFrag
                             roomImage.setSnapdragonArray(snapArray);
                             roomImage.setReferenceTags(referenceTagArray);
                             roomImage.invalidate();
+                            setupRoom();
                             progressBar.setVisibility(View.GONE);
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -822,6 +795,53 @@ public class FindActivity extends ActionBarActivity implements ConfirmDialogFrag
         }
 
 
+    }
+
+
+   //////////ADDING STUFF TO MAP/////////////////////
+
+    public void setupRoom() {
+        roomImage.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                CharSequence text = roomArray[roomPosition].getName() +
+                        " dimensions: " + roomArray[roomPosition].getWidth() +
+                        " x " + roomArray[roomPosition].getLength() ;
+
+                Toast roomToast = Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT);
+                roomToast.setGravity(Gravity.CENTER|Gravity.CENTER_HORIZONTAL, 0, 0);
+                roomToast.show();
+            }
+        });
+
+        mapLayout = (RelativeLayout) findViewById(R.id.layout2);
+
+        TOP = 50;
+        LEFT = 50;
+        RIGHT = mapLayout.getRight() - 110;
+        BOTTOM = mapLayout.getBottom() - 85 - 192;
+
+
+        width = Float.parseFloat(roomArray[roomPosition].getWidth());
+        length = Float.parseFloat(roomArray[roomPosition].getLength());
+
+        if (length > width) {       //height > width: draw rect->top,
+            scaledSize = BOTTOM * width / length;
+            diff = (BOTTOM - scaledSize) / 2;
+            LEFT += diff;
+            RIGHT -= diff;
+        }
+        else {
+            scaledSize = RIGHT * length/ width;
+            diff = (RIGHT - scaledSize)/2;
+            TOP += diff;
+            BOTTOM -= diff;
+        }
+        scaledXUnit = (RIGHT - LEFT)/width;
+        scaledYUnit = (BOTTOM - TOP)/length;
+        imgParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+
+        addRefTags(scaledRfid, LEFT, BOTTOM, scaledXUnit, scaledYUnit);
+        addSensors(scaledSnap, LEFT, BOTTOM, scaledXUnit, scaledYUnit);
     }
 
     public void addRefTags(Bitmap scaledRfid,float LEFT, float BOTTOM, float scaledXUnit, float scaledYUnit) {
@@ -849,6 +869,30 @@ public class FindActivity extends ActionBarActivity implements ConfirmDialogFrag
         }
     }
 
+    public void addSensors(Bitmap scaledSnap,float LEFT, float BOTTOM, float scaledXUnit, float scaledYUnit) {
+        for (int i = 0; i < snapArray.length; i++) {
+            ImageView v = new ImageView(getApplicationContext());
+            v.setImageBitmap(scaledSnap);
+            v.setX(LEFT + Float.parseFloat(snapArray[i].getxCoord()) * scaledXUnit - 35);
+            v.setY(BOTTOM - Float.parseFloat(snapArray[i].getyCoord()) * scaledYUnit - 35);
+            v.setClickable(true);
+            v.setVisibility(View.VISIBLE);
+            final int curr = i;
+
+            mapLayout.addView(v, imgParams);
+            v.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    CharSequence text = snapArray[curr].getName() +
+                            " (X: " + snapArray[curr].getxCoord() +
+                            ", Y: " + snapArray[curr].getyCoord() + ")";
+                    Toast refTagToast = Toast.makeText(getApplicationContext(),
+                            text, Toast.LENGTH_SHORT);
+                    refTagToast.setGravity(Gravity.CENTER|Gravity.CENTER_HORIZONTAL, 0, 0);
+                    refTagToast.show();
+                }
+            });
+        }
+    }
 
 
 }

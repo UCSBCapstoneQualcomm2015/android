@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.DialogFragment;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -16,11 +17,13 @@ import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBarActivity;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -56,6 +59,8 @@ public class RoomActivity extends ActionBarActivity implements AddRoomDialogFrag
     Bitmap scaled;
     Paint myPaint;
     Context context;
+    RelativeLayout mapLayout;
+    RelativeLayout.LayoutParams imgParams;
 
     int densityDpi;
     int h_px;
@@ -63,6 +68,18 @@ public class RoomActivity extends ActionBarActivity implements AddRoomDialogFrag
 
     Snapdragon[] snapdragonArray;
     ReferenceTag[] referenceTagArray;
+
+
+
+    int TOP, LEFT, RIGHT, BOTTOM;
+    float width, length, scaledSize, diff, scaledXUnit, scaledYUnit;
+
+    Bitmap rfidMap;
+    Bitmap scaledRfid;
+    Bitmap snapMap;
+    Bitmap scaledSnap;
+    Resources res;
+
 
     //    import android.graphics.Bitmap;
 //    import android.graphics.Canvas;
@@ -122,6 +139,14 @@ public class RoomActivity extends ActionBarActivity implements AddRoomDialogFrag
 
         final Bitmap bitmap = Bitmap.createBitmap(w_px, h_px, conf); // this creates a MUTABLE bitmap
 
+        res = getApplicationContext().getResources();
+
+        rfidMap = BitmapFactory.decodeResource(res, R.mipmap.rfid_image);
+        scaledRfid = Bitmap.createScaledBitmap(rfidMap,
+                70, 70, false);
+        snapMap = BitmapFactory.decodeResource(res, R.mipmap.sensor_image);
+        scaledSnap = Bitmap.createScaledBitmap(snapMap, 70, 70, false);
+
         sr.getRoomIds("snapdragon", user, room.get_id(), new Callback<ResponseBody>() {
             @Override
             public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
@@ -144,11 +169,14 @@ public class RoomActivity extends ActionBarActivity implements AddRoomDialogFrag
                                 referenceTagArray = gson.fromJson(json, ReferenceTag[].class);
                                 roomImage.setImageBitmap(bitmap);
                                 roomImage.setFlag(2);
-                                Log.d("hi","bye");
                                 roomImage.setRoom(room);
                                 roomImage.setSnapdragonArray(snapdragonArray);
                                 roomImage.setReferenceTags(referenceTagArray);
                                 roomImage.invalidate();
+                                setupRoom();
+
+
+
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
@@ -346,27 +374,100 @@ public class RoomActivity extends ActionBarActivity implements AddRoomDialogFrag
         startActivity(intent);
     }
 
+    /////////// POPULATE MAP ///////////
 
-    //////ROOM DISPLAY /////////
-    public static Bitmap drawableToBitmap (Drawable drawable) {
-        Bitmap bitmap = null;
+    public void setupRoom() {
+        roomImage.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                CharSequence text = room.getName() +
+                        " dimensions: " + room.getWidth() +
+                        " x " + room.getLength() ;
 
-        if (drawable instanceof BitmapDrawable) {
-            BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
-            if(bitmapDrawable.getBitmap() != null) {
-                return bitmapDrawable.getBitmap();
+                Toast roomToast = Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT);
+                roomToast.setGravity(Gravity.CENTER|Gravity.CENTER_HORIZONTAL, 0, 0);
+                roomToast.show();
             }
-        }
+        });
 
-        if(drawable.getIntrinsicWidth() <= 0 || drawable.getIntrinsicHeight() <= 0) {
-            bitmap = Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888); // Single color bitmap will be created of 1x1 pixel
-        } else {
-            bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
-        }
+        mapLayout = (RelativeLayout) findViewById(R.id.room_map);
 
-        Canvas canvas = new Canvas(bitmap);
-        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
-        drawable.draw(canvas);
-        return bitmap;
+        int TOP = 50;
+        int LEFT = 50;
+        int RIGHT = mapLayout.getRight() - 95;
+        int BOTTOM = mapLayout.getBottom() - 85 - (1711 - 930);
+
+        width = Float.parseFloat(room.getWidth());
+        length = Float.parseFloat(room.getLength());
+
+        if (length > width) {       //height > width: draw rect->top,
+            scaledSize = BOTTOM * width / length;
+            diff = (BOTTOM - scaledSize) / 2;
+            LEFT += diff;
+            RIGHT -= diff;
+        }
+        else {
+            scaledSize = RIGHT * length/ width;
+            diff = (RIGHT - scaledSize)/2;
+            TOP += diff;
+            BOTTOM -= diff;
+        }
+        scaledXUnit = (RIGHT - LEFT)/width;
+        scaledYUnit = (BOTTOM - TOP)/length;
+        imgParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+
+        addRefTags(scaledRfid, LEFT, BOTTOM, scaledXUnit, scaledYUnit);
+        addSensors(scaledSnap, LEFT, BOTTOM, scaledXUnit, scaledYUnit);
     }
+
+    public void addRefTags(Bitmap scaledRfid,float LEFT, float BOTTOM, float scaledXUnit, float scaledYUnit) {
+        for (int i = 0; i < referenceTagArray.length; i++) {
+            ImageView v = new ImageView(getApplicationContext());
+            v.setImageBitmap(scaledRfid);
+            v.setX(LEFT + Float.parseFloat(referenceTagArray[i].getX()) * scaledXUnit - 35);
+            v.setY(BOTTOM - Float.parseFloat(referenceTagArray[i].getY()) * scaledYUnit - 35);
+            v.setClickable(true);
+            v.setVisibility(View.VISIBLE);
+            final int curr = i;
+
+            mapLayout.addView(v, imgParams);
+            v.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    CharSequence text = referenceTagArray[curr].getName() +
+                            " (X: " + referenceTagArray[curr].getX() +
+                            ", Y: " + referenceTagArray[curr].getY() + ")";
+                    Toast refTagToast = Toast.makeText(getApplicationContext(),
+                            text, Toast.LENGTH_SHORT);
+                    refTagToast.setGravity(Gravity.CENTER|Gravity.CENTER_HORIZONTAL, 0, 0);
+                    refTagToast.show();
+                }
+            });
+        }
+    }
+
+    public void addSensors(Bitmap scaledSnap,float LEFT, float BOTTOM, float scaledXUnit, float scaledYUnit) {
+        for (int i = 0; i < snapdragonArray.length; i++) {
+            ImageView v = new ImageView(getApplicationContext());
+            v.setImageBitmap(scaledSnap);
+            v.setX(LEFT + Float.parseFloat(snapdragonArray[i].getxCoord()) * scaledXUnit - 35);
+            v.setY(BOTTOM - Float.parseFloat(snapdragonArray[i].getyCoord()) * scaledYUnit - 35);
+            v.setClickable(true);
+            v.setVisibility(View.VISIBLE);
+            final int curr = i;
+
+            mapLayout.addView(v, imgParams);
+            v.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    CharSequence text = snapdragonArray[curr].getName() +
+                            " (X: " + snapdragonArray[curr].getxCoord() +
+                            ", Y: " + snapdragonArray[curr].getyCoord() + ")";
+                    Toast refTagToast = Toast.makeText(getApplicationContext(),
+                            text, Toast.LENGTH_SHORT);
+                    refTagToast.setGravity(Gravity.CENTER|Gravity.CENTER_HORIZONTAL, 0, 0);
+                    refTagToast.show();
+                }
+            });
+        }
+    }
+
+
 }

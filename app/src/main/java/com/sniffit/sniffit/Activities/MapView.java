@@ -142,16 +142,21 @@ public class MapView extends ImageView {
         if (myFlag == 2 || myFlag == 1) {
 
             //ADD LEGEND
-            canvas.drawText("SENSORS: ",  ((LEFT + RIGHT)/2) - 400, TOP - 15, textPaint);
             Resources res = getResources();
+            Bitmap sensorMap = BitmapFactory.decodeResource(res, R.mipmap.sensor_image);
+            Bitmap scaledSensor = Bitmap.createScaledBitmap(sensorMap, 45, 45, false);
+
+
+            canvas.drawText("SENSORS: ",  ((LEFT + RIGHT)/2) - 400, TOP - 15, textPaint);
+            canvas.drawBitmap(scaledSensor, ((LEFT + RIGHT) / 2) - 160, TOP - 50, paintSnaps);
 
             Bitmap rfidMap = BitmapFactory.decodeResource(res, R.mipmap.rfid_image);
             Bitmap scaledRfid = Bitmap.createScaledBitmap(rfidMap,
                     45, 45, false);
-            canvas.drawCircle(((LEFT + RIGHT) / 2) - 50, TOP - 30, 15, paintSnaps);
 
-            canvas.drawText("REFERENCE TAGS: ", ((LEFT + RIGHT) / 2) + 40, TOP - 15, textPaint);
-            canvas.drawBitmap(scaledRfid, ((LEFT + RIGHT) / 2) + 420, TOP - 50, paintRefTags);
+
+            canvas.drawText("REFERENCE TAGS: ", ((LEFT + RIGHT) / 2) + 20, TOP - 15, textPaint);
+            canvas.drawBitmap(scaledRfid, ((LEFT + RIGHT) / 2) + 400, TOP - 50, paintRefTags);
 
             scaledRfid = Bitmap.createScaledBitmap(rfidMap,
                     70, 70, false);
@@ -184,21 +189,7 @@ public class MapView extends ImageView {
             scaledXUnit = (RIGHT - LEFT)/width;
             scaledYUnit = (BOTTOM - TOP)/length;
 
-                ////LOAD SNAPDRAGONS/////
-            for (int i = 0; i < snapdragons.length; i++) {
-                canvas.drawCircle(LEFT + Float.parseFloat(snapdragons[i].getxCoord()) * scaledXUnit, BOTTOM - Float.parseFloat(snapdragons[i].getyCoord()) * scaledYUnit, 30, paintSnaps);
-            }
 
-            /////LOAD REFERENCE TAGS///////
-
-            for (int i = 0; i < referenceTags.length; i++) {
-//                ImageView v = new ImageView(context);
-//                v.setImageBitmap(scaledRfid);
-//                v.setClickable(true);
-
-//              canvas.drawBitmap(scaledRfid, LEFT + Float.parseFloat(referenceTags[i].getX()) * scaledXUnit - 35, BOTTOM - Float.parseFloat(referenceTags[i].getY()) * scaledYUnit - 35, paintRefTags);
-//                canvas.drawCircle(LEFT + Float.parseFloat(referenceTags[i].getX()) * scaledXUnit, BOTTOM - Float.parseFloat(referenceTags[i].getY()) * scaledYUnit, 30, paintRefTags);
-            }
 
             if (myFlag == 1) {
                 if (Float.parseFloat(location.getxCoord()) != -1) {

@@ -12,8 +12,8 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/daily_logger"
-        tools:context=".DailyLogger"
+        android:id="@+id/room_map"
+        tools:context=".Sniffit"
         android:layout_above="@+id/footer"
         android:layout_below="@+id/header"
         android:paddingTop= "10dp"
