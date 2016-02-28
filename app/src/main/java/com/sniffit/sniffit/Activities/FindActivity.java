@@ -5,6 +5,7 @@ import android.app.DialogFragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -14,17 +15,21 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.sniffit.sniffit.Dialogs.ConfirmDialogFragment;
 import com.sniffit.sniffit.Objects.Location;
 import com.sniffit.sniffit.Objects.RFIDItem;
@@ -39,6 +44,7 @@ import com.squareup.okhttp.ResponseBody;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import retrofit.Callback;
@@ -76,6 +82,9 @@ public class FindActivity extends ActionBarActivity implements ConfirmDialogFrag
     Paint myPaint;
     int imageFlag;
     ProgressBar progressBar;
+    RelativeLayout.LayoutParams imgParams;
+    RelativeLayout mapLayout;
+
 
 
     //Scaling
@@ -113,6 +122,7 @@ public class FindActivity extends ActionBarActivity implements ConfirmDialogFrag
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
 
+
         findButton = (Button) findViewById(R.id.sniff_button);
 
         currentPage = (Button) findViewById(R.id.find_button);
@@ -149,10 +159,20 @@ public class FindActivity extends ActionBarActivity implements ConfirmDialogFrag
                     String json = response.body().string();
                     Gson gson = new Gson();
                     roomArray = gson.fromJson(json, Room[].class);
+                    Room allRooms = new Room();
+                    allRooms.setName("All Rooms");
+                    allRooms.setLength("-1");
+                    allRooms.setWidth("-1");
+                    ArrayList<Room> roomList = new ArrayList<Room>();
+                    for(Room e : roomArray)
+                        roomList.add(e);
+                    Log.d("before size", Integer.toString(roomList.size()));
+                    roomList.add(allRooms);
+                    Log.d("after size", Integer.toString(roomList.size()));
+                    roomArray = roomList.toArray(new Room[roomList.size()]);
                     ArrayAdapter<Room> adapter;
                     adapter = new ArrayAdapter<Room>(getApplicationContext(),
                             R.layout.spinner_dropdown_item, roomArray);
-
                     roomSpinner.setAdapter(adapter);
 
                     roomPosition = pref.getInt("roomSpinnerPosition", -1);
@@ -217,9 +237,8 @@ public class FindActivity extends ActionBarActivity implements ConfirmDialogFrag
 
 
                     //GET ROOM'S SNAPDRAGONS//
-                    if (roomPosition >= 0) {
+                    if (roomPosition >= 0 && roomArray[roomPosition].getName() != "All Rooms") {
                         //hi
-
                         sr.getRoomIds("snapdragon", user, roomArray[roomPosition].get_id(), new Callback<ResponseBody>() {
                             @Override
                             public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
@@ -246,6 +265,55 @@ public class FindActivity extends ActionBarActivity implements ConfirmDialogFrag
                                                 roomImage.setReferenceTags(referenceTagArray);
 
                                                 roomImage.invalidate();
+
+                                                roomImage.setOnClickListener(new View.OnClickListener() {
+                                                    public void onClick(View v) {
+                                                        CharSequence text = roomArray[roomPosition].getName() +
+                                                                " dimensions: " + roomArray[roomPosition].getWidth() +
+                                                                " x " + roomArray[roomPosition].getLength() ;
+
+                                                        Toast roomToast = Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT);
+                                                        roomToast.setGravity(Gravity.CENTER|Gravity.CENTER_HORIZONTAL, 0, 0);
+                                                        roomToast.show();
+                                                    }
+                                                });
+
+                                                ///SET IMAGES FOR REFERENCE TAGS AND SNAPDRAGONS
+
+//                                                roomImage.setVisibility(View.INVISIBLE);
+                                                mapLayout = (RelativeLayout) findViewById(R.id.layout2);
+
+                                                imgParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+                                                Resources res = getApplicationContext().getResources();
+                                                Bitmap rfidMap = BitmapFactory.decodeResource(res, R.mipmap.rfid_image);
+                                                Bitmap scaledRfid = Bitmap.createScaledBitmap(rfidMap,
+                                                        70, 70, false);
+                                                int TOP = 50;
+                                                int LEFT = 50;
+                                                int RIGHT = mapLayout.getRight() - 110;
+                                                int BOTTOM = mapLayout.getBottom() - 85 - 192;
+                                                float width = Float.parseFloat(roomArray[roomPosition].getWidth());
+                                                float length = Float.parseFloat(roomArray[roomPosition].getLength());
+                                                float diff;
+                                                float scaledSize;
+                                                if (length > width) {       //height > width: draw rect->top,
+                                                    scaledSize = BOTTOM * width / length;
+                                                    diff = (BOTTOM - scaledSize) / 2;
+                                                    LEFT += diff;
+                                                    RIGHT -= diff;
+                                                }
+                                                else {
+                                                    scaledSize = RIGHT * length/ width;
+                                                    diff = (RIGHT - scaledSize)/2;
+                                                    TOP += diff;
+                                                    BOTTOM -= diff;
+                                                }
+                                                float scaledXUnit = (RIGHT - LEFT)/width;
+                                                float scaledYUnit = (BOTTOM - TOP)/length;
+                                                addRefTags(scaledRfid, LEFT, BOTTOM, scaledXUnit, scaledYUnit);
+
+
+                                                //// ITEM STUFF ////
 
 
                                                 //Set item spinner value
@@ -278,7 +346,6 @@ public class FindActivity extends ActionBarActivity implements ConfirmDialogFrag
                                                             //fourth nest
 
 
-
                                                             itemSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                                                                 public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                                                                     editor.putInt("itemSpinnerPosition", itemSpinner.getSelectedItemPosition());
@@ -292,7 +359,6 @@ public class FindActivity extends ActionBarActivity implements ConfirmDialogFrag
                                                                     return;
                                                                 }
                                                             });
-
 
 
                                                             //Find Button click
@@ -321,9 +387,6 @@ public class FindActivity extends ActionBarActivity implements ConfirmDialogFrag
                                                 });
 
 
-
-
-
                                             } catch (Exception e) {
                                                 e.printStackTrace();
                                             }
@@ -335,7 +398,6 @@ public class FindActivity extends ActionBarActivity implements ConfirmDialogFrag
 
                                         }
                                     });
-
 
 
                                 } catch (Exception e) {
@@ -352,9 +414,66 @@ public class FindActivity extends ActionBarActivity implements ConfirmDialogFrag
 
 
                     }
+                    else if (roomPosition >= 0) {
+
+
+                                                //Set item spinner value
+                        sr.getIds("rfid", user, new Callback<ResponseBody>() {
+                            @Override
+                            public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
+                                try {
+                                    String json = response.body().string();
+                                    Gson gson = new Gson();
+                                    rfidArray = gson.fromJson(json, RFIDItem[].class);
+//                                                            Log.d("items", Integer.toString(rfidArray.length));
+                                    ArrayAdapter<RFIDItem> adapter = new ArrayAdapter<RFIDItem>(getApplicationContext(),
+                                            R.layout.spinner_dropdown_item, rfidArray);
+                                    itemPosition = pref.getInt("itemSpinnerPosition", -1);
+                                    if (itemPosition >= 0) {
+                                        itemSpinner.post(new Runnable() {
+                                                                    @Override
+                                                                    public void run() {itemSpinner.setSelection(itemPosition);}
+                                                                });
+                                                            }
+                                    itemSpinner.setAdapter(adapter);
+                                                            //fourth nest
+
+
+                                    itemSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                                        public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                                            editor.putInt("itemSpinnerPosition", itemSpinner.getSelectedItemPosition());
+                                            editor.commit();
+                                            imageFlag = -1;
+                                            return;
+                                        }
+
+                                        public void onNothingSelected(AdapterView<?> adapterView) {
+                                            return;
+                                        }
+                                    });
+
+
+                                                            //Find Button click
+                                    findButton.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View view) {//Confirm dialog shown, not fully functional
+                                            DialogFragment dialog = ConfirmDialogFragment.newInstance(rfidArray[itemPosition].getName(), roomArray[roomPosition].getName());
+                                            dialog.show(getFragmentManager(), "confirm");
+                                        }
+                                    });
+                                    firstLoad = false;
+
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                            @Override
+                            public void onFailure(Throwable t) {
+                            }
+                        });
+                    }
                     else {
                         Log.d("roomposition", Integer.toString(roomPosition));
-
                         noRooms.setVisibility(View.VISIBLE);
                         Log.d("visibility", Integer.toString(noRooms.getVisibility()));
                         //Set item spinner value
@@ -498,7 +617,20 @@ public class FindActivity extends ActionBarActivity implements ConfirmDialogFrag
     }
 
 
-    ////Confirm Dialog/////
+
+
+
+
+
+
+
+    ////CONFIRM DIALOG/////
+
+
+
+
+
+
     @Override
     public void onConfirmPositiveClick(DialogFragment dialog) {
         if (itemPosition == -1) {
@@ -509,34 +641,149 @@ public class FindActivity extends ActionBarActivity implements ConfirmDialogFrag
         } else {
             bundle.putSerializable("flag", 1);
             progressBar.setVisibility(View.VISIBLE);
-            sr.findItem(user, roomArray[roomPosition].getName(), rfidArray[itemPosition].getName(), new Callback<ResponseBody>() {
-                @Override
-                public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
-                    try {
-                        String json = response.body().string();
-                        Gson gson = new Gson();
-                        myLocation = gson.fromJson(json, Location.class);
-                        roomImage.setFlag(1);
-                        roomImage.setLocation(myLocation);
-                        roomImage.setRoom(roomArray[roomPosition]);
-                        roomImage.setSnapdragonArray(snapArray);
-                        roomImage.setReferenceTags(referenceTagArray);
-                        roomImage.invalidate();
+            //depending on text, for loop if text is all rooms
+            if (roomArray[roomPosition].getName() == "All Rooms") {
+                final boolean breakFlag = false;
+                for (int i = 0; i < roomPosition - 1; i ++) {   //MAY NEED TO CHANGE THIS
+                    if (myLocation.getxCoord() != "-1") {       //break as we found the item
                         progressBar.setVisibility(View.GONE);
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                        break;
                     }
-                }
+                    final int currentRoom = i;
+                    sr.findItem(user, roomArray[currentRoom].getName(), rfidArray[itemPosition].getName(), new Callback<ResponseBody>() {
+                        @Override
+                        public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
+                            try {
+                                String json = response.body().string();
+                                Gson gson = new Gson();
+                                myLocation = gson.fromJson(json, Location.class);
+                                if (myLocation.getxCoord() != "-1") {
+                                    sr.getRoomIds("snapdragon", user, roomArray[currentRoom].get_id(), new Callback<ResponseBody>() {
+                                        @Override
+                                        public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
+                                            try {
+                                                String json = response.body().string();
+                                                Gson gson = new Gson();
+                                                snapArray = gson.fromJson(json, Snapdragon[].class);
 
-                @Override
-                public void onFailure(Throwable t) {
+                                                //SECOND NEST
 
+                                                sr.getRoomIds("reference", user, roomArray[currentRoom].get_id(), new Callback<ResponseBody>() {
+                                                    @Override
+                                                    public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
+                                                        try {
+                                                            String json = response.body().string();
+                                                            Gson gson = new Gson();
+                                                            referenceTagArray = gson.fromJson(json, ReferenceTag[].class);
+                                                            roomImage.setFlag(1);
+                                                            roomImage.setLocation(myLocation);
+                                                            roomImage.setRoom(roomArray[currentRoom]);
+                                                            roomImage.setSnapdragonArray(snapArray);
+                                                            roomImage.setReferenceTags(referenceTagArray);
+                                                            roomImage.invalidate();
+                                                        } catch (Exception e) {
+                                                            e.printStackTrace();
+                                                        }
+                                                    }
+
+                                                    @Override
+                                                    public void onFailure(Throwable t) {
+                                                    }
+
+                                                });
+
+
+                                            } catch (Exception e) {
+                                                e.printStackTrace();
+                                            }
+
+                                        }
+
+                                        @Override
+                                        public void onFailure(Throwable t) {
+
+                                        }
+                                    });
+                                }
+                                else if (currentRoom == roomPosition - 1) {
+                                    roomImage.setFlag(-1);
+                                    roomImage.setLocation(myLocation);
+                                    roomImage.setRoom(roomArray[currentRoom]);
+                                    roomImage.setSnapdragonArray(snapArray);
+                                    roomImage.setReferenceTags(referenceTagArray);
+                                    roomImage.invalidate();
+                                    progressBar.setVisibility(View.GONE);
+                                }
+
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        @Override
+                        public void onFailure(Throwable t) {
+
+                        }
+                    });
                 }
-            });
+            }
+            else{
+                sr.findItem(user, roomArray[roomPosition].getName(), rfidArray[itemPosition].getName(), new Callback<ResponseBody>() {
+                    @Override
+                    public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
+                        try {
+                            String json = response.body().string();
+                            Gson gson = new Gson();
+                            myLocation = gson.fromJson(json, Location.class);
+                            if (myLocation.getxCoord() != "-1") {
+                                roomImage.setFlag(1);
+                            } else {
+                                roomImage.setFlag(-1);
+                            }
+                            roomImage.setLocation(myLocation);
+                            roomImage.setRoom(roomArray[roomPosition]);
+                            roomImage.setSnapdragonArray(snapArray);
+                            roomImage.setReferenceTags(referenceTagArray);
+                            roomImage.invalidate();
+                            progressBar.setVisibility(View.GONE);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    @Override
+                    public void onFailure(Throwable t) {
+                    }
+                });
+            }
         }
 
 
     }
+
+    public void addRefTags(Bitmap scaledRfid,float LEFT, float BOTTOM, float scaledXUnit, float scaledYUnit) {
+        for (int i = 0; i < referenceTagArray.length; i++) {
+            ImageView v = new ImageView(getApplicationContext());
+            v.setImageBitmap(scaledRfid);
+            v.setX(LEFT + Float.parseFloat(referenceTagArray[i].getX()) * scaledXUnit - 35);
+            v.setY(BOTTOM - Float.parseFloat(referenceTagArray[i].getY()) * scaledYUnit - 35);
+            v.setClickable(true);
+            v.setVisibility(View.VISIBLE);
+            final int curr = i;
+
+            mapLayout.addView(v, imgParams);
+            v.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    CharSequence text = referenceTagArray[curr].getName() +
+                            " (X: " + referenceTagArray[curr].getX() +
+                            ", Y: " + referenceTagArray[curr].getY() + ")";
+                    Toast refTagToast = Toast.makeText(getApplicationContext(),
+                            text, Toast.LENGTH_SHORT);
+                    refTagToast.setGravity(Gravity.CENTER|Gravity.CENTER_HORIZONTAL, 0, 0);
+                    refTagToast.show();
+                }
+            });
+        }
+    }
+
 
 
 }

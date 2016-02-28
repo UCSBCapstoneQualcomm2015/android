@@ -4,6 +4,9 @@ package com.sniffit.sniffit.Activities;
  * Created by sohanshah on 1/19/16.
  */
 import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
@@ -13,10 +16,13 @@ import android.graphics.RectF;
 import android.support.v4.view.MotionEventCompat;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -27,6 +33,8 @@ import com.sniffit.sniffit.Objects.Snapdragon;
 import com.sniffit.sniffit.REST.ServerRequest;
 import com.sniffit.sniffit.REST.User;
 import com.squareup.okhttp.ResponseBody;
+import com.sniffit.sniffit.R;
+
 
 import java.util.ArrayList;
 
@@ -51,7 +59,10 @@ public class MapView extends ImageView {
     float width;
     float scaledSize;
     float diff;
+
     float TOP;
+
+
     float BOTTOM;
     float LEFT;
     float RIGHT;
@@ -80,6 +91,7 @@ public class MapView extends ImageView {
     }
     public MapView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
+
         this.context = context;
         paint = new Paint();
         paint.setColor(Color.WHITE);
@@ -118,7 +130,8 @@ public class MapView extends ImageView {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         Log.d("flag:", Integer.toString(myFlag));
-
+        Log.d("check mapview right", Integer.toString(this.getRight()));
+        Log.d("check mapview bottom", Integer.toString(this.getBottom()));
 
         TOP = 50;
         LEFT = 50;
@@ -130,11 +143,18 @@ public class MapView extends ImageView {
 
             //ADD LEGEND
             canvas.drawText("SENSORS: ",  ((LEFT + RIGHT)/2) - 400, TOP - 15, textPaint);
+            Resources res = getResources();
+
+            Bitmap rfidMap = BitmapFactory.decodeResource(res, R.mipmap.rfid_image);
+            Bitmap scaledRfid = Bitmap.createScaledBitmap(rfidMap,
+                    45, 45, false);
             canvas.drawCircle(((LEFT + RIGHT) / 2) - 50, TOP - 30, 15, paintSnaps);
 
             canvas.drawText("REFERENCE TAGS: ", ((LEFT + RIGHT) / 2) + 40, TOP - 15, textPaint);
-            canvas.drawCircle(((LEFT + RIGHT) / 2) + 430, TOP - 30, 15, paintRefTags);
+            canvas.drawBitmap(scaledRfid, ((LEFT + RIGHT) / 2) + 420, TOP - 50, paintRefTags);
 
+            scaledRfid = Bitmap.createScaledBitmap(rfidMap,
+                    70, 70, false);
 
 
 
@@ -172,7 +192,12 @@ public class MapView extends ImageView {
             /////LOAD REFERENCE TAGS///////
 
             for (int i = 0; i < referenceTags.length; i++) {
-                canvas.drawCircle(LEFT + Float.parseFloat(referenceTags[i].getX()) * scaledXUnit, BOTTOM - Float.parseFloat(referenceTags[i].getY()) * scaledYUnit, 30, paintRefTags);
+//                ImageView v = new ImageView(context);
+//                v.setImageBitmap(scaledRfid);
+//                v.setClickable(true);
+
+//              canvas.drawBitmap(scaledRfid, LEFT + Float.parseFloat(referenceTags[i].getX()) * scaledXUnit - 35, BOTTOM - Float.parseFloat(referenceTags[i].getY()) * scaledYUnit - 35, paintRefTags);
+//                canvas.drawCircle(LEFT + Float.parseFloat(referenceTags[i].getX()) * scaledXUnit, BOTTOM - Float.parseFloat(referenceTags[i].getY()) * scaledYUnit, 30, paintRefTags);
             }
 
             if (myFlag == 1) {
@@ -185,6 +210,7 @@ public class MapView extends ImageView {
                 else {
                     CharSequence text = "Item not found in " + room.getName() ;
                     Toast toast = Toast.makeText(context, text, Toast.LENGTH_LONG);
+                    toast.setGravity(Gravity.CENTER|Gravity.CENTER_HORIZONTAL, 0, 0);
                     toast.show();
 
                 }
@@ -198,6 +224,8 @@ public class MapView extends ImageView {
 
 
     }
+
+
 
     ////////////NECESSARY SETTERS/////
     public void setFlag(int flag) {
@@ -217,5 +245,37 @@ public class MapView extends ImageView {
     }
 
     public void setLocation(Location location) {this.location = location;}
+
+    public float getTOP() {
+        return this.TOP;
+    }
+
+    public float getBOTTOM() {
+        return this.BOTTOM;
+    }
+
+    public float getLEFT() {
+        return this.LEFT;
+    }
+
+    public float getRIGHT() {
+        return this.RIGHT;
+    }
+
+    public float getScaledXUnit() {
+        return scaledXUnit;
+    }
+
+    public float getScaledYUnit() {
+        return scaledYUnit;
+    }
+
+    public float getL() {
+        return length;
+    }
+
+    public float getW() {
+        return width;
+    }
 
 }
