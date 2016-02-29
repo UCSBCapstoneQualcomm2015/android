@@ -33,8 +33,7 @@ import com.sniffit.sniffit.Objects.SniffitObject;
 import com.sniffit.sniffit.REST.ServerRequest;
 import com.squareup.okhttp.ResponseBody;
 import com.sniffit.sniffit.REST.User;
-import com.sniffit.sniffit.REST.ServerRequest;
-import com.squareup.okhttp.ResponseBody;
+
 
 import org.json.JSONObject;
 
@@ -170,7 +169,7 @@ public class ListDisplay extends AppCompatActivity implements AddItemDialogFragm
 
         else if (flag == SNAPDRAGON) {         //if we are adding a snapdragon (same with ref tag), we need to figure out way to add it to that specific room in db
             room = (Room) getIntent().getExtras().getSerializable("room");
-            header.setText("SENSORS (" + room.getName().substring(0,1).toUpperCase() + room.getName().substring(1) + ")");
+            header.setText("Sensors (" + room.getName().substring(0,1).toUpperCase() + room.getName().substring(1) + ")");
             Log.d("room", room.get_id());
             currentPage = (Button) findViewById(R.id.rooms_button);
             currentPage.setBackgroundColor(Color.parseColor("#294e6a"));

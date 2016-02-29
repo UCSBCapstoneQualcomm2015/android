@@ -44,6 +44,8 @@ import com.squareup.okhttp.Headers;
 import com.squareup.okhttp.ResponseBody;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -238,17 +240,18 @@ public class FindActivity extends ActionBarActivity implements ConfirmDialogFrag
                     String json = response.body().string();
                     Gson gson = new Gson();
                     roomArray = gson.fromJson(json, Room[].class);
-                    Room allRooms = new Room();
-                    allRooms.setName("All Rooms");
-                    allRooms.setLength("-1");
-                    allRooms.setWidth("-1");
-                    ArrayList<Room> roomList = new ArrayList<Room>();
-                    for(Room e : roomArray)
-                        roomList.add(e);
-                    Log.d("before size", Integer.toString(roomList.size()));
-                    roomList.add(allRooms);
-                    Log.d("after size", Integer.toString(roomList.size()));
-                    roomArray = roomList.toArray(new Room[roomList.size()]);
+                    if (roomArray.length > 0)  {
+                        Room allRooms = new Room();
+                        allRooms.setName("All Rooms");
+                        allRooms.setLength("-1");
+                        allRooms.setWidth("-1");
+                        ArrayList<Room> roomList = new ArrayList<Room>();
+                        for(Room e : roomArray)
+                            roomList.add(e);
+                        roomList.add(allRooms);
+                        roomArray = roomList.toArray(new Room[roomList.size()]);
+                    }
+
                     ArrayAdapter<Room> adapter;
                     adapter = new ArrayAdapter<Room>(getApplicationContext(),
                             R.layout.spinner_dropdown_item, roomArray);
@@ -764,10 +767,12 @@ public class FindActivity extends ActionBarActivity implements ConfirmDialogFrag
                 }
             }
             else{
+                Log.d("entry", "point");
                 sr.findItem(user, roomArray[roomPosition].getName(), rfidArray[itemPosition].getName(), new Callback<ResponseBody>() {
                     @Override
                     public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
                         try {
+                            Log.d("should", "go");
                             String json = response.body().string();
                             Gson gson = new Gson();
                             myLocation = gson.fromJson(json, Location.class);
@@ -783,13 +788,20 @@ public class FindActivity extends ActionBarActivity implements ConfirmDialogFrag
                             roomImage.invalidate();
                             setupRoom();
                             progressBar.setVisibility(View.GONE);
+                            Log.d("hi", "hi");
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
                     }
                     @Override
                     public void onFailure(Throwable t) {
+//                        StringWriter sw = new StringWriter();
+//                        PrintWriter pw = new PrintWriter(sw);
+//                        t.printStackTrace(pw);
+//                        Log.d("fail", sw.toString());
+                        Log.d("failure", "fail", t);
                     }
+
                 });
             }
         }
