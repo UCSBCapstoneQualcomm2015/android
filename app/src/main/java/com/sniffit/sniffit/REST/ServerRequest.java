@@ -5,9 +5,11 @@ package com.sniffit.sniffit.REST;
         import java.io.InputStream;
         import java.util.HashMap;
         import java.util.Map;
+        import java.util.concurrent.TimeUnit;
 
         import org.json.JSONObject;
 
+        import com.squareup.okhttp.*;
         import com.squareup.okhttp.Request;
         import com.squareup.okhttp.Response;
         import com.squareup.okhttp.ResponseBody;
@@ -43,9 +45,22 @@ public class ServerRequest {
     Request request;
     Response response;
     String jsonData = "";
+    OkHttpClient client;
+    Retrofit retrofit;
+
 
     public ServerRequest() {
+        client = new OkHttpClient();
+        client.setConnectTimeout(60, TimeUnit.SECONDS); // connect timeout
+        client.setReadTimeout(60, TimeUnit.SECONDS);    // socket timeout
+
+        retrofit = new Retrofit.Builder()
+                .baseUrl(base_url)
+                .client(client)
+                .build();
     }
+
+
 
     public interface apiInterface{
         //Authentication
@@ -138,9 +153,6 @@ public class ServerRequest {
     }
 
     public void authenticate(String request, String email, String password, retrofit.Callback<ResponseBody> callback){
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(base_url)
-                .build();
         apiInterface loginService = retrofit.create(apiInterface.class);
         switch (request.toLowerCase()) {
             case "login":
@@ -160,9 +172,6 @@ public class ServerRequest {
         API helper function for general GET requests, with a "request" parameter that chooses which api call to make
      */
     public void getIds(String request, User user, retrofit.Callback<ResponseBody> callback){
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(base_url)
-                .build();
         apiInterface apiService = retrofit.create(apiInterface.class);
 
         switch (request.toLowerCase()){
@@ -183,9 +192,6 @@ public class ServerRequest {
     API helper function for GET requests associated with a Room, which includes Snapdragons and Reference Tags
  */
     public void getRoomIds(String request, User user, String roomId, retrofit.Callback<ResponseBody> callback){
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(base_url)
-                .build();
         apiInterface apiService = retrofit.create(apiInterface.class);
 
         switch (request.toLowerCase()){
@@ -206,9 +212,6 @@ public class ServerRequest {
         API helper function for a specific id's GET request, with a "request" parameter that chooses which api call to make
      */
     public void getId(String request, String id, User user, retrofit.Callback<ResponseBody> callback){
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(base_url)
-                .build();
         apiInterface apiService = retrofit.create(apiInterface.class);
 
         switch (request.toLowerCase()){
@@ -239,9 +242,6 @@ public class ServerRequest {
         API helper function for DELETE requests, with a "request" parameter that chooses which api call to make
      */
     public void deleteId(String request, String id, User user, retrofit.Callback<ResponseBody> callback){
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(base_url)
-                .build();
         apiInterface apiService = retrofit.create(apiInterface.class);
 
         switch (request.toLowerCase()) {
@@ -271,9 +271,6 @@ public class ServerRequest {
         String tagId = myTagId;
         String name = myName;
 
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(base_url)
-                .build();
         apiInterface loginService = retrofit.create(apiInterface.class);
 
         Call<ResponseBody> rfidCall = loginService.postTag(user.getToken(), user.getUserId(), tagId, name);
@@ -283,9 +280,6 @@ public class ServerRequest {
 
     public void putRFIDTag(User user, String oldId, String tagId, String name, retrofit.Callback<ResponseBody> callback){
 
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(base_url)
-                .build();
         apiInterface loginService = retrofit.create(apiInterface.class);
 
         Call<ResponseBody> rfidCall = loginService.putTag(user.getToken(), user.getUserId(), oldId, tagId, name);
@@ -298,9 +292,6 @@ public class ServerRequest {
         String length = roomLength;
         String name = roomName;
 
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(base_url)
-                .build();
         apiInterface loginService = retrofit.create(apiInterface.class);
 
         Call<ResponseBody> rfidCall = loginService.postRoom(user.getToken(), user.getUserId(), name, length, width);
@@ -310,9 +301,6 @@ public class ServerRequest {
     public void putRoom(User user, String oldRoomId, String roomName, String width, String length,
                          retrofit.Callback<ResponseBody> callback){
 
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(base_url)
-                .build();
         apiInterface loginService = retrofit.create(apiInterface.class);
 
         Call<ResponseBody> rfidCall = loginService.putRoom(user.getToken(), user.getUserId(), oldRoomId, roomName, length, width);
@@ -321,9 +309,6 @@ public class ServerRequest {
 
     public void postSnapdragon(User user, String name, String roomId, String ipAddress, String xCoord, String yCoord, retrofit.Callback<ResponseBody> callback){
 
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(base_url)
-                .build();
         apiInterface loginService = retrofit.create(apiInterface.class);
 
         Call<ResponseBody> snapdragonCall = loginService.postSnapdragon(user.getToken(), user.getUserId(), name, roomId, ipAddress, xCoord, yCoord);
@@ -332,9 +317,6 @@ public class ServerRequest {
 
     public void putSnapdragon(User user, String oldIp, String name, String roomId, String ipAddress, String xCoord, String yCoord, retrofit.Callback<ResponseBody> callback){
 
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(base_url)
-                .build();
         apiInterface loginService = retrofit.create(apiInterface.class);
 
         Call<ResponseBody> snapdragonCall = loginService.putSnapdragon(user.getToken(), user.getUserId(), oldIp, name, roomId, ipAddress, xCoord, yCoord);
@@ -343,9 +325,6 @@ public class ServerRequest {
 
     public void postReferenceTag(User user, String tagName, String roomId, String tagId, String xCoord, String yCoord, retrofit.Callback<ResponseBody> callback){
 
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(base_url)
-                .build();
         apiInterface loginService = retrofit.create(apiInterface.class);
 
         Call<ResponseBody> snapdragonCall = loginService.postReferenceTag(user.getToken(), user.getUserId(), tagName, roomId, tagId, xCoord, yCoord);
@@ -354,9 +333,6 @@ public class ServerRequest {
 
     public void putReferenceTag(User user, String oldTagId, String tagName, String roomId, String tagId, String xCoord, String yCoord, retrofit.Callback<ResponseBody> callback){
 
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(base_url)
-                .build();
         apiInterface loginService = retrofit.create(apiInterface.class);
 
         Call<ResponseBody> snapdragonCall = loginService.putReferenceTag(user.getToken(), user.getUserId(), oldTagId, tagName, tagId, roomId, xCoord, yCoord);
@@ -366,9 +342,7 @@ public class ServerRequest {
 
     public void deleteRoom(User user, String roomId, retrofit.Callback<ResponseBody> callback) {
         String id = roomId;
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(base_url)
-                .build();
+
         apiInterface loginService = retrofit.create(apiInterface.class);
 
         Call<ResponseBody> roomCall = loginService.deleteRoom(user.getToken(), user.getUserId(), id);
@@ -378,10 +352,6 @@ public class ServerRequest {
 
     public void deleteSnapdragon(User user, String snapIp, retrofit.Callback<ResponseBody> callback) {
         String ip = snapIp;
-        Log.d("hi", ip);
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(base_url)
-                .build();
         apiInterface loginService = retrofit.create(apiInterface.class);
 
         Call<ResponseBody> snapCall = loginService.deleteSnapdragon(user.getToken(), user.getUserId(), ip);
@@ -390,9 +360,6 @@ public class ServerRequest {
 
     public void deleteRefTag(User user, String refId, retrofit.Callback<ResponseBody> callback) {       //CHECK API CALL HERE: MAY BE WRONG
         String id = refId;
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(base_url)
-                .build();
         apiInterface loginService = retrofit.create(apiInterface.class);
 
         Call<ResponseBody> refTagCall = loginService.deleteReferenceTag(user.getToken(), user.getUserId(), id);
@@ -401,9 +368,6 @@ public class ServerRequest {
 
     public void deleteItem(User user, String itemId, retrofit.Callback<ResponseBody> callback) {       //CHECK API CALL HERE: MAY BE WRONG
         String id = itemId;
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(base_url)
-                .build();
         apiInterface loginService = retrofit.create(apiInterface.class);
 
         Call<ResponseBody> refTagCall = loginService.deleteTag(user.getToken(), user.getUserId(), id);
@@ -413,9 +377,6 @@ public class ServerRequest {
     public void findItem(User user, String roomName, String itemName, retrofit.Callback<ResponseBody> callback) {
         String item = itemName;
         String room = roomName;
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(base_url)
-                .build();
         apiInterface loginService = retrofit.create(apiInterface.class);
         Call<ResponseBody> findCall = loginService.find(user.getToken(),user.getUserId(), item, room);
         findCall.enqueue(callback);
