@@ -14,13 +14,16 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.sniffit.sniffit.Dialogs.AddItemDialogFragment;
 import com.sniffit.sniffit.Dialogs.AddRoomDialogFragment;
+import com.sniffit.sniffit.Objects.History;
 import com.sniffit.sniffit.Objects.RFIDItem;
 import com.sniffit.sniffit.Objects.ReferenceTag;
 import com.sniffit.sniffit.Objects.Room;
@@ -31,6 +34,9 @@ import com.sniffit.sniffit.REST.User;
 import com.squareup.okhttp.ResponseBody;
 
 import org.json.JSONObject;
+
+import java.io.IOException;
+import java.util.ArrayList;
 
 import retrofit.Callback;
 import retrofit.Response;
@@ -64,6 +70,47 @@ public class ItemActivity extends ActionBarActivity implements AddItemDialogFrag
         headerTitle.setText(item.getName());
         bundle = new Bundle();
         bundle.putSerializable("user", user);
+
+        final ListView listview = (ListView) findViewById(R.id.listview);
+
+//        ArrayList<History> historyArrayList = new ArrayList<History>();
+//        History he = new History();
+//        he.setCreated_at("aslkdfj;lks");
+//        he.setxCoord("3");
+//        he.setyCoord("4");
+//        he.setRoomId("alksfdj;");
+//        he.setTagId("aslkfj");
+//        historyArrayList.add(he);
+//        final HistoryAdapter adapter = new HistoryAdapter(getApplicationContext(),
+//                R.layout.history_card, historyArrayList);
+//        listview.setAdapter(adapter);
+
+        sr.getId("history", item.getTagId(), user, new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
+                try {
+                    History[] historyArray;
+                    String json = response.body().string();
+                    Gson gson = new Gson();
+                    historyArray = gson.fromJson(json, History[].class);
+                    ArrayList<History> historyArrayList = new ArrayList<History>();
+                    for(History h: historyArray){
+                        historyArrayList.add(h);
+                    }
+                    final HistoryAdapter adapter = new HistoryAdapter(getApplicationContext(),
+                            R.layout.history_card, historyArrayList);
+                    listview.setAdapter(adapter);
+
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+
+            }
+        });
 
     }
 

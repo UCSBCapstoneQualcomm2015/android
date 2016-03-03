@@ -32,6 +32,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.sniffit.sniffit.Dialogs.ConfirmDialogFragment;
+import com.sniffit.sniffit.Objects.History;
 import com.sniffit.sniffit.Objects.Location;
 import com.sniffit.sniffit.Objects.RFIDItem;
 import com.sniffit.sniffit.Objects.ReferenceTag;
@@ -802,7 +803,48 @@ public class FindActivity extends ActionBarActivity implements ConfirmDialogFrag
 //                        PrintWriter pw = new PrintWriter(sw);
 //                        t.printStackTrace(pw);
 //                        Log.d("fail", sw.toString());
-                        Log.d("failure", "fail", t);
+                        sr.getId("history", rfidArray[itemPosition].getTagId(), user, new Callback<ResponseBody>() {
+                            @Override
+                            public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
+                                try {
+                                    Log.d("fail", "should still work");
+                                    History[] historyArray;
+                                    String json = response.body().string();
+                                    Gson gson = new Gson();
+                                    historyArray = gson.fromJson(json, History[].class);
+                                    History last = historyArray[historyArray.length - 1];
+                                    myLocation = new Location();
+                                    myLocation.setxCoord(last.getxCoord());
+                                    myLocation.setyCoord(last.getyCoord());
+                                    if (myLocation.getxCoord() == "-1") {
+                                        roomImage.setFlag(1);
+                                    }
+                                    else if (myLocation.getxCoord() == "-2") {
+                                        roomImage.setFlag(1);
+                                    }
+                                    else {
+                                        roomImage.setFlag(1);
+                                    }
+                                    roomImage.setLocation(myLocation);
+                                    roomImage.setRoom(roomArray[roomPosition]);
+                                    roomImage.setSnapdragonArray(snapArray);
+                                    roomImage.setReferenceTags(referenceTagArray);
+                                    roomImage.invalidate();
+                                    setupRoom();
+                                    progressBar.setVisibility(View.GONE);
+
+
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Throwable t) {
+
+                            }
+                        });
+
                     }
 
                 });

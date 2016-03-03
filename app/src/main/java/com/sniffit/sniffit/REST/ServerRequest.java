@@ -33,8 +33,10 @@ package com.sniffit.sniffit.REST;
  */
 public class ServerRequest {
 
+
 //    private static final String base_url = "http://192.168.1.3:8080/";
     private static final String base_url = "http://192.168.1.2:8080/";
+
 
     //"http://ec2-52-27-212-208.us-west-2.compute.amazonaws.com/";
 
@@ -149,6 +151,8 @@ public class ServerRequest {
         @POST("api/user/{user_id}/find/")
         Call<ResponseBody> find(@Header("x-access-token") String token, @Path("user_id") String userId, @Field("name") String name, @Field("roomName") String roomName);
 
+        @GET("api/user/{user_id}/history/{ref_tagId}")
+        Call<ResponseBody> getHistory(@Header("x-access-token") String token, @Path("user_id") String userId, @Path("ref_tagId") String tagId);
 
     }
 
@@ -233,6 +237,11 @@ public class ServerRequest {
             case "reference":
                 Call<ResponseBody> getReferenceCall = apiService.getSnapdragon(user.getToken(), user.getUserId(), id);
                 getReferenceCall.enqueue(callback);
+                break;
+
+            case "history":
+                Call<ResponseBody> getHistoryCall = apiService.getHistory(user.getToken(), user.getUserId(), id);
+                getHistoryCall.enqueue(callback);
                 break;
         }
 

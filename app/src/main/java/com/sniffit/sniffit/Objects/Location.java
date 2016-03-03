@@ -7,6 +7,14 @@ import java.io.Serializable;
  */
 public class Location implements Serializable{
 
+    public void setyCoord(String yCoord) {
+        this.yCoord = yCoord;
+    }
+
+    public void setxCoord(String xCoord) {
+        this.xCoord = xCoord;
+    }
+
     String yCoord;
     String xCoord;
 
