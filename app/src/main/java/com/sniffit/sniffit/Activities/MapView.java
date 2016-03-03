@@ -192,19 +192,25 @@ public class MapView extends ImageView {
 
 
             if (myFlag == 1) {
-                if (Float.parseFloat(location.getxCoord()) != -1) {
+                if (Float.parseFloat(location.getxCoord()) == -1) {
+                    CharSequence text = "Item not found in " + room.getName() ;
+                    Toast toast = Toast.makeText(context, text, Toast.LENGTH_LONG);
+                    toast.setGravity(Gravity.CENTER | Gravity.CENTER_HORIZONTAL, 0, 0);
+                    toast.show();
+                }
+                else if (Float.parseFloat(location.getxCoord()) == -2) {
+                    CharSequence text = "Item exists in " + room.getName() + " but location could not be gathered." ;
+                    Toast toast = Toast.makeText(context, text, Toast.LENGTH_LONG);
+                    toast.setGravity(Gravity.CENTER | Gravity.CENTER_HORIZONTAL, 0, 0);
+                    toast.show();
+                }
+                else {
                     canvas.drawCircle(LEFT + Float.parseFloat(location.getxCoord()) * scaledXUnit, BOTTOM - Float.parseFloat(location.getyCoord()) * scaledYUnit, 50, locationPaint);
                     canvas.drawCircle(LEFT + Float.parseFloat(location.getxCoord()) * scaledXUnit, BOTTOM - Float.parseFloat(location.getyCoord()) * scaledYUnit, 75, locationPaint);
                     canvas.drawCircle(LEFT + Float.parseFloat(location.getxCoord()) * scaledXUnit, BOTTOM - Float.parseFloat(location.getyCoord()) * scaledYUnit, 100, locationPaint);
 
                 }
-                else {
-                    CharSequence text = "Item not found in " + room.getName() ;
-                    Toast toast = Toast.makeText(context, text, Toast.LENGTH_LONG);
-                    toast.setGravity(Gravity.CENTER|Gravity.CENTER_HORIZONTAL, 0, 0);
-                    toast.show();
 
-                }
             }
 
 

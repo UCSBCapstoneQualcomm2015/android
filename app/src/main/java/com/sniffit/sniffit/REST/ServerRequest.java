@@ -33,7 +33,7 @@ package com.sniffit.sniffit.REST;
  */
 public class ServerRequest {
 
-//    private static final String base_url = "http://10.0.3.2:8080/";
+//    private static final String base_url = "http://192.168.1.3:8080/";
     private static final String base_url = "http://192.168.1.2:8080/";
 
     //"http://ec2-52-27-212-208.us-west-2.compute.amazonaws.com/";
@@ -51,8 +51,8 @@ public class ServerRequest {
 
     public ServerRequest() {
         client = new OkHttpClient();
-        client.setConnectTimeout(60, TimeUnit.SECONDS); // connect timeout
-        client.setReadTimeout(60, TimeUnit.SECONDS);    // socket timeout
+        client.setConnectTimeout(180, TimeUnit.SECONDS); // connect timeout
+        client.setReadTimeout(180, TimeUnit.SECONDS);    // socket timeout
 
         retrofit = new Retrofit.Builder()
                 .baseUrl(base_url)

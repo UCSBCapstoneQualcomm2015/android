@@ -389,6 +389,7 @@ public class FindActivity extends ActionBarActivity implements ConfirmDialogFrag
                                                                     editor.putInt("itemSpinnerPosition", itemSpinner.getSelectedItemPosition());
                                                                     editor.commit();
                                                                     imageFlag = -1;
+                                                                    itemPosition = itemSpinner.getSelectedItemPosition();
 
                                                                     return;
                                                                 }
@@ -772,14 +773,17 @@ public class FindActivity extends ActionBarActivity implements ConfirmDialogFrag
                     @Override
                     public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
                         try {
-                            Log.d("should", "go");
                             String json = response.body().string();
                             Gson gson = new Gson();
                             myLocation = gson.fromJson(json, Location.class);
-                            if (myLocation.getxCoord() != "-1") {
+                            if (myLocation.getxCoord() == "-1") {
                                 roomImage.setFlag(1);
-                            } else {
-                                roomImage.setFlag(-1);
+                            }
+                            else if (myLocation.getxCoord() == "-2") {
+                                roomImage.setFlag(1);
+                            }
+                            else {
+                                roomImage.setFlag(1);
                             }
                             roomImage.setLocation(myLocation);
                             roomImage.setRoom(roomArray[roomPosition]);
@@ -788,7 +792,6 @@ public class FindActivity extends ActionBarActivity implements ConfirmDialogFrag
                             roomImage.invalidate();
                             setupRoom();
                             progressBar.setVisibility(View.GONE);
-                            Log.d("hi", "hi");
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
