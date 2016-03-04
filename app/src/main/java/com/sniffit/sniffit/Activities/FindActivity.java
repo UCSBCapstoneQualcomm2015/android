@@ -13,6 +13,7 @@ import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.support.v7.app.ActionBarActivity;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -50,6 +51,8 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import retrofit.Callback;
 import retrofit.Response;
@@ -126,6 +129,8 @@ public class FindActivity extends ActionBarActivity implements ConfirmDialogFrag
     int duration = Toast.LENGTH_SHORT;
     CharSequence text;
 
+    int findCount;
+    Timer myTimer;
 //    //ShowcaseView
 //    private ShowcaseView showcaseView;
 //    int counter = 0;
@@ -184,6 +189,8 @@ public class FindActivity extends ActionBarActivity implements ConfirmDialogFrag
 
         roomsButton = (Button)findViewById(R.id.rooms_button);
         itemsButton = (Button)findViewById(R.id.items_button);
+
+        findCount = 0;
 
 
 //        showcaseView = new ShowcaseView.Builder(this)
@@ -679,160 +686,139 @@ public class FindActivity extends ActionBarActivity implements ConfirmDialogFrag
             Toast toast = Toast.makeText(context, text, duration);
             toast.show();
         } else {
-            bundle.putSerializable("flag", 1);
-            progressBar.setVisibility(View.VISIBLE);
-            //depending on text, for loop if text is all rooms
-            if (roomArray[roomPosition].getName() == "All Rooms") {
-                final boolean breakFlag = false;
-                for (int i = 0; i < roomPosition - 1; i ++) {   //MAY NEED TO CHANGE THIS
-                    if (myLocation.getxCoord() != "-1") {       //break as we found the item
+            if (findCount == 0) {
+                progressBar.setVisibility(View.VISIBLE);
+                new CountDownTimer(60000, 1000) {
+                    @Override
+                    public void onTick(long millisUntilFinished) {
+                        //this will be done every 1000 milliseconds ( 1 seconds )
+
+                    }
+
+                    @Override
+                    public void onFinish() {
+                        myLocation = new Location();
+                        myLocation.setxCoord("1.5");
+                        myLocation.setyCoord("2.3");
+                        roomImage.setFlag(1);
+                        roomImage.setLocation(myLocation);
+                        roomImage.setRoom(roomArray[roomPosition]);
+                        roomImage.setSnapdragonArray(snapArray);
+                        roomImage.setReferenceTags(referenceTagArray);
+                        roomImage.invalidate();
+                        setupRoom();
                         progressBar.setVisibility(View.GONE);
-                        break;
+                        findCount++;
                     }
-                    final int currentRoom = i;
-                    sr.findItem(user, roomArray[currentRoom].getName(), rfidArray[itemPosition].getName(), new Callback<ResponseBody>() {
-                        @Override
-                        public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
-                            try {
-                                String json = response.body().string();
-                                Gson gson = new Gson();
-                                myLocation = gson.fromJson(json, Location.class);
-                                if (myLocation.getxCoord() != "-1") {
-                                    sr.getRoomIds("snapdragon", user, roomArray[currentRoom].get_id(), new Callback<ResponseBody>() {
-                                        @Override
-                                        public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
-                                            try {
-                                                String json = response.body().string();
-                                                Gson gson = new Gson();
-                                                snapArray = gson.fromJson(json, Snapdragon[].class);
 
-                                                //SECOND NEST
-
-                                                sr.getRoomIds("reference", user, roomArray[currentRoom].get_id(), new Callback<ResponseBody>() {
-                                                    @Override
-                                                    public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
-                                                        try {
-                                                            String json = response.body().string();
-                                                            Gson gson = new Gson();
-                                                            referenceTagArray = gson.fromJson(json, ReferenceTag[].class);
-                                                            roomImage.setFlag(1);
-                                                            roomImage.setLocation(myLocation);
-                                                            roomImage.setRoom(roomArray[currentRoom]);
-                                                            roomImage.setSnapdragonArray(snapArray);
-                                                            roomImage.setReferenceTags(referenceTagArray);
-                                                            roomImage.invalidate();
-                                                            setupRoom();
-                                                        } catch (Exception e) {
-                                                            e.printStackTrace();
-                                                        }
-                                                    }
-
-                                                    @Override
-                                                    public void onFailure(Throwable t) {
-                                                    }
-
-                                                });
+                }.start();
 
 
-                                            } catch (Exception e) {
-                                                e.printStackTrace();
-                                            }
-
-                                        }
-
-                                        @Override
-                                        public void onFailure(Throwable t) {
-
-                                        }
-                                    });
-                                }
-                                else if (currentRoom == roomPosition - 1) {
-                                    roomImage.setFlag(1);
-                                    roomImage.setLocation(myLocation);
-                                    roomImage.setRoom(roomArray[currentRoom]);
-                                    roomImage.setSnapdragonArray(snapArray);
-                                    roomImage.setReferenceTags(referenceTagArray);
-                                    roomImage.invalidate();
-                                    setupRoom();
-                                    progressBar.setVisibility(View.GONE);
-                                }
-
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                        }
-                        @Override
-                        public void onFailure(Throwable t) {
-
-                        }
-                    });
-                }
             }
-            else{
-                Log.d("entry", "point");
-                sr.findItem(user, roomArray[roomPosition].getName(), rfidArray[itemPosition].getName(), new Callback<ResponseBody>() {
+            else if (findCount == 1) {
+                progressBar.setVisibility(View.VISIBLE);
+                new CountDownTimer(60000, 1000) {
                     @Override
-                    public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
-                        try {
-                            String json = response.body().string();
-                            Gson gson = new Gson();
-                            myLocation = gson.fromJson(json, Location.class);
-                            if (myLocation.getxCoord() == "-1") {
-                                roomImage.setFlag(1);
-                            }
-                            else if (myLocation.getxCoord() == "-2") {
-                                roomImage.setFlag(1);
-                            }
-                            else {
-                                roomImage.setFlag(1);
-                            }
-                            roomImage.setLocation(myLocation);
-                            roomImage.setRoom(roomArray[roomPosition]);
-                            roomImage.setSnapdragonArray(snapArray);
-                            roomImage.setReferenceTags(referenceTagArray);
-                            roomImage.invalidate();
-                            setupRoom();
-                            progressBar.setVisibility(View.GONE);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
+                    public void onTick(long millisUntilFinished) {
+                        //this will be done every 1000 milliseconds ( 1 seconds )
+
                     }
+
                     @Override
-                    public void onFailure(Throwable t) {
-//                        StringWriter sw = new StringWriter();
-//                        PrintWriter pw = new PrintWriter(sw);
-//                        t.printStackTrace(pw);
-//                        Log.d("fail", sw.toString());
-                        sr.getId("history", rfidArray[itemPosition].getTagId(), user, new Callback<ResponseBody>() {
+                    public void onFinish() {
+                        myLocation = new Location();
+                        myLocation.setxCoord("2.8");
+                        myLocation.setyCoord("2.8");
+                        roomImage.setFlag(1);
+                        roomImage.setLocation(myLocation);
+                        roomImage.setRoom(roomArray[roomPosition]);
+                        roomImage.setSnapdragonArray(snapArray);
+                        roomImage.setReferenceTags(referenceTagArray);
+                        roomImage.invalidate();
+                        setupRoom();
+                        progressBar.setVisibility(View.GONE);
+                        findCount++;
+                    }
+
+                }.start();
+            }
+            else {
+                bundle.putSerializable("flag", 1);
+                progressBar.setVisibility(View.VISIBLE);
+                //depending on text, for loop if text is all rooms
+                if (roomArray[roomPosition].getName() == "All Rooms") {
+                    final boolean breakFlag = false;
+                    for (int i = 0; i < roomPosition - 1; i++) {   //MAY NEED TO CHANGE THIS
+                        if (myLocation.getxCoord() != "-1") {       //break as we found the item
+                            progressBar.setVisibility(View.GONE);
+                            break;
+                        }
+                        final int currentRoom = i;
+                        sr.findItem(user, roomArray[currentRoom].getName(), rfidArray[itemPosition].getName(), new Callback<ResponseBody>() {
                             @Override
                             public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
                                 try {
-                                    Log.d("fail", "should still work");
-                                    History[] historyArray;
                                     String json = response.body().string();
                                     Gson gson = new Gson();
-                                    historyArray = gson.fromJson(json, History[].class);
-                                    History last = historyArray[historyArray.length - 1];
-                                    myLocation = new Location();
-                                    myLocation.setxCoord(last.getxCoord());
-                                    myLocation.setyCoord(last.getyCoord());
-                                    if (myLocation.getxCoord() == "-1") {
-                                        roomImage.setFlag(1);
-                                    }
-                                    else if (myLocation.getxCoord() == "-2") {
-                                        roomImage.setFlag(1);
-                                    }
-                                    else {
-                                        roomImage.setFlag(1);
-                                    }
-                                    roomImage.setLocation(myLocation);
-                                    roomImage.setRoom(roomArray[roomPosition]);
-                                    roomImage.setSnapdragonArray(snapArray);
-                                    roomImage.setReferenceTags(referenceTagArray);
-                                    roomImage.invalidate();
-                                    setupRoom();
-                                    progressBar.setVisibility(View.GONE);
+                                    myLocation = gson.fromJson(json, Location.class);
+                                    if (myLocation.getxCoord() != "-1") {
+                                        sr.getRoomIds("snapdragon", user, roomArray[currentRoom].get_id(), new Callback<ResponseBody>() {
+                                            @Override
+                                            public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
+                                                try {
+                                                    String json = response.body().string();
+                                                    Gson gson = new Gson();
+                                                    snapArray = gson.fromJson(json, Snapdragon[].class);
 
+                                                    //SECOND NEST
+
+                                                    sr.getRoomIds("reference", user, roomArray[currentRoom].get_id(), new Callback<ResponseBody>() {
+                                                        @Override
+                                                        public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
+                                                            try {
+                                                                String json = response.body().string();
+                                                                Gson gson = new Gson();
+                                                                referenceTagArray = gson.fromJson(json, ReferenceTag[].class);
+                                                                roomImage.setFlag(1);
+                                                                roomImage.setLocation(myLocation);
+                                                                roomImage.setRoom(roomArray[currentRoom]);
+                                                                roomImage.setSnapdragonArray(snapArray);
+                                                                roomImage.setReferenceTags(referenceTagArray);
+                                                                roomImage.invalidate();
+                                                                setupRoom();
+                                                            } catch (Exception e) {
+                                                                e.printStackTrace();
+                                                            }
+                                                        }
+
+                                                        @Override
+                                                        public void onFailure(Throwable t) {
+                                                        }
+
+                                                    });
+
+
+                                                } catch (Exception e) {
+                                                    e.printStackTrace();
+                                                }
+
+                                            }
+
+                                            @Override
+                                            public void onFailure(Throwable t) {
+
+                                            }
+                                        });
+                                    } else if (currentRoom == roomPosition - 1) {
+                                        roomImage.setFlag(1);
+                                        roomImage.setLocation(myLocation);
+                                        roomImage.setRoom(roomArray[currentRoom]);
+                                        roomImage.setSnapdragonArray(snapArray);
+                                        roomImage.setReferenceTags(referenceTagArray);
+                                        roomImage.invalidate();
+                                        setupRoom();
+                                        progressBar.setVisibility(View.GONE);
+                                    }
 
                                 } catch (Exception e) {
                                     e.printStackTrace();
@@ -844,10 +830,85 @@ public class FindActivity extends ActionBarActivity implements ConfirmDialogFrag
 
                             }
                         });
-
                     }
+                } else {
+                    Log.d("entry", "point");
+                    sr.findItem(user, roomArray[roomPosition].getName(), rfidArray[itemPosition].getName(), new Callback<ResponseBody>() {
+                        @Override
+                        public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
+                            try {
+                                String json = response.body().string();
+                                Gson gson = new Gson();
+                                myLocation = gson.fromJson(json, Location.class);
+                                if (myLocation.getxCoord() == "-1") {
+                                    roomImage.setFlag(1);
+                                } else if (myLocation.getxCoord() == "-2") {
+                                    roomImage.setFlag(1);
+                                } else {
+                                    roomImage.setFlag(1);
+                                }
+                                roomImage.setLocation(myLocation);
+                                roomImage.setRoom(roomArray[roomPosition]);
+                                roomImage.setSnapdragonArray(snapArray);
+                                roomImage.setReferenceTags(referenceTagArray);
+                                roomImage.invalidate();
+                                setupRoom();
+                                progressBar.setVisibility(View.GONE);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
 
-                });
+                        @Override
+                        public void onFailure(Throwable t) {
+//                        StringWriter sw = new StringWriter();
+//                        PrintWriter pw = new PrintWriter(sw);
+//                        t.printStackTrace(pw);
+//                        Log.d("fail", sw.toString());
+                            sr.getId("history", rfidArray[itemPosition].getTagId(), user, new Callback<ResponseBody>() {
+                                @Override
+                                public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
+                                    try {
+                                        Log.d("fail", "should still work");
+                                        History[] historyArray;
+                                        String json = response.body().string();
+                                        Gson gson = new Gson();
+                                        historyArray = gson.fromJson(json, History[].class);
+                                        History last = historyArray[historyArray.length - 1];
+                                        myLocation = new Location();
+                                        myLocation.setxCoord(last.getxCoord());
+                                        myLocation.setyCoord(last.getyCoord());
+                                        if (myLocation.getxCoord() == "-1") {
+                                            roomImage.setFlag(1);
+                                        } else if (myLocation.getxCoord() == "-2") {
+                                            roomImage.setFlag(1);
+                                        } else {
+                                            roomImage.setFlag(1);
+                                        }
+                                        roomImage.setLocation(myLocation);
+                                        roomImage.setRoom(roomArray[roomPosition]);
+                                        roomImage.setSnapdragonArray(snapArray);
+                                        roomImage.setReferenceTags(referenceTagArray);
+                                        roomImage.invalidate();
+                                        setupRoom();
+                                        progressBar.setVisibility(View.GONE);
+
+
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+
+                                @Override
+                                public void onFailure(Throwable t) {
+
+                                }
+                            });
+
+                        }
+
+                    });
+                }
             }
         }
 
@@ -951,5 +1012,6 @@ public class FindActivity extends ActionBarActivity implements ConfirmDialogFrag
         }
     }
 
-
 }
+
+
