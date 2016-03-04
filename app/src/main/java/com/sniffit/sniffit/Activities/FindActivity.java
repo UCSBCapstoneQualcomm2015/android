@@ -205,6 +205,8 @@ public class FindActivity extends ActionBarActivity implements ConfirmDialogFrag
         roomSpinner = (android.support.v7.widget.AppCompatSpinner)findViewById(R.id.room_spinner);
 
         itemSpinner = (android.support.v7.widget.AppCompatSpinner)findViewById(R.id.item_spinner);
+        Log.d("item1", Integer.toString(itemPosition));
+        Log.d("room1", Integer.toString(roomPosition));
 
         user = (User) getIntent().getExtras().getSerializable("user");
         imageFlag = (Integer) getIntent().getExtras().getSerializable("flag");
@@ -219,7 +221,6 @@ public class FindActivity extends ActionBarActivity implements ConfirmDialogFrag
         bundle = new Bundle();
         bundle.putSerializable("user", user);
         intent = new Intent(this, FindActivity.class);
-
 
         pref =  getApplicationContext().getSharedPreferences("MyPref", 0);
         final SharedPreferences.Editor editor = pref.edit();
@@ -241,17 +242,17 @@ public class FindActivity extends ActionBarActivity implements ConfirmDialogFrag
                     String json = response.body().string();
                     Gson gson = new Gson();
                     roomArray = gson.fromJson(json, Room[].class);
-                    if (roomArray.length > 0)  {
-                        Room allRooms = new Room();
-                        allRooms.setName("All Rooms");
-                        allRooms.setLength("-1");
-                        allRooms.setWidth("-1");
-                        ArrayList<Room> roomList = new ArrayList<Room>();
-                        for(Room e : roomArray)
-                            roomList.add(e);
-                        roomList.add(allRooms);
-                        roomArray = roomList.toArray(new Room[roomList.size()]);
-                    }
+//                    if (roomArray.length > 0)  {
+//                        Room allRooms = new Room();
+//                        allRooms.setName("All Rooms");
+//                        allRooms.setLength("-1");
+//                        allRooms.setWidth("-1");
+//                        ArrayList<Room> roomList = new ArrayList<Room>();
+//                        for(Room e : roomArray)
+//                            roomList.add(e);
+//                        roomList.add(allRooms);
+//                        roomArray = roomList.toArray(new Room[roomList.size()]);
+//                    }
 
                     ArrayAdapter<Room> adapter;
                     adapter = new ArrayAdapter<Room>(getApplicationContext(),
@@ -319,6 +320,7 @@ public class FindActivity extends ActionBarActivity implements ConfirmDialogFrag
 
 
 
+
                     //GET ROOM'S SNAPDRAGONS//
                     if (roomPosition >= 0 && roomArray[roomPosition].getName() != "All Rooms") {
                         //hi
@@ -356,6 +358,8 @@ public class FindActivity extends ActionBarActivity implements ConfirmDialogFrag
 
 
                                                 //Set item spinner value
+                                                Log.d("item2", Integer.toString(itemPosition));
+                                                Log.d("room2", Integer.toString(roomPosition));
                                                 sr.getIds("rfid", user, new Callback<ResponseBody>() {
                                                     @Override
                                                     public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
@@ -370,6 +374,9 @@ public class FindActivity extends ActionBarActivity implements ConfirmDialogFrag
 
 
                                                             itemPosition = pref.getInt("itemSpinnerPosition", -1);
+
+                                                            Log.d("item3", Integer.toString(itemPosition));
+                                                            Log.d("room3", Integer.toString(roomPosition));
 
                                                             if (itemPosition >= 0) {
                                                                 itemSpinner.post(new Runnable() {
@@ -457,7 +464,8 @@ public class FindActivity extends ActionBarActivity implements ConfirmDialogFrag
                     else if (roomPosition >= 0) {
 
 
-                                                //Set item spinner value
+
+                        //Set item spinner value
                         sr.getIds("rfid", user, new Callback<ResponseBody>() {
                             @Override
                             public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
@@ -469,6 +477,7 @@ public class FindActivity extends ActionBarActivity implements ConfirmDialogFrag
                                     ArrayAdapter<RFIDItem> adapter = new ArrayAdapter<RFIDItem>(getApplicationContext(),
                                             R.layout.spinner_dropdown_item, rfidArray);
                                     itemPosition = pref.getInt("itemSpinnerPosition", -1);
+
                                     if (itemPosition >= 0) {
                                         itemSpinner.post(new Runnable() {
                                                                     @Override
@@ -530,7 +539,6 @@ public class FindActivity extends ActionBarActivity implements ConfirmDialogFrag
 
 
                                     itemPosition = pref.getInt("itemSpinnerPosition", -1);
-
                                     if (itemPosition >= 0) {
                                         itemSpinner.post(new Runnable() {
                                             @Override
@@ -803,6 +811,7 @@ public class FindActivity extends ActionBarActivity implements ConfirmDialogFrag
 //                        PrintWriter pw = new PrintWriter(sw);
 //                        t.printStackTrace(pw);
 //                        Log.d("fail", sw.toString());
+                        Log.d("fail", "fail", t);
                         sr.getId("history", rfidArray[itemPosition].getTagId(), user, new Callback<ResponseBody>() {
                             @Override
                             public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
@@ -818,11 +827,9 @@ public class FindActivity extends ActionBarActivity implements ConfirmDialogFrag
                                     myLocation.setyCoord(last.getyCoord());
                                     if (myLocation.getxCoord() == "-1") {
                                         roomImage.setFlag(1);
-                                    }
-                                    else if (myLocation.getxCoord() == "-2") {
+                                    } else if (myLocation.getxCoord() == "-2") {
                                         roomImage.setFlag(1);
-                                    }
-                                    else {
+                                    } else {
                                         roomImage.setFlag(1);
                                     }
                                     roomImage.setLocation(myLocation);
@@ -841,7 +848,7 @@ public class FindActivity extends ActionBarActivity implements ConfirmDialogFrag
 
                             @Override
                             public void onFailure(Throwable t) {
-
+                                Log.d("history failed too", ":(");
                             }
                         });
 
